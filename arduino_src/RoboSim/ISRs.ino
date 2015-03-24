@@ -38,14 +38,18 @@ void encoderInit()
   {
     encoder_states[i] = ENCODER_DISABLED;
     encoder_periods[i] = 0; //Just initalize to zero for now, I guess...
+    encoder_state_timers[i] = 0;
     pinMode(encoder_output_pin_numbers[i*2],OUTPUT); //setup encoder output pins as actual outputs
     pinMode(encoder_output_pin_numbers[i*2+1],OUTPUT);
     digitalWrite(encoder_output_pin_numbers[i*2], LOW); //start with everything at low voltage
     digitalWrite(encoder_output_pin_numbers[i*2+1], LOW);
+    Serial.println("Finished init of encoder!");
   }
   
-  Timer1.initialize(ENCODER_INT_PERIOD_MS); // kick off timer1 at the right period
-  Timer1.attachInterrupt(encoderISR); //fire off the 
+  Timer1.initialize(ENCODER_INT_PERIOD_MS*1000); // kick off timer1 at the right period
+  Timer1.detachInterrupt();
+  Timer1.attachInterrupt(encoderISR); //fire off the function at the right intervals
+  //Timer1.start(); //start up the interupts
    
 }
 
@@ -70,15 +74,21 @@ void encoderISR()
   unsigned char encoder_next_state = 0;
   
   //State machine implemented for each encoder
-  for(; i < NUM_ENCODER_OUTPUTS; i++)
+  for(i = 0; i < NUM_ENCODER_OUTPUTS; i++)
   {
     if(encoder_enabled[i] == false) //always disable encoder if requested
     {
       encoder_next_state = ENCODER_DISABLED;  
     }
+    else if((encoder_state_timers[i] < encoder_periods[i]))
+    {
+      encoder_state_timers[i] = encoder_state_timers[i] + 1;
+      encoder_next_state = encoder_states[i];
+    }
     
     else //otherwise, move through states
     {
+      encoder_state_timers[i] = 0;
       switch(encoder_states[i])
       {
         case ENCODER_DISABLED: //decide if to move out of disabled or not.
@@ -91,7 +101,7 @@ void encoderISR()
           digitalWrite(encoder_output_pin_numbers[i*2+1], LOW);
         break;
         
-        case ENCODER_STATE_1: //NEED TO ADD TIMERS FOR HOLDING IN EACH STATE FOR A GIVEN PERIOD
+        case ENCODER_STATE_1:
           if(encoder_directions[i] == ENCODER_DIR_FWD)
             encoder_next_state = ENCODER_STATE_2;
           else
@@ -142,6 +152,7 @@ void encoderISR()
     }
     
     encoder_states[i] = encoder_next_state;
+
     
   }
   

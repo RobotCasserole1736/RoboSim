@@ -29,11 +29,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 void setup()
 {
-  //open serial port for pc comm's
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   //start up encoders
   encoderInit();
+
   
 }
 
@@ -51,6 +51,11 @@ void setup()
 void loop()
 {
   
+  set_encoder_RPM(60, 0);
+  delay(1000);
+  set_encoder_RPM(-60, 0);
+  delay(1000);
+  Serial.println((int)encoder_periods[0]);
   
   
 }

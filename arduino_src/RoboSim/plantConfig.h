@@ -13,9 +13,16 @@
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
+/******************************************************************************/
+#ifndef PLANTCONFIG_h
+#define PLANTCONFIG_h
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //THINGS WHICH MUST ALWAYS BE DEFINED DUE TO HARDWARE CONSTRAINTS
 //YOU CAN CHANGE THEIR VALUES, BUT DO NOT REMOVE THEM!!!
 ////////////////////////////////////////////////////////////////////////////////
-static int encoder_ticks_per_revolution[NUM_ENCODER_OUTPUTS] = {64,64,64,64};
+static int encoder_ticks_per_revolution[NUM_ENCODER_OUTPUTS] = {16,16,16,16};
+
+#endif /*PLANTCONFIG_h*/

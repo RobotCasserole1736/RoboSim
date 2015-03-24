@@ -20,6 +20,7 @@
 //  Global variables
 ////////////////////////////////////////////////////////////////////////////////
 volatile unsigned long encoder_periods[NUM_ENCODER_OUTPUTS];
+volatile unsigned long encoder_state_timers[NUM_ENCODER_OUTPUTS];
 volatile char encoder_states[NUM_ENCODER_OUTPUTS];
 volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
 volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
@@ -38,10 +39,31 @@ volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
 ////////////////////////////////////////////////////////////////////////////////
 void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
 {
-  double period_calculated = 0;
+  double cycles_per_interrupt_state_delay = 0;
   
-  //Period = rpm desired * ticks per revolution * 0.000016666666 minutes per millisecond *  
-  period_calculated = encoder_RPM_in * encoder_ticks_per_revolution[encoder_num] * 60 
+  if(encoder_RPM_in > 0)
+  {
+    encoder_directions[encoder_num] = ENCODER_DIR_FWD;
+    cycles_per_interrupt_state_delay = encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] / ((double)ENCODER_INT_PERIOD_MS/1000.0);
+  }
+  else
+  {
+    encoder_directions[encoder_num] = ENCODER_DIR_BKD;
+    cycles_per_interrupt_state_delay = -encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] / ((double)ENCODER_INT_PERIOD_MS/1000.0);
+  }
+  
+
+  
+  if(cycles_per_interrupt_state_delay > 0)
+  {
+    encoder_periods[encoder_num] = (unsigned long)round(1.0/cycles_per_interrupt_state_delay);
+    encoder_enabled[encoder_num] = true;
+  }
+  else
+  {
+    encoder_periods[encoder_num] = 0;
+    encoder_enabled[encoder_num] = false;
+  }
   
 }
 

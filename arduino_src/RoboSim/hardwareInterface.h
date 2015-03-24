@@ -40,6 +40,7 @@ void encoderISR();
 
 //encoder state variables
 extern volatile unsigned long encoder_periods[NUM_ENCODER_OUTPUTS];
+extern volatile unsigned long encoder_state_timers[NUM_ENCODER_OUTPUTS];
 extern volatile char encoder_states[NUM_ENCODER_OUTPUTS];
 extern volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
 extern volatile char encoder_directions[NUM_ENCODER_OUTPUTS];

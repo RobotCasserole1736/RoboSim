@@ -28,14 +28,14 @@
 #define HW_MOTOR_4_INPUT_PIN A4
 #define HW_MOTOR_5_INPUT_PIN A5
 
-#define HW_ENCODER_1A_PIN 0
-#define HW_ENCODER_1B_PIN 1
-#define HW_ENCODER_2A_PIN 2
-#define HW_ENCODER_2B_PIN 3
-#define HW_ENCODER_3A_PIN 4
-#define HW_ENCODER_3B_PIN 5
-#define HW_ENCODER_4A_PIN 6
-#define HW_ENCODER_4B_PIN 7
+#define HW_ENCODER_1A_PIN 2
+#define HW_ENCODER_1B_PIN 3
+#define HW_ENCODER_2A_PIN 4
+#define HW_ENCODER_2B_PIN 5
+#define HW_ENCODER_3A_PIN 6
+#define HW_ENCODER_3B_PIN 7
+#define HW_ENCODER_4A_PIN 8
+#define HW_ENCODER_4B_PIN 9
 
 //Define number of hardware IO's
 #define NUM_ENCODER_OUTPUTS 4
@@ -45,7 +45,7 @@
 
 //period between evaluating the encoder isr function
 //which triggers (possibly) state transitions
-#define ENCODER_INT_PERIOD_MS 256
+#define ENCODER_INT_PERIOD_MS 0.1
 
 
 #endif /*HWCONFIG_H*/
