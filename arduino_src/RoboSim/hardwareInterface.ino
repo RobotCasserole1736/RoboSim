@@ -44,12 +44,12 @@ void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
   if(encoder_RPM_in > 0)
   {
     encoder_directions[encoder_num] = ENCODER_DIR_FWD;
-    cycles_per_interrupt_state_delay = encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] / ((double)ENCODER_INT_PERIOD_MS/1000.0);
+    cycles_per_interrupt_state_delay = encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] * ((double)ENCODER_INT_PERIOD_MS/1000.0);
   }
   else
   {
     encoder_directions[encoder_num] = ENCODER_DIR_BKD;
-    cycles_per_interrupt_state_delay = -encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] / ((double)ENCODER_INT_PERIOD_MS/1000.0);
+    cycles_per_interrupt_state_delay = -encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] * ((double)ENCODER_INT_PERIOD_MS/1000.0);
   }
   
 
