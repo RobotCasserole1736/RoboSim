@@ -24,6 +24,9 @@ volatile unsigned long encoder_state_timers[NUM_ENCODER_OUTPUTS];
 volatile char encoder_states[NUM_ENCODER_OUTPUTS];
 volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
 volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
+double motor_speeds[NUM_MOTOR_INPUTS] = {0,0,0,0,0,0};
+double motor_zero_points[NUM_MOTOR_INPUTS] = {0.5,0.5,0.5,0.5,0.5,0.5};
+
 
 
 
@@ -51,8 +54,6 @@ void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
     encoder_directions[encoder_num] = ENCODER_DIR_BKD;
     cycles_per_interrupt_state_delay = -encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] * ((double)ENCODER_INT_PERIOD_MS/1000.0);
   }
-  
-
   
   if(cycles_per_interrupt_state_delay > 0)
   {

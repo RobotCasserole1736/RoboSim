@@ -56,6 +56,11 @@ static char encoder_output_pin_numbers[NUM_ENCODER_OUTPUTS*2] = {
   }; //Must have NUM_ENCODER_OUTPUTS*2 elements //must be of size NUM_ENCODER_OUTPUTS*2
 
 
+//Motor input values
+extern double motor_speeds[NUM_MOTOR_INPUTS]; //speed, normalized to range [-1, 1]
+extern double motor_zero_points[NUM_MOTOR_INPUTS]; //full-stop of normalized reading from ADC (in range [0, 2^12]
+extern double motor_conversion_factor[NUM_MOTOR_INPUTS]; //conversion from 
+
 //Function prototypes
 void set_encoder_RPM( double encoder_RPM_in, char encoder_num);
 

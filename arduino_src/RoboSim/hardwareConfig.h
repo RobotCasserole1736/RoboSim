@@ -47,5 +47,7 @@
 //which triggers (possibly) state transitions
 #define ENCODER_INT_PERIOD_MS 0.1
 
+//Sample time for main simulation loop
+#define MAIN_LOOP_TS_MS 100 
 
 #endif /*HWCONFIG_H*/
