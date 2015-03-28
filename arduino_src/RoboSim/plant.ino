@@ -17,6 +17,8 @@
 
 void plant_periodic_loop()
 {
+  Serial.print("M1 Val: ");
+  Serial.println(get_motor_in_voltage(0));
   
   
   

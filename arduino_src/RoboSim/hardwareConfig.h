@@ -51,6 +51,6 @@
 #define MAIN_LOOP_TS_MS 100 
 
 //flash rate of plant active LED in loops
-#define HW_STATUS_FLASH_RATE_LOOPS 5
+#define HW_STATUS_FLASH_RATE_LOOPS 3
 
 #endif /*HWCONFIG_H*/

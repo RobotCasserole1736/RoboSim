@@ -49,7 +49,6 @@ void encoderInit()
   Timer1.initialize(ENCODER_INT_PERIOD_MS*1000); // kick off timer1 at the right period
   Timer1.detachInterrupt();
   Timer1.attachInterrupt(encoderISR); //fire off the function at the right intervals
-  //Timer1.start(); //start up the interupts
    
 }
 
