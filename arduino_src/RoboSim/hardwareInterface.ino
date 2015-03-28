@@ -24,8 +24,9 @@ volatile unsigned long encoder_state_timers[NUM_ENCODER_OUTPUTS];
 volatile char encoder_states[NUM_ENCODER_OUTPUTS];
 volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
 volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
-double motor_speeds[NUM_MOTOR_INPUTS] = {0,0,0,0,0,0};
+int motor_input_readings[NUM_MOTOR_INPUTS] = {0,0,0,0,0,0};
 double motor_zero_points[NUM_MOTOR_INPUTS] = {0.5,0.5,0.5,0.5,0.5,0.5};
+double motor_conversion_factor[NUM_MOTOR_INPUTS] = {0.0009765625,0.0009765625,0.0009765625,0.0009765625,0.0009765625,0.0009765625}; // 1/1024
 
 
 
@@ -69,3 +70,57 @@ void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// double get_motor_in_voltage
+// Description: Takes a motor number, and returns the most recent voltage read
+//
+// Input Arguments: char - motor number to get input from
+//                  
+// Output: Motor voltage
+// Globals Read: motor_input_readings
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
+double get_motor_in_voltage(char motor_num)
+{
+  //Scale and offset the analog value.
+  //negative is hard-coded because input filter circuit has an inverting amplifier
+  return -((double)motor_input_readings[motor_num]*motor_conversion_factor[motor_num] - motor_zero_points[motor_num]);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// void sample_motor_values
+// Description: Reads and saves analog port values for motor voltages
+//
+// Input Arguments: none
+//                  
+// Output: none
+// Globals Read: none
+// Globals Written: motor_input_readings
+////////////////////////////////////////////////////////////////////////////////
+void sample_motor_values()
+{
+  int i;
+  for(i = 0; i<NUM_MOTOR_INPUTS; i++)
+  {
+    motor_input_readings[i] = analogRead(motor_int_pin_numbers[i]);
+  }
+  
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// void init_motor_inputs
+// Description: Sets up motor analog pins as inputs. Currently, no action is
+//              actually required.
+//
+// Input Arguments: none
+//                  
+// Output: none
+// Globals Read: none
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
+void init_motor_inputs()
+{
+  
+  
+}

@@ -18,5 +18,8 @@
 
 #include "plantConfig.h"
 
+;
+//function prototypes
+void plant_periodic_loop()
 
 #endif /*PLANT_h */

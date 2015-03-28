@@ -44,7 +44,7 @@ extern volatile unsigned long encoder_state_timers[NUM_ENCODER_OUTPUTS];
 extern volatile char encoder_states[NUM_ENCODER_OUTPUTS];
 extern volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
 extern volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
-static char encoder_output_pin_numbers[NUM_ENCODER_OUTPUTS*2] = {
+const char encoder_output_pin_numbers[NUM_ENCODER_OUTPUTS*2] = {
   HW_ENCODER_1A_PIN,
   HW_ENCODER_1B_PIN,
   HW_ENCODER_2A_PIN,
@@ -59,9 +59,23 @@ static char encoder_output_pin_numbers[NUM_ENCODER_OUTPUTS*2] = {
 //Motor input values
 extern double motor_speeds[NUM_MOTOR_INPUTS]; //speed, normalized to range [-1, 1]
 extern double motor_zero_points[NUM_MOTOR_INPUTS]; //full-stop of normalized reading from ADC (in range [0, 2^12]
-extern double motor_conversion_factor[NUM_MOTOR_INPUTS]; //conversion from 
+extern double motor_conversion_factor[NUM_MOTOR_INPUTS]; //conversion from analog bits to -1 -> 1 range
+const char motor_int_pin_numbers[NUM_MOTOR_INPUTS] = { // array of numbers for pins used for analog input
+  HW_MOTOR_0_INPUT_PIN,
+  HW_MOTOR_1_INPUT_PIN,
+  HW_MOTOR_2_INPUT_PIN,
+  HW_MOTOR_3_INPUT_PIN,
+  HW_MOTOR_4_INPUT_PIN,
+  HW_MOTOR_5_INPUT_PIN
+};
+
+
 
 //Function prototypes
 void set_encoder_RPM( double encoder_RPM_in, char encoder_num);
+
+double get_motor_in_voltage(char motor_num);
+void sample_motor_values();
+void init_motor_inputs();
 
 #endif /*HWINTERFACE_h*/

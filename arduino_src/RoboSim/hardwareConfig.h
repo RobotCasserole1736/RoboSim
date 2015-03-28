@@ -21,12 +21,12 @@
 
 #define HW_STATUS_LED_PIN 13
 
-#define HW_MOTOR_0_INPUT_PIN A0
-#define HW_MOTOR_1_INPUT_PIN A1
-#define HW_MOTOR_2_INPUT_PIN A2
-#define HW_MOTOR_3_INPUT_PIN A3
-#define HW_MOTOR_4_INPUT_PIN A4
-#define HW_MOTOR_5_INPUT_PIN A5
+#define HW_MOTOR_0_INPUT_PIN 0
+#define HW_MOTOR_1_INPUT_PIN 1
+#define HW_MOTOR_2_INPUT_PIN 2
+#define HW_MOTOR_3_INPUT_PIN 3
+#define HW_MOTOR_4_INPUT_PIN 4
+#define HW_MOTOR_5_INPUT_PIN 5
 
 #define HW_ENCODER_1A_PIN 2
 #define HW_ENCODER_1B_PIN 3
@@ -49,5 +49,8 @@
 
 //Sample time for main simulation loop
 #define MAIN_LOOP_TS_MS 100 
+
+//flash rate of plant active LED in loops
+#define HW_STATUS_FLASH_RATE_LOOPS 5
 
 #endif /*HWCONFIG_H*/
