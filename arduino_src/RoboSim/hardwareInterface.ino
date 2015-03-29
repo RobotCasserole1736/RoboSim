@@ -25,8 +25,8 @@ volatile char encoder_states[NUM_ENCODER_OUTPUTS];
 volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
 volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
 int motor_input_readings[NUM_MOTOR_INPUTS] = {0,0,0,0,0,0};
-double motor_zero_points[NUM_MOTOR_INPUTS] = {0.5,0.5,0.5,0.5,0.5,0.5};
-double motor_conversion_factor[NUM_MOTOR_INPUTS] = {0.0009765625,0.0009765625,0.0009765625,0.0009765625,0.0009765625,0.0009765625}; // 1/1024
+double motor_zero_points[NUM_MOTOR_INPUTS] = {512,512,512,512,512,512};
+double motor_conversion_factor[NUM_MOTOR_INPUTS] = {0.001953125,0.001953125,0.001953125,0.001953125,0.001953125,0.001953125}; // 1/512
 
 
 
@@ -84,7 +84,7 @@ double get_motor_in_voltage(char motor_num)
 {
   //Scale and offset the analog value.
   //negative is hard-coded because input filter circuit has an inverting amplifier
-  return -((double)motor_input_readings[motor_num]*motor_conversion_factor[motor_num] - motor_zero_points[motor_num]);
+  return -((double)motor_input_readings[motor_num] - motor_zero_points[motor_num])*motor_conversion_factor[motor_num] ;
 }
 
 
@@ -120,6 +120,38 @@ void sample_motor_values()
 // Globals Written: none
 ////////////////////////////////////////////////////////////////////////////////
 void init_motor_inputs()
+{
+  
+  
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// void sample_digital_inputs
+// Description: Get current readings for digital inputs
+//
+// Input Arguments: none
+//                  
+// Output: none
+// Globals Read: none
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
+void sample_digital_inputs()
+{
+  
+  
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// void init_digital_inputs
+// Description: Set up digital inputs to recieve voltages
+//
+// Input Arguments: none
+//                  
+// Output: none
+// Globals Read: none
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
+void init_digital_inputs()
 {
   
   

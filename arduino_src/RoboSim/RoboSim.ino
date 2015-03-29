@@ -74,7 +74,7 @@ void loop()
     //Calculate processor load and hold to ensure a loop time of MAIN_LOOP_TS_MS
     prev_loop_end_time_ms = millis();
     while(millis() < (prev_loop_start_time_ms + MAIN_LOOP_TS_MS)); //Hold here to ensure proper sample time
-    ProcessorLoad = 100*((double)prev_loop_end_time_ms-(double)prev_loop_start_time_ms)/(double)MAIN_LOOP_TS_MS; //fixed overhead of calculating processor Load is not included in processor load calculation. BWAAAAAAA....
+    ProcessorLoad = 100.0*((double)prev_loop_end_time_ms-(double)prev_loop_start_time_ms)/(double)MAIN_LOOP_TS_MS; //fixed overhead of calculating processor Load is not included in processor load calculation. BWAAAAAAA....
     prev_loop_start_time_ms = millis();
     
     //Toggle LED status light every HW_STATUS_FLASH_RATE_LOOPS
@@ -87,6 +87,9 @@ void loop()
     
     //Acquire input
     sample_motor_values();
+    sample_digital_inputs();
+    
+    //Update output
     
     
     //run plant model
