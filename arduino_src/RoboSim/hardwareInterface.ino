@@ -126,8 +126,9 @@ void init_motor_inputs()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// void sample_digital_inputs
-// Description: Get current readings for digital inputs
+// void io_card_exchange_data
+// Description: Get current readings for digital inputs, and set digital and 
+//              analog outputs
 //
 // Input Arguments: none
 //                  
@@ -135,15 +136,15 @@ void init_motor_inputs()
 // Globals Read: none
 // Globals Written: none
 ////////////////////////////////////////////////////////////////////////////////
-void sample_digital_inputs()
+void io_card_exchange_data()
 {
   
   
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// void init_digital_inputs
-// Description: Set up digital inputs to recieve voltages
+// void init_io_card
+// Description: Set up io card
 //
 // Input Arguments: none
 //                  
@@ -151,7 +152,7 @@ void sample_digital_inputs()
 // Globals Read: none
 // Globals Written: none
 ////////////////////////////////////////////////////////////////////////////////
-void init_digital_inputs()
+void init_io_card()
 {
   
   

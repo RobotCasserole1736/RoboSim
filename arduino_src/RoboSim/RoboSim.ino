@@ -42,8 +42,9 @@ void setup()
   //start up motor inputs
   init_motor_inputs();
   
-  //set StatusLED as output
-  pinMode(HW_STATUS_LED_PIN, OUTPUT);
+  //set up io cards
+  init_io_card();
+  
   
 }
 
@@ -82,7 +83,7 @@ void loop()
     {
       plant_running_led_counter = 0;
       plant_running_led_state = !plant_running_led_state;
-      digitalWrite(HW_STATUS_LED_PIN, plant_running_led_state);
+      //need to actually use this data somehow...
     }
     
     //Acquire input
