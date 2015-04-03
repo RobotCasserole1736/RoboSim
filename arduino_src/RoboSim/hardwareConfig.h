@@ -58,14 +58,14 @@
 #define HW_STATUS_FLASH_RATE_LOOPS 3
 
 
+
 //IO Card constants
 #define NUM_IO_CARDS 1
-#define IO_SYNC_ACTIVE 0
-#define IO_SYNC_LATCH 1
-#define IO_CLOCK_LOW 0 //use these to invert clock if needed
-#define IO_CLOCK_HIGH 1
-
-
+#define IO_SYNC_LOCKED 0 //lockced state - outputs are latched and will not change as data is shifted. Inputs are latched at the unlocked->locked transition so changes during shifting do not affect shifted bits
+#define IO_SYNC_UNLOCKED 1 //unlocked means exchanging data with the outside world, locked means exchanging data with the arduino.
+#define IO_CLK_LOW 0 //use these to invert clock if needed
+#define IO_CLK_HIGH 1
+#define IO_CLK_HALF_CYCLE_US 100;
 
 
 #endif /*HWCONFIG_H*/

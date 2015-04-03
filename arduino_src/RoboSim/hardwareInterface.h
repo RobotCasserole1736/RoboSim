@@ -69,13 +69,23 @@ static char motor_int_pin_numbers[NUM_MOTOR_INPUTS] = { // array of numbers for 
   HW_MOTOR_5_INPUT_PIN
 };
 
+//digital input values
+extern bool digital_inputs[NUM_IO_CARDS*8];
+
+//digital output values
+extern bool digital_outputs[NUM_IO_CARDS*8];
+
+//analog output values
+extern double analog_outputs[NUM_IO_CARDS*2];
+
 
 
 //Function prototypes
 void set_encoder_RPM( double encoder_RPM_in, char encoder_num);
-
 double get_motor_in_voltage(char motor_num);
 void sample_motor_values();
 void init_motor_inputs();
+unsigned char io_card_rx_byte();
+unsigned char io_card_tx_byte();
 
 #endif /*HWINTERFACE_h*/

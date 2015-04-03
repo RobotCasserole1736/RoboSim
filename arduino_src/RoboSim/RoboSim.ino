@@ -86,11 +86,10 @@ void loop()
       //need to actually use this data somehow...
     }
     
-    //Acquire input
+    //Acquire input & output
     sample_motor_values();
-    sample_digital_inputs();
+    io_card_exchange_data();
     
-    //Update output
     
     
     //run plant model
