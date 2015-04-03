@@ -123,7 +123,7 @@ void sample_motor_values()
 ////////////////////////////////////////////////////////////////////////////////
 void init_motor_inputs()
 {
-  memset(motor_input_readings, 0, sizeof(motor_input_readings)):
+  memset(motor_input_readings, 0, sizeof(motor_input_readings));
   
 }
 
@@ -180,13 +180,21 @@ void io_card_exchange_data()
     
     //get bits for digital input
     temp_byte = io_card_rx_byte();
-    
-    
-    
+    //split returned byte out by bit into the digital_inputs array
+    for(bit_iter = 0; bit_iter < 8; bit_iter++)
+      digital_inputs[io_card_iter * 8 + bit_iter] = temp_byte & (0x01 << bit_iter);
       
+    //final step - generate digital output byte
+    temp_byte = 0;
+    for(bit_iter = 0; bit_iter < 8; bit_iter++)
+      temp_byte = temp_byte | ((unsigned char)digital_outputs[io_card_iter * 8 + bit_iter] << bit_iter);
       
+    //send bits for digital output
+    io_card_tx_byte(temp_byte);
+    
+    //unlock IO cards since data transfer is complete.
+    digitalWrite(IO_SER_SYNC_PIN, IO_SYNC_UNLOCKED);
 
-    
    
   } 
   
@@ -208,8 +216,7 @@ void io_card_tx_byte(unsigned char input_byte)
     delayMicroseconds(IO_CLK_HALF_CYCLE_US);
     digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH);
     delayMicroseconds(IO_CLK_HALF_CYCLE_US);
-    digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);
-    
+    digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);   
   }
 }
 
@@ -219,7 +226,7 @@ unsigned char io_card_rx_byte()
   bool rx_bit = 0;
   unsigned char bit_iter;
   
-  for(bit_iter = 0; bit_iter < 8; bit_iter ++)
+  for(bit_iter = 0; bit_iter < 8; bit_iter++)
   {
     //cycle clock high-low to shift data
     delayMicroseconds(IO_CLK_HALF_CYCLE_US);
@@ -228,6 +235,7 @@ unsigned char io_card_rx_byte()
     delayMicroseconds(IO_CLK_HALF_CYCLE_US);
     digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);
     rx_byte = rx_byte | ((unsigned char)rx_bit << bit_iter); 
+  }
   
 }
 

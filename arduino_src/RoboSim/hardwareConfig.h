@@ -65,7 +65,7 @@
 #define IO_SYNC_UNLOCKED 1 //unlocked means exchanging data with the outside world, locked means exchanging data with the arduino.
 #define IO_CLK_LOW 0 //use these to invert clock if needed
 #define IO_CLK_HIGH 1
-#define IO_CLK_HALF_CYCLE_US 100;
+#define IO_CLK_HALF_CYCLE_US 100
 
 
 #endif /*HWCONFIG_H*/
