@@ -3075,7 +3075,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 </class>
 </classes>
 <parts>
-<part name="IC1" library="SparkFun-AnalogIC" deviceset="LM358" device=""/>
+<part name="IC1" library="SparkFun-AnalogIC" deviceset="LM358" device="" value="TLV2772"/>
 <part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="80K"/>
 <part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="20K"/>
 <part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="80K"/>
@@ -3117,7 +3117,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <part name="SUPPLY16" library="supply2" deviceset="GND" device=""/>
 <part name="JP1" library="SparkFun-Connectors" deviceset="M06" device="LOCK"/>
 <part name="JP2" library="SparkFun-Connectors" deviceset="M06" device="LOCK"/>
-<part name="IC2" library="SparkFun-AnalogIC" deviceset="LM358" device=""/>
+<part name="IC2" library="SparkFun-AnalogIC" deviceset="LM358" device="" value="TLV2772"/>
 <part name="R15" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="80K"/>
 <part name="R16" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="20K"/>
 <part name="R17" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="80K"/>
@@ -3150,7 +3150,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <part name="SUPPLY27" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="C8" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
 <part name="SUPPLY28" library="supply2" deviceset="GND" device=""/>
-<part name="IC3" library="SparkFun-AnalogIC" deviceset="LM358" device=""/>
+<part name="IC3" library="SparkFun-AnalogIC" deviceset="LM358" device="" value="TLV2772"/>
 <part name="R29" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="80K"/>
 <part name="R30" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="20K"/>
 <part name="R31" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="80K"/>
