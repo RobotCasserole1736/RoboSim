@@ -13,6 +13,7 @@
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
+#define HWIO_DEBUG_PRINT
 
 #include "hardwareInterface.h"
 
@@ -166,7 +167,12 @@ void io_card_exchange_data()
     else
       temp_byte = round(analog_outputs[io_card_iter*2]*255.0/5.0);
     //output analog 1
+    #ifdef HWIO_DEBUG_PRINT
+    Serial.print("A1:");
+    Serial.println(temp_byte, HEX);
+    #endif
     io_card_tx_byte(temp_byte);
+    
     
     //calculate bits for output analog 2 
     if(analog_outputs[io_card_iter*2+1] > 5)
@@ -176,10 +182,18 @@ void io_card_exchange_data()
     else
       temp_byte = round(analog_outputs[io_card_iter*2+1]*255.0/5.0);
     //output analog 2
+    #ifdef HWIO_DEBUG_PRINT
+    Serial.print("A2:");
+    Serial.println(temp_byte, HEX);
+    #endif
     io_card_tx_byte(temp_byte);
     
     //get bits for digital input
     temp_byte = io_card_rx_byte();
+    #ifdef HWIO_DEBUG_PRINT
+    Serial.print("DI:");
+    Serial.println(temp_byte, HEX);
+    #endif
     //split returned byte out by bit into the digital_inputs array
     for(bit_iter = 0; bit_iter < 8; bit_iter++)
       digital_inputs[io_card_iter * 8 + bit_iter] = temp_byte & (0x01 << bit_iter);
@@ -190,6 +204,10 @@ void io_card_exchange_data()
       temp_byte = temp_byte | ((unsigned char)digital_outputs[io_card_iter * 8 + bit_iter] << bit_iter);
       
     //send bits for digital output
+    #ifdef HWIO_DEBUG_PRINT
+    Serial.print("DO:");
+    Serial.println(temp_byte, HEX);
+    #endif
     io_card_tx_byte(temp_byte);
     
     //unlock IO cards since data transfer is complete.
