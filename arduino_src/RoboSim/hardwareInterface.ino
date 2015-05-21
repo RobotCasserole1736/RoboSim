@@ -148,8 +148,14 @@ void io_card_exchange_data()
 
   //Assume clock starts low, ready to shift at next rising edge.
   
-  //Set the sync pin to latch inputs, and lock outputs
-  digitalWrite(IO_SER_SYNC_PIN, IO_SYNC_LOCKED);
+  //Pulse the sync pin low before the data transfer.
+  //This will load data into the input shift registers (occurs whenever sync is low)
+  //It will also reload the data into the output shift registers. This is fine because
+  //no shift has occurred since the last data transfer, so the shift registers and storage
+  //registers on the 74HC595's are already the same.
+  digitalWrite(IO_SER_SYNC_PIN, LOW);
+  delayMicroseconds(IO_SYNC_PULSE_TIME_US);
+  digitalWrite(IO_SER_SYNC_PIN, HIGH);
 
   for(io_card_iter = 0; io_card_iter < NUM_IO_CARDS; io_card_iter++)
   {
@@ -210,11 +216,19 @@ void io_card_exchange_data()
     #endif
     io_card_tx_byte(temp_byte);
     
-    //unlock IO cards since data transfer is complete.
-    digitalWrite(IO_SER_SYNC_PIN, IO_SYNC_UNLOCKED);
-
-   
   } 
+  
+  //Pulse the sync pin low again. On the rising edge of the pulse, data shifted into
+  //the 74HC595's shift registers will latch into their storage registers.
+  //It will also load the 74HC165 with data, but that will be overwritten on
+  //the next call to exchange data. So that's ok.
+  //Technically, this second pulse isn't needed. However, eliminating either
+  //the first or second pulse will cause input and output data to be out of
+  //phase by one loop. This might be ok, and could be attempted if faster data
+  //exchange rates are needed.
+  digitalWrite(IO_SER_SYNC_PIN, LOW);
+  delayMicroseconds(IO_SYNC_PULSE_TIME_US);
+  digitalWrite(IO_SER_SYNC_PIN, HIGH);
   
   
 }
@@ -279,7 +293,7 @@ void init_io_card()
   
   //set pin initial states
   digitalWrite(IO_SER_OUT_PIN, LOW);
-  digitalWrite(IO_SER_SYNC_PIN, IO_SYNC_UNLOCKED); //set io cards to recieve data.
+  digitalWrite(IO_SER_SYNC_PIN, HIGH); //sync stays high except for data transfer.
   digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);
   
   memset(digital_inputs, '0', sizeof(digital_inputs)); 
