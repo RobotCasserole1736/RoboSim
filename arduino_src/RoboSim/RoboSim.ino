@@ -37,7 +37,7 @@ void setup()
   Serial.begin(115200);
   
   //start up encoders
-  encoderInit();
+  //encoderInit();
   
   //start up motor inputs
   init_motor_inputs();

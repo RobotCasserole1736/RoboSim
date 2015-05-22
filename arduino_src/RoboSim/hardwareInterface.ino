@@ -227,10 +227,10 @@ void io_card_exchange_data()
   //the first or second pulse will cause input and output data to be out of
   //phase by one loop. This might be ok, and could be attempted if faster data
   //exchange rates are needed.
+  delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   digitalWrite(IO_SER_SYNC_PIN, LOW);
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   digitalWrite(IO_SER_SYNC_PIN, HIGH);
-  delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   
   
 }
@@ -238,9 +238,9 @@ void io_card_exchange_data()
 void io_card_tx_byte(unsigned char input_byte)
 {
   bool bit_to_tx = 0;
-  unsigned char bit_iter;
+  char bit_iter;
   
-  for(bit_iter = 7; bit_iter >= 0; bit_iter --)
+  for(bit_iter = 7; bit_iter >= 0; bit_iter--)
   {
     //calcualte the bit
     bit_to_tx = (0x01 << bit_iter) & (input_byte);
@@ -258,9 +258,9 @@ unsigned char io_card_rx_byte()
 {
   unsigned char rx_byte = 0;
   bool rx_bit = 0;
-  unsigned char bit_iter;
+  char bit_iter;
   
-  for(bit_iter = 7; bit_iter >= 0; bit_iter --)
+  for(bit_iter = 7; bit_iter >= 0; bit_iter--)
   {
     //cycle clock high-low to shift data
     delayMicroseconds(IO_CLK_HALF_CYCLE_US);
