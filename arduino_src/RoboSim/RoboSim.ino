@@ -94,17 +94,18 @@ void loop()
     //test vectors
     analog_outputs[0] = 1.2;
     analog_outputs[1] = 2.5;
-    digital_outputs[0] = false;
+    digital_outputs[0] = true;
     digital_outputs[1] = true;
     digital_outputs[2] = true;
     digital_outputs[3] = false;
-    digital_outputs[4] = true;
+    digital_outputs[4] = false;
     digital_outputs[5] = false;
     digital_outputs[6] = false;
-    digital_outputs[7] = true;
+    digital_outputs[7] = false;
     
     
     io_card_exchange_data();
+
 
     
     

@@ -156,6 +156,7 @@ void io_card_exchange_data()
   digitalWrite(IO_SER_SYNC_PIN, LOW);
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   digitalWrite(IO_SER_SYNC_PIN, HIGH);
+  delayMicroseconds(IO_SYNC_PULSE_TIME_US);
 
   for(io_card_iter = 0; io_card_iter < NUM_IO_CARDS; io_card_iter++)
   {
@@ -229,6 +230,7 @@ void io_card_exchange_data()
   digitalWrite(IO_SER_SYNC_PIN, LOW);
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   digitalWrite(IO_SER_SYNC_PIN, HIGH);
+  delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   
   
 }
@@ -238,7 +240,7 @@ void io_card_tx_byte(unsigned char input_byte)
   bool bit_to_tx = 0;
   unsigned char bit_iter;
   
-  for(bit_iter = 0; bit_iter < 8; bit_iter ++)
+  for(bit_iter = 7; bit_iter >= 0; bit_iter --)
   {
     //calcualte the bit
     bit_to_tx = (0x01 << bit_iter) & (input_byte);
@@ -258,13 +260,13 @@ unsigned char io_card_rx_byte()
   bool rx_bit = 0;
   unsigned char bit_iter;
   
-  for(bit_iter = 0; bit_iter < 8; bit_iter++)
+  for(bit_iter = 7; bit_iter >= 0; bit_iter --)
   {
     //cycle clock high-low to shift data
     delayMicroseconds(IO_CLK_HALF_CYCLE_US);
     digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH);
-    rx_bit = digitalRead(IO_SER_IN_PIN);
     delayMicroseconds(IO_CLK_HALF_CYCLE_US);
+    rx_bit = digitalRead(IO_SER_IN_PIN);
     digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);
     rx_byte = rx_byte | ((unsigned char)rx_bit << bit_iter); 
   }

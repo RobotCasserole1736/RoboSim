@@ -67,8 +67,8 @@
 #define IO_CLK_HIGH 1
 //all timings on the 74HC165 and 595 datasheets are in the ns range, so just need to set this long enough to allow
 //arduino pin voltages to swing sufficently for stable operation.
-#define IO_CLK_HALF_CYCLE_US 10
-#define IO_SYNC_PULSE_TIME_US 10 
+#define IO_CLK_HALF_CYCLE_US 500
+#define IO_SYNC_PULSE_TIME_US 1000 
 
 
 
