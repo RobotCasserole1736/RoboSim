@@ -65,10 +65,14 @@
 #define IO_SYNC_UNLOCKED 1 //unlocked means exchanging data with the outside world, locked means exchanging data with the arduino.
 #define IO_CLK_LOW 0 //use these to invert clock if needed
 #define IO_CLK_HIGH 1
+
 //all timings on the 74HC165 and 595 datasheets are in the ns range, so just need to set this long enough to allow
 //arduino pin voltages to swing sufficently for stable operation.
-#define IO_CLK_HALF_CYCLE_US 500
-#define IO_SYNC_PULSE_TIME_US 1000 
+//Turns out these can be really tiny (1 us each, yeilding up to a 38kHz IO clock speed == 0.86ms data exchange time per io card)
+//but if instablilty sets in, one potential solution is to slow down the IO speed by cranking these up.
+#define IO_CLK_HALF_CYCLE_US 1
+#define IO_SYNC_PULSE_TIME_US 1
+
 
 
 

@@ -37,7 +37,7 @@ void setup()
   Serial.begin(115200);
   
   //start up encoders
-  //encoderInit();
+  encoderInit();
   
   //start up motor inputs
   init_motor_inputs();
@@ -85,41 +85,14 @@ void loop()
       plant_running_led_state = !plant_running_led_state;
       //need to actually use this data somehow...
     }
-    
-    
-    //debug io card
+
     //Acquire input & output
-    //sample_motor_values();
-    
-    //test vectors
-    analog_outputs[0] = 1.2;
-    analog_outputs[1] = 2.5;
-    digital_outputs[0] = true;
-    digital_outputs[1] = true;
-    digital_outputs[2] = true;
-    digital_outputs[3] = false;
-    digital_outputs[4] = false;
-    digital_outputs[5] = false;
-    digital_outputs[6] = false;
-    digital_outputs[7] = false;
-    
-    
+    sample_motor_values();
     io_card_exchange_data();
 
-
-    
-    
-    
     //run plant model
     plant_periodic_loop();
-    
-    
-  
 
-
-    Serial.println(ProcessorLoad);
   }
-  
-  
 }
 

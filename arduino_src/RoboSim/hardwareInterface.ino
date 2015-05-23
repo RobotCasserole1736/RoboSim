@@ -142,9 +142,10 @@ void init_motor_inputs()
 void io_card_exchange_data()
 {
   unsigned char io_card_iter;
-  unsigned char temp_byte;
-  unsigned char byte_rxed;
+  unsigned char bytes_to_tx[NUM_IO_CARDS*4];
+  unsigned char bytes_rxed[NUM_IO_CARDS*4];
   unsigned char bit_iter;
+  unsigned char temp_byte;
 
   //Assume clock starts low, ready to shift at next rising edge.
   
@@ -157,15 +158,22 @@ void io_card_exchange_data()
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   digitalWrite(IO_SER_SYNC_PIN, HIGH);
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
-
+  
+  //Assemble bytes we need to TX to the IO card chain.
+  //These are all the bits which control the outputs of the cards.
+  //The format of each element of the tx or rx byte arrays are:
+  //   3    2   1   0
+  // 0x XX  XX  00  XX
+  //    |   |   |   |
+  //    |   |   |   Eight bits for digital outputs
+  //    |   |   Placeholder zeros where digital inputs will end up
+  //    |   Analog output 2 eight-bit representation
+  //    Analog output 1 eight-bit representation
+  //
+  // Bit order is MSB transmitted first on the serial bus.
+  
   for(io_card_iter = 0; io_card_iter < NUM_IO_CARDS; io_card_iter++)
   {
-    //based on io board design, the sequence to shift data per board is:
-    //output analog out 1
-    //output analog out 2
-    //recieve digital inputs
-    //output analog inputs
-    
     //calculate bits for output analog 1 
     if(analog_outputs[io_card_iter*2] > 5)
       temp_byte = 0xFF;
@@ -173,51 +181,73 @@ void io_card_exchange_data()
       temp_byte = 0x00;
     else
       temp_byte = round(analog_outputs[io_card_iter*2]*255.0/5.0);
-    //output analog 1
-    #ifdef HWIO_DEBUG_PRINT
-    Serial.print("A1:");
-    Serial.println(temp_byte, HEX);
-    #endif
-    io_card_tx_byte(temp_byte);
     
+    bytes_to_tx[io_card_iter+3] = temp_byte;
     
-    //calculate bits for output analog 2 
+        //calculate bits for output analog 1 
     if(analog_outputs[io_card_iter*2+1] > 5)
       temp_byte = 0xFF;
     else if(analog_outputs[io_card_iter*2+1] < 0)
       temp_byte = 0x00;
     else
       temp_byte = round(analog_outputs[io_card_iter*2+1]*255.0/5.0);
-    //output analog 2
-    #ifdef HWIO_DEBUG_PRINT
-    Serial.print("A2:");
-    Serial.println(temp_byte, HEX);
-    #endif
-    io_card_tx_byte(temp_byte);
     
-    //get bits for digital input
-    temp_byte = io_card_rx_byte();
-    #ifdef HWIO_DEBUG_PRINT
-    Serial.print("DI:");
-    Serial.println(temp_byte, HEX);
-    #endif
-    //split returned byte out by bit into the digital_inputs array
-    for(bit_iter = 0; bit_iter < 8; bit_iter++)
-      digital_inputs[io_card_iter * 8 + bit_iter] = temp_byte & (0x01 << bit_iter);
-      
-    //final step - generate digital output byte
+    bytes_to_tx[io_card_iter+2] = temp_byte;
+    
+    //drop an all-zeros placeholder for where the inputs will be shifted in.
+    bytes_to_tx[io_card_iter+1] = 0x00;
+    
+    //generate byte for digital outputs
     temp_byte = 0;
     for(bit_iter = 0; bit_iter < 8; bit_iter++)
       temp_byte = temp_byte | ((unsigned char)digital_outputs[io_card_iter * 8 + bit_iter] << bit_iter);
-      
-    //send bits for digital output
-    #ifdef HWIO_DEBUG_PRINT
-    Serial.print("DO:");
-    Serial.println(temp_byte, HEX);
-    #endif
-    io_card_tx_byte(temp_byte);
     
-  } 
+    bytes_to_tx[io_card_iter+0] = temp_byte;
+  }
+  
+  //Tx bits have been assembled into the bytes_to_tx[] array. Cycle them through
+  //the IO card chain. Additionally, this process will return an array which contains
+  //the current contents of all registers, from which we can extract the digital inputs.
+  io_card_tx_and_rx_byte_arrays(NUM_IO_CARDS, bytes_to_tx, bytes_rxed);
+  
+  #ifdef HWIO_DEBUG_PRINT
+  Serial.print("TX: ");
+  for(io_card_iter = 0; io_card_iter < NUM_IO_CARDS; io_card_iter++)
+  {
+    Serial.print(" x");
+    Serial.print(bytes_to_tx[io_card_iter+0],HEX);
+    Serial.print(" x");
+    Serial.print(bytes_to_tx[io_card_iter+1],HEX);
+    Serial.print(" x");
+    Serial.print(bytes_to_tx[io_card_iter+2],HEX);
+    Serial.print(" x");
+    Serial.print(bytes_to_tx[io_card_iter+3],HEX);
+  }
+  Serial.print("  ||  RX: ");
+  for(io_card_iter = 0; io_card_iter < NUM_IO_CARDS; io_card_iter++)
+  {
+    Serial.print(" x");
+    Serial.print(bytes_rxed[io_card_iter+0],HEX);
+    Serial.print(" x");
+    Serial.print(bytes_rxed[io_card_iter+1],HEX);
+    Serial.print(" x");
+    Serial.print(bytes_rxed[io_card_iter+2],HEX);
+    Serial.print(" x");
+    Serial.println(bytes_rxed[io_card_iter+3],HEX);
+  }
+  #endif
+  
+  //bytes_rxed now contains all the latest digital inputs, plus last control loop's outputs.
+  //we could possibly do some error checking on that, but for now just extract the
+  //digital inputs.
+  
+  for(io_card_iter = 0; io_card_iter < NUM_IO_CARDS; io_card_iter++)
+  {
+    for(bit_iter = 0; bit_iter < 8; bit_iter++)
+    {
+      digital_inputs[io_card_iter * 8 + bit_iter] = (bool)(bytes_rxed[io_card_iter + 1] & (0x01 << bit_iter));
+    }
+  }
   
   //Pulse the sync pin low again. On the rising edge of the pulse, data shifted into
   //the 74HC595's shift registers will latch into their storage registers.
@@ -235,44 +265,56 @@ void io_card_exchange_data()
   
 }
 
-void io_card_tx_byte(unsigned char input_byte)
-{
-  bool bit_to_tx = 0;
-  char bit_iter;
-  
-  for(bit_iter = 7; bit_iter >= 0; bit_iter--)
-  {
-    //calcualte the bit
-    bit_to_tx = (0x01 << bit_iter) & (input_byte);
-    //assume clock starts low, set bit on output
-    digitalWrite(IO_SER_OUT_PIN, bit_to_tx);
-    //cycle clock high-low to shift data
-    delayMicroseconds(IO_CLK_HALF_CYCLE_US);
-    digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH);
-    delayMicroseconds(IO_CLK_HALF_CYCLE_US);
-    digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);   
-  }
-}
+////////////////////////////////////////////////////////////////////////////////
+// void io_card_tx_and_rx_byte_arrays
+// Description: Get current readings for digital inputs, and set digital and 
+//              analog outputs
+//
+// Input Arguments: 
+//     num_cards - number of IO cards to shift data through
+//     tx_bytes - array of bytes to send to the IO cards
+//     rx_bytes - array of bytes read back from the cards
+//
+// Note: For both tx_bytes inputs, format is such that the MSB of the last
+//       byte gets sent first, and ends up in the furthest shift register
+//       spot from the arduino's data output pin. Same thing for rx_bytes - 
+//       the MSB of its last byte represents the register furthest from the
+//       arduino's output pin (but closest to its input pin).
+//                  
+// Output: nothing returned, rx_bytes populated with data
+// Globals Read: none
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
 
-unsigned char io_card_rx_byte()
+void io_card_tx_and_rx_byte_arrays(unsigned int num_cards, unsigned char * tx_bytes, unsigned char * rx_bytes)
 {
-  unsigned char rx_byte = 0;
-  bool rx_bit = 0;
-  char bit_iter;
-  
-  for(bit_iter = 7; bit_iter >= 0; bit_iter--)
-  {
-    //cycle clock high-low to shift data
-    delayMicroseconds(IO_CLK_HALF_CYCLE_US);
-    digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH);
-    delayMicroseconds(IO_CLK_HALF_CYCLE_US);
-    rx_bit = digitalRead(IO_SER_IN_PIN);
-    digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);
-    rx_byte = rx_byte | ((unsigned char)rx_bit << bit_iter); 
-  }
-  
+   int num_bytes = num_cards * 4;
+   char byte_iter = 0;
+   char bit_iter = 0;
+   bool bit_to_tx = 0;
+   bool rx_bit = 0;
+   
+   for(byte_iter = num_bytes-1; byte_iter >= 0; byte_iter --)
+   {
+     rx_bytes[byte_iter] = 0;
+     for(bit_iter = 7; bit_iter >= 0; bit_iter--)
+     {
+        //calcualte the bit
+        bit_to_tx = (bool)((0x01 << bit_iter) & (tx_bytes[byte_iter]));
+        //assume clock starts high, cycle clock low,
+        //set bit on output, and read input bit.
+        digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW); 
+        digitalWrite(IO_SER_OUT_PIN, bit_to_tx);
+        rx_bit = digitalRead(IO_SER_IN_PIN);
+        delayMicroseconds(IO_CLK_HALF_CYCLE_US);
+        //cycle clock low-high (rising edge) to shift data
+        digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH);
+        delayMicroseconds(IO_CLK_HALF_CYCLE_US);
+        rx_bytes[byte_iter] = rx_bytes[byte_iter] | ((unsigned char)(rx_bit & 0x01) << bit_iter); 
+     }
+   }
 }
-
+  
 ////////////////////////////////////////////////////////////////////////////////
 // void init_io_card
 // Description: Set up io card
@@ -296,7 +338,7 @@ void init_io_card()
   //set pin initial states
   digitalWrite(IO_SER_OUT_PIN, LOW);
   digitalWrite(IO_SER_SYNC_PIN, HIGH); //sync stays high except for data transfer.
-  digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW);
+  digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH); //clock stays high while idle.
   
   memset(digital_inputs, '0', sizeof(digital_inputs)); 
   memset(digital_outputs, '0', sizeof(digital_outputs));
