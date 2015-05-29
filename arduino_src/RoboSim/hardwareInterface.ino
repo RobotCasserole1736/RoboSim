@@ -13,7 +13,7 @@
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
-#define HWIO_DEBUG_PRINT
+//#define HWIO_DEBUG_PRINT
 
 #include "hardwareInterface.h"
 
@@ -154,9 +154,9 @@ void io_card_exchange_data()
   //It will also reload the data into the output shift registers. This is fine because
   //no shift has occurred since the last data transfer, so the shift registers and storage
   //registers on the 74HC595's are already the same.
-  digitalWrite(IO_SER_SYNC_PIN, LOW);
+  digitalWriteFast(IO_SER_SYNC_PIN, LOW);
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
-  digitalWrite(IO_SER_SYNC_PIN, HIGH);
+  digitalWriteFast(IO_SER_SYNC_PIN, HIGH);
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
   
   //Assemble bytes we need to TX to the IO card chain.
@@ -258,9 +258,9 @@ void io_card_exchange_data()
   //phase by one loop. This might be ok, and could be attempted if faster data
   //exchange rates are needed.
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
-  digitalWrite(IO_SER_SYNC_PIN, LOW);
+  digitalWriteFast(IO_SER_SYNC_PIN, LOW);
   delayMicroseconds(IO_SYNC_PULSE_TIME_US);
-  digitalWrite(IO_SER_SYNC_PIN, HIGH);
+  digitalWriteFast(IO_SER_SYNC_PIN, HIGH);
   
   
 }
@@ -303,12 +303,12 @@ void io_card_tx_and_rx_byte_arrays(unsigned int num_cards, unsigned char * tx_by
         bit_to_tx = (bool)((0x01 << bit_iter) & (tx_bytes[byte_iter]));
         //assume clock starts high, cycle clock low,
         //set bit on output, and read input bit.
-        digitalWrite(IO_SER_CLK_PIN, IO_CLK_LOW); 
-        digitalWrite(IO_SER_OUT_PIN, bit_to_tx);
+        digitalWriteFast(IO_SER_CLK_PIN, IO_CLK_LOW); 
+        digitalWriteFast(IO_SER_OUT_PIN, bit_to_tx);
         rx_bit = digitalRead(IO_SER_IN_PIN);
         delayMicroseconds(IO_CLK_HALF_CYCLE_US);
         //cycle clock low-high (rising edge) to shift data
-        digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH);
+        digitalWriteFast(IO_SER_CLK_PIN, IO_CLK_HIGH);
         delayMicroseconds(IO_CLK_HALF_CYCLE_US);
         rx_bytes[byte_iter] = rx_bytes[byte_iter] | ((unsigned char)(rx_bit & 0x01) << bit_iter); 
      }
@@ -336,9 +336,9 @@ void init_io_card()
   pinMode(IO_SER_CLK_PIN, OUTPUT);
   
   //set pin initial states
-  digitalWrite(IO_SER_OUT_PIN, LOW);
-  digitalWrite(IO_SER_SYNC_PIN, HIGH); //sync stays high except for data transfer.
-  digitalWrite(IO_SER_CLK_PIN, IO_CLK_HIGH); //clock stays high while idle.
+  digitalWriteFast(IO_SER_OUT_PIN, LOW);
+  digitalWriteFast(IO_SER_SYNC_PIN, HIGH); //sync stays high except for data transfer.
+  digitalWriteFast(IO_SER_CLK_PIN, IO_CLK_HIGH); //clock stays high while idle.
   
   memset(digital_inputs, '0', sizeof(digital_inputs)); 
   memset(digital_outputs, '0', sizeof(digital_outputs));

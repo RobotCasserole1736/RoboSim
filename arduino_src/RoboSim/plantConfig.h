@@ -23,6 +23,11 @@
 //THINGS WHICH MUST ALWAYS BE DEFINED DUE TO HARDWARE CONSTRAINTS
 //YOU CAN CHANGE THEIR VALUES, BUT DO NOT REMOVE THEM!!!
 ////////////////////////////////////////////////////////////////////////////////
-static int encoder_ticks_per_revolution[NUM_ENCODER_OUTPUTS] = {16,16,16,16};
+const int encoder_ticks_per_revolution[NUM_ENCODER_OUTPUTS] = {16,16,16,16};
+
+//Test - output sine and cosine on analog
+//frequency (HZ)
+double freq = 5;
+unsigned long i = 0;
 
 #endif /*PLANTCONFIG_h*/

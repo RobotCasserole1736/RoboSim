@@ -41,8 +41,8 @@ void encoderInit()
     encoder_state_timers[i] = 0;
     pinMode(encoder_output_pin_numbers[i*2],OUTPUT); //setup encoder output pins as actual outputs
     pinMode(encoder_output_pin_numbers[i*2+1],OUTPUT);
-    digitalWrite(encoder_output_pin_numbers[i*2], LOW); //start with everything at low voltage
-    digitalWrite(encoder_output_pin_numbers[i*2+1], LOW);
+    digitalWriteFast(encoder_output_pin_numbers[i*2], LOW); //start with everything at low voltage
+    digitalWriteFast(encoder_output_pin_numbers[i*2+1], LOW);
     Serial.println("Finished init of encoder!");
   }
   
@@ -96,8 +96,8 @@ void encoderISR()
           else
             encoder_next_state = ENCODER_DISABLED;
             
-          digitalWrite(encoder_output_pin_numbers[i*2], LOW);
-          digitalWrite(encoder_output_pin_numbers[i*2+1], LOW);
+          digitalWriteFast(encoder_output_pin_numbers[i*2], LOW);
+          digitalWriteFast(encoder_output_pin_numbers[i*2+1], LOW);
         break;
         
         case ENCODER_STATE_1:
@@ -106,8 +106,8 @@ void encoderISR()
           else
             encoder_next_state = ENCODER_STATE_4;
             
-          digitalWrite(encoder_output_pin_numbers[i*2], LOW); //might be able to make this double-write faster
-          digitalWrite(encoder_output_pin_numbers[i*2+1], LOW);
+          digitalWriteFast(encoder_output_pin_numbers[i*2], LOW); //might be able to make this double-write faster
+          digitalWriteFast(encoder_output_pin_numbers[i*2+1], LOW);
 
         break;
         
@@ -117,8 +117,8 @@ void encoderISR()
           else
             encoder_next_state = ENCODER_STATE_1;
             
-          digitalWrite(encoder_output_pin_numbers[i*2], LOW); //might be able to make this double-write faster
-          digitalWrite(encoder_output_pin_numbers[i*2+1], HIGH);
+          digitalWriteFast(encoder_output_pin_numbers[i*2], LOW); //might be able to make this double-write faster
+          digitalWriteFast(encoder_output_pin_numbers[i*2+1], HIGH);
   
         break;
         
@@ -128,8 +128,8 @@ void encoderISR()
           else
             encoder_next_state = ENCODER_STATE_2;
             
-          digitalWrite(encoder_output_pin_numbers[i*2], HIGH); //might be able to make this double-write faster
-          digitalWrite(encoder_output_pin_numbers[i*2+1], HIGH);
+          digitalWriteFast(encoder_output_pin_numbers[i*2], HIGH); //might be able to make this double-write faster
+          digitalWriteFast(encoder_output_pin_numbers[i*2+1], HIGH);
         break;
         
         
@@ -139,8 +139,8 @@ void encoderISR()
           else
             encoder_next_state = ENCODER_STATE_3;
             
-          digitalWrite(encoder_output_pin_numbers[i*2], HIGH); //might be able to make this double-write faster
-          digitalWrite(encoder_output_pin_numbers[i*2+1], LOW);
+          digitalWriteFast(encoder_output_pin_numbers[i*2], HIGH); //might be able to make this double-write faster
+          digitalWriteFast(encoder_output_pin_numbers[i*2+1], LOW);
         break;
         
         default:

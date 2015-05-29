@@ -52,7 +52,7 @@
 #define ENCODER_INT_PERIOD_MS 0.1
 
 //Sample time for main simulation loop
-#define MAIN_LOOP_TS_MS 100 
+#define MAIN_LOOP_TS_MS 100
 
 //flash rate of plant active LED in loops
 #define HW_STATUS_FLASH_RATE_LOOPS 3

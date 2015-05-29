@@ -63,8 +63,8 @@ void loop()
 {
   
   //processor load calculation vars
-  unsigned long prev_loop_start_time_ms = millis(); //keeps the result of Millis() call before a loop starts
-  unsigned long prev_loop_end_time_ms = millis(); //keeps the result of Millis() call as a loop ends
+  unsigned long prev_loop_start_time_us = micros(); //keeps the result of Millis() call before a loop starts
+  unsigned long prev_loop_end_time_us = micros(); //keeps the result of Millis() call as a loop ends
   
   int i = 0;
   int plant_running_led_counter = 0;
@@ -73,10 +73,10 @@ void loop()
   while(1)//Redundant, but allows us to define truly local but persistant variables for the loop function
   {
     //Calculate processor load and hold to ensure a loop time of MAIN_LOOP_TS_MS
-    prev_loop_end_time_ms = millis();
-    while(millis() < (prev_loop_start_time_ms + MAIN_LOOP_TS_MS)); //Hold here to ensure proper sample time
-    ProcessorLoad = 100.0*((double)prev_loop_end_time_ms-(double)prev_loop_start_time_ms)/(double)MAIN_LOOP_TS_MS; //fixed overhead of calculating processor Load is not included in processor load calculation. BWAAAAAAA....
-    prev_loop_start_time_ms = millis();
+    prev_loop_end_time_us = micros();
+    while(micros() < (prev_loop_start_time_us + MAIN_LOOP_TS_MS*1000UL)); //Hold here to ensure proper sample time
+    ProcessorLoad = 100.0*((double)prev_loop_end_time_us-(double)prev_loop_start_time_us)/((double)MAIN_LOOP_TS_MS*1000.0); //fixed overhead of calculating processor Load is not included in processor load calculation. BWAAAAAAA....
+    prev_loop_start_time_us = micros();
     
     //Toggle LED status light every HW_STATUS_FLASH_RATE_LOOPS
     if(plant_running_led_counter++ >= HW_STATUS_FLASH_RATE_LOOPS)

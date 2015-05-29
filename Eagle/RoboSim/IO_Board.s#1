@@ -4839,6 +4839,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <label x="78.74" y="228.6" size="1.778" layer="95" rot="R90"/>
 <wire x1="63.5" y1="200.66" x2="78.74" y2="200.66" width="0.1524" layer="91"/>
 <wire x1="78.74" y1="200.66" x2="78.74" y2="236.22" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="A" pin="QH*"/>
 </segment>
 </net>
 <net name="N$59" class="0">

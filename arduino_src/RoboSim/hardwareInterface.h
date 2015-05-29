@@ -20,6 +20,7 @@
 #include "hardwareConfig.h"
 #include "plantConfig.h"
 #include "TimerOne.h"
+#include "digitalWriteFast.h"
 
 //encoder state machine def's
 #define ENCODER_DISABLED 0 //all outputs at 0
