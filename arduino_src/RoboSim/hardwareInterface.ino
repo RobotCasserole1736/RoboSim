@@ -13,7 +13,7 @@
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
-//#define HWIO_DEBUG_PRINT
+#define HWIO_DEBUG_PRINT
 
 #include "hardwareInterface.h"
 
