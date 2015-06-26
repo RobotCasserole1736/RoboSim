@@ -1,25 +1,22 @@
-Circuit: * B:\Projects\RobotCasserole\RoboSim\PSPICE\RoboSim PWM Input Filter V2.asc
+Circuit: * C:\RobotCasserole\RoboSim\PSPICE\RoboSim PWM Input Filter V2.asc
 
-Limiting rise time of source v§pwmin to 1.11111e-006
-Limiting fall time of source v§pwmin to 1.11111e-006
-WARNING: Less than two connections to node VDD.  This node is used by V§MAINSUPPLY1.
 Direct Newton iteration for .op point succeeded.
 
-Date: Sun Jun 21 13:07:21 2015
-Total elapsed time: 1.668 seconds.
+Date: Thu Jun 25 19:24:41 2015
+Total elapsed time: 0.149 seconds.
 
 tnom = 27
 temp = 27
 method = modified trap
-totiter = 193935
-traniter = 193888
-tranpoints = 96887
-accept = 74373
-rejected = 22514
+totiter = 3659
+traniter = 3617
+tranpoints = 1307
+accept = 1237
+rejected = 70
 matrix size = 17
-fillins = 10
+fillins = 9
 solver = Normal
-Matrix Compiler1: 1.14 KB object code size  0.4/0.2/[0.1]
-Matrix Compiler2: off  [0.2]/0.3/0.5
+Matrix Compiler1: 1.21 KB object code size  0.8/0.4/[0.2]
+Matrix Compiler2: off  [0.4]/0.6/0.6
 
 

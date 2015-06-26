@@ -1,0 +1,17 @@
+* C:\RobotCasserole\RoboSim\PSPICE\RoboSim PWM Input Filter V2.asc
+XU1 N004 N001 Vcc Vdd N003 LT1006
+Rin- N001 N002 10K
+Rin+ N004 N005 10K
+Rfb N003 N001 2K
+Rgnd N004 0 2K
+V§PWMin N002 N005 PWL(0 0 0.05 12 0.1 -12 0.15 0)
+V§MainSupply Vcc 0 5
+V§OffsetSupply Voff 0 5
+V§MainSupply1 Vdd 0 0
+C2 N003 0 5µF
+Roff1 N004 Voff 1K
+Roff2 N001 Voff 4.7K
+.tran 0.2
+.lib LTC.lib
+.backanno
+.end
