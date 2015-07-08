@@ -70,6 +70,15 @@ static char motor_int_pin_numbers[NUM_MOTOR_INPUTS] = { // array of numbers for 
   HW_MOTOR_5_INPUT_PIN
 };
 
+// the number of points in the ADC vs Motor Voltage table
+#define ADC_MAP_POINTS 3
+// adc configuration
+typedef struct
+{
+    double adc_val[ADC_MAP_POINTS];        // the arduino's adc values
+    double motor_voltage[ADC_MAP_POINTS];  // the corresponding motor voltage outputs
+} adc_map_t;
+
 //digital input values
 extern bool digital_inputs[NUM_IO_CARDS*8];
 
@@ -84,6 +93,7 @@ extern double analog_outputs[NUM_IO_CARDS*2];
 //Function prototypes
 void set_encoder_RPM( double encoder_RPM_in, char encoder_num);
 double get_motor_in_voltage(char motor_num);
+double get_motor_in_voltage_map(char motor_num);
 void sample_motor_values();
 void init_motor_inputs();
 unsigned char io_card_rx_byte();

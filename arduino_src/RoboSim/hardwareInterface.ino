@@ -33,6 +33,57 @@ bool digital_outputs[NUM_IO_CARDS*8];
 double analog_outputs[NUM_IO_CARDS*2];
 
 
+// tables to configure motor controllers
+
+// adc0
+static const adc_map_t adc0 =
+{
+    {     13,  560,   988}, // adc output
+    { -12.03, 0.00, 11.97}  // motor voltage
+};
+// adc1
+static const adc_map_t adc1 =
+{
+    {     13,  560,   988}, // adc output
+    { -12.03, 0.00, 11.97}  // motor voltage
+};
+// adc2
+static const adc_map_t adc2 =
+{
+    {     13,  560,   988}, // adc output
+    { -12.03, 0.00, 11.97}  // motor voltage
+};
+// adc3
+static const adc_map_t adc3 =
+{
+    {     13,  560,   988}, // adc output
+    { -12.03, 0.00, 11.97}  // motor voltage
+};
+// adc4
+static const adc_map_t adc4 =
+{
+    {     13,  560,   988}, // adc output
+    { -12.03, 0.00, 11.97}  // motor voltage
+};
+// adc5
+static const adc_map_t adc5 =
+{
+    {     13,  560,   988}, // adc output
+    { -12.03, 0.00, 11.97}  // motor voltage
+};
+
+// top-level config for motor controllers
+static const adc_map_t *adc_config[NUM_MOTOR_INPUTS] =
+{
+    &adc0,
+    &adc1,
+    &adc2,
+    &adc3,
+    &adc4,
+    &adc5,
+};
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // void set_encoder_RPM() 
@@ -88,6 +139,55 @@ double get_motor_in_voltage(char motor_num)
   //Scale and offset the analog value.
   //negative is hard-coded because input filter circuit has an inverting amplifier
   return -((double)motor_input_readings[motor_num] - motor_zero_points[motor_num])*motor_conversion_factor[motor_num] ;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// double get_motor_in_voltage_map
+// Description: Takes a motor number, and returns the most recent voltage read
+//
+// Input Arguments: char - motor number to get input from
+//                  
+// Output: Motor voltage
+// Globals Read: motor_input_readings
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
+double get_motor_in_voltage_map(char motor_num)
+{
+    // This linearizes using a map to find the motor voltage from the adc input
+    
+    const volatile double *x[2];
+    const volatile double *y[2];
+    const adc_map_t *adc_map;  // local adc map - specific to this motor_num
+    int *adc_value;      // local adc reading
+    unsigned i;
+    
+    adc_map = adc_config[motor_num]; //grab the specific adc map from the adc_config global 
+    adc_value = &motor_input_readings[motor_num]; // grab the adc reading for this motor_num
+    
+    // this is super complex for 3 points, but scales well
+    for (i = 0; i < ADC_MAP_POINTS; i++)
+    {
+        // loop until you find the location of the adc value
+        if (adc_map->adc_val[i+1] <= *adc_value)
+            break;  // if the reading is less than the next point, linearize here
+        else if ( ADC_MAP_POINTS == (i+1) )
+            break;  // if we are in the last loop, use the final 2 points and extrapolate
+    }
+    
+    // set the x values
+    x[0] = &adc_map->adc_val[i];
+    x[1] = &adc_map->adc_val[i+1];
+    // set the y values
+    y[0] = &adc_map->motor_voltage[i];
+    y[1] = &adc_map->motor_voltage[i+1];
+    
+    // two-point linear equation
+    //      y1-y0
+    // y = ------- *(x-x0) + y0
+    //      x1-x0
+    //
+    // this finds motor voltage from a linear interpolation of the map
+    return (double)( ( ((*y[1]-*y[0])/(*x[1]-*x[0])) * (*adc_value - *x[0]) ) + *y[0]);
 }
 
 
