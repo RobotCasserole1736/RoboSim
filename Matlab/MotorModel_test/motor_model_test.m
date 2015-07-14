@@ -5,7 +5,7 @@ clf;
 %Constants, motor-specific.
 %See http://files.andymark.com/CIM-motor-curve-am-0255.pdf
 Rc = 0.3; %ohms, for full CIM motor. Didn't have an Ohmmeter that could measure this, so just kinda guessed.
-Lc = 0.02; %henries, just a guess based on similarly sized motor typical values
+Lc = 0.02; %henries, just a guess based on what made things look nice
 Kt = 2.429/131.227; %Nm/A - for CIM motor. Calculated from Stall Torque/Stall Current
 Ki = (12-(2.7*Rc))/(5310*2*pi/60); %V/(rad/s). Calculated from Vemf@FreeSpeed/(2pi/60*RPM@FreeSpeed). Steady-state Vemf = Vs - I@FreeSpeed*Rc, for Vs = 12
 
@@ -56,13 +56,13 @@ end
 
 subplot(3,1,1);
 plot(time, voltage);
-title("Voltage (V) vs. Time (S)");
+title('Voltage (V) vs. Time (S)');
 subplot(3,1,2);
 plot(time, torque);
-title("Torque (Nm) vs. Time (S)");
+title('Torque (Nm) vs. Time (S)');
 subplot(3,1,3);
 plot(time, speed*60/2/pi);
-title("Speed (RPM) vs. Time (S)");
+title('Speed (RPM) vs. Time (S)');
 
 
 
