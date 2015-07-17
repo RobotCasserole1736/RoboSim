@@ -16,6 +16,7 @@ RoboSim is currently in development. This section will be updated once the first
 - Octave - source code for the Octave-run plant model and GUI
 - Eagle - electrical schematics for RoboSim peripheral boards
 - PSPICE - electrical simulations for RoboSim peripheral boards
+- docs - an increasing collection of documentation.
 
 ## Required software:
 - Arduino IDE
