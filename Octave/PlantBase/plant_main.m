@@ -1,4 +1,47 @@
-%A test of Octave's ability to animate a rectangle on a figure.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Copyright (C) 2015 FRC Team 1736 
+%%%
+%%% File: plant_main.m
+%%%
+%%% Description: Main entry point for the plant model for RoboSim
+%%% 
+%%% Inputs: Serial packets from Arduino on RoboSim
+%%%         Configuration of plant model.
+%%%
+%%% Outputs: Serial packets to Arduino
+%%%          GUI animation of robot state
+%%%          log files  
+%%%
+%%%  Change Log:
+%%%
+%%%     7/16/2015 - Chris Gerth
+%%%       -Created
+%%%        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Arduino->Plant Packet Definition:
+% byte (0 rxed first, n rxed last)
+% 0 - start of packet marker - always '~'
+% 1 - bit-packed digital inputs
+% 2 - motor 1 voltage - signed int8, 0.09375 V/bit
+% 3 - motor 2 voltage - signed int8, 0.09375 V/bit
+% 4 - motor 3 voltage - signed int8, 0.09375 V/bit
+% 5 - motor 4 voltage - signed int8, 0.09375 V/bit
+% 6 - motor 5 voltage - signed int8, 0.09375 V/bit
+% 7 - motor 6 voltage - signed int8, 0.09375 V/bit
+
+%Plant->Arduino Packet Definition:
+% byte (0 rxed first, n rxed last)
+% 0 - start of packet marker - always '~'
+% 1 - bit-packed digital outputs
+% 2 - analog output 1
+% 3 - analog output 2
+% 4 - Quad Encoder 1 output - in UNITS???
+% 5 - Quad Encoder 2 output - in UNITS???
+% 6 - Quad Encoder 3 output - in UNITS???
+% 7 - Quad Encoder 4 output - in UNITS???
 
 clf;
 
@@ -14,7 +57,6 @@ robot_x_pos = 0; %ft
 robot_y_pos = 0; %ft
 robot_rotation = 0; %radians wrt. +y axis. 0 radians means robot is pointed straight up. 90 is pointed to the left
 
-error("throw an error! ")
 
 %set up figure axis and draw field
 axis([-field_width/2 field_width/2 -field_height/2 field_height/2], "equal", "nolabel", "manual", "tic", "on");
