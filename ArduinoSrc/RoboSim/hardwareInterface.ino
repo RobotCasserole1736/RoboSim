@@ -72,6 +72,36 @@ void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
   
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// void set_encoder_period_ms() 
+// Description: Takes a period length in ms and and sets the encoder outputs
+//
+// Input Arguments: double - speed to set to encoder outputs in RPM
+//                  char - encoder number to change output of
+// Output: None
+// Globals Read: None
+// Globals Written: Encoder globals
+////////////////////////////////////////////////////////////////////////////////
+void set_encoder_period_ms( double encoder_period_ms_in, bool encoder_dir_in, char encoder_num)
+{
+  double cycles_per_interrupt_state_delay = 0;
+
+  encoder_directions[encoder_num] = encoder_dir_in;
+  cycles_per_interrupt_state_delay = encoder_period_ms_in / 4  * ((double)ENCODER_INT_PERIOD_MS/1000.0);
+  
+  if(cycles_per_interrupt_state_delay > 0)
+  {
+    encoder_periods[encoder_num] = (unsigned long)round(encoder_period_ms_in / 4 / (double)ENCODER_INT_PERIOD_MS);
+    encoder_enabled[encoder_num] = true;
+  }
+  else
+  {
+    encoder_periods[encoder_num] = 0;
+    encoder_enabled[encoder_num] = false;
+  }
+  
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // double get_motor_in_voltage

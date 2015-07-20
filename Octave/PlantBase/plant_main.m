@@ -21,6 +21,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%declare globals
+global motor_voltages
+
 %Arduino->Plant Packet Definition:
 % byte (0 rxed first, n rxed last)
 % 0 - start of packet marker - always '~'
@@ -43,6 +46,8 @@
 % 6 - Quad Encoder 3 output - in UNITS???
 % 7 - Quad Encoder 4 output - in UNITS???
 
+
+%clear out the existing figure
 clf;
 
 %Physical size constants
