@@ -17,10 +17,7 @@
 #ifndef PLANTCONFIG_h
 #define PLANTCONFIG_h
 
-//Test - output sine and cosine on analog
-//frequency (HZ)
-double freq = 2;
-unsigned long i = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //THINGS WHICH MUST ALWAYS BE DEFINED DUE TO HARDWARE CONSTRAINTS

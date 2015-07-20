@@ -17,10 +17,5 @@
 
 void plant_periodic_loop()
 { 
-  i = i + 1;
 
-  analog_outputs[0] = 2.5+2.5*sin(2.0*PI*freq*(double)MAIN_LOOP_TS_MS/1000.0*(double)i);
-  analog_outputs[1] = 2.5+2.5*cos(2.0*PI*freq*(double)MAIN_LOOP_TS_MS/1000.0*(double)i);
-  Serial.println(ProcessorLoad);
-  
 }
