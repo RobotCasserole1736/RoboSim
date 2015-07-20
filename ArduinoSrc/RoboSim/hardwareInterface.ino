@@ -76,28 +76,34 @@ void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
 // void set_encoder_period_ms() 
 // Description: Takes a period length in ms and and sets the encoder outputs
 //
-// Input Arguments: double - speed to set to encoder outputs in RPM
+// Input Arguments: double - period of the pwm wave in ms
+//                  bool - direction of the encoder's travel. ENCODER_DIR_FWD or ENCODER_DIR_BKD.
 //                  char - encoder number to change output of
 // Output: None
 // Globals Read: None
 // Globals Written: Encoder globals
 ////////////////////////////////////////////////////////////////////////////////
-void set_encoder_period_ms( double encoder_period_ms_in, bool encoder_dir_in, char encoder_num)
-{
-  double cycles_per_interrupt_state_delay = 0;
-
-  encoder_directions[encoder_num] = encoder_dir_in;
-  cycles_per_interrupt_state_delay = encoder_period_ms_in / 4  * ((double)ENCODER_INT_PERIOD_MS/1000.0);
-  
-  if(cycles_per_interrupt_state_delay > 0)
-  {
-    encoder_periods[encoder_num] = (unsigned long)round(encoder_period_ms_in / 4 / (double)ENCODER_INT_PERIOD_MS);
-    encoder_enabled[encoder_num] = true;
-  }
-  else
+void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num)
+{ 
+  //case, encoder stopped
+  if(encoder_period_ms_in > MAX_PWM_PERIOD_MS | encoder_period_ms_in < -MAX_PWM_PERIOD_MS)
   {
     encoder_periods[encoder_num] = 0;
     encoder_enabled[encoder_num] = false;
+  }
+  //case, encoder running forward
+  else if(encoder_period_ms_in > 0)
+  {
+    encoder_periods[encoder_num] = (unsigned long)round(encoder_period_ms_in / 4.0 / (double)ENCODER_INT_PERIOD_MS);
+    encoder_enabled[encoder_num] = true;
+    encoder_directions[encoder_num] = ENCODER_DIR_FWD;
+  }
+  //case, encoder running backward
+  else
+  {
+    encoder_periods[encoder_num] = (unsigned long)round(encoder_period_ms_in / 4.0 / (double)ENCODER_INT_PERIOD_MS);
+    encoder_enabled[encoder_num] = true;
+    encoder_directions[encoder_num] = ENCODER_DIR_BKD;
   }
   
 }
@@ -375,3 +381,144 @@ void init_io_card()
   memset(analog_outputs, 0.0, sizeof(analog_outputs));
   
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// int send_packet_to_pc()
+// Description: Sends a single packet of serial data to the PC. Serial port must
+//              be opened already. Pulls from global variables.
+//
+// Input Arguments: none
+//                  
+// Output: 0 on successful send, -1 on failures
+// Globals Read: none
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
+int send_packet_to_pc()
+{
+  /* serial arduino->PC packet format: (must be synced with PC side)
+      % byte (0 txed first, n rxed last)
+      % 0 - start of packet marker - always '~'
+      % 1 - bit-packed digital inputs
+      % 2 - motor 1 voltage - signed int8, 0.09375 V/bit
+      % 3 - motor 2 voltage - signed int8, 0.09375 V/bit
+      % 4 - motor 3 voltage - signed int8, 0.09375 V/bit
+      % 5 - motor 4 voltage - signed int8, 0.09375 V/bit
+      % 6 - motor 5 voltage - signed int8, 0.09375 V/bit
+      % 7 - motor 6 voltage - signed int8, 0.09375 V/bit
+  */
+  byte tx_buffer[8]  = {PACKET_START_BYTE,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+  int i;
+  
+  //note throughout this funciton we have hardcoded many array lengths. This
+  //is because the math and data movement contained herein is dependant on the
+  //packet definition, not the hardware configuration of RoboSim. For that reason,
+  //All of the packet-dependant variables are hardcoded to this function.
+  
+  //set digital inputs byte
+  for(i = 0; i < 8; i++) //iterate over all bits
+  {
+    if(digital_inputs[i]) //input is true, set the bit
+      tx_buffer[1] |= 0x01 << i;
+    else //input is false, clear the bit
+      tx_buffer[1] &= ~(0x01 << i);
+  }
+  
+  //set motor voltages
+  for(i = 2; i < 8; i++)
+    digital_inputs[i] = (byte)((int8_t)(round(get_motor_in_voltage(i - 2) / 0.09375)));
+    
+  //Transmit byte (assuming serial port has been opened)
+  //return proper error code
+  
+  if(Serial.write(tx_buffer, sizeof(tx_buffer)) == sizeof(tx_buffer))
+    return 0;
+  else
+    return -1;
+  
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// int get_packet_from_pc()
+// Description: pulls a single packet from the PC. Writes to global variables
+//              per those packet's demands
+//
+// Input Arguments: blocking - true if this function should block until a
+//                             valid packet is recieved, false if it should
+//                             simply attempt to read whatever packet exists
+//                             and return failure if no packet.
+//                  
+// Output: 0 on successful read, -1 on no packet available
+// Globals Read: none
+// Globals Written: none
+////////////////////////////////////////////////////////////////////////////////
+int get_packet_from_pc(bool blocking)
+{
+  bool full_packet_rxed = false;
+  /* serial PC->arduino packet format: (must be synced with PC side)
+      % byte (0 rxed first, n rxed last)
+      % 0 - start of packet marker - always '~'
+      % 1 - bit-packed digital outputs
+      % 2 - analog output 1 - 0.019607 volts/bit (0-5V range)
+      % 3 - analog output 2 - 0.019607 volts/bit (0-5V range)
+      % 4 - Quad Encoder 1 output MSB (1ms/bit)
+      % 5 - Quad Encoder 1 output LSB
+      % 6 - Quad Encoder 2 output MSB (1ms/bit)
+      % 7 - Quad Encoder 2 output LSB
+      % 8 - Quad Encoder 3 output MSB (1ms/bit)
+      % 9 - Quad Encoder 3 output LSB
+      % 10 - Quad Encoder 4 output MSB (1ms/bit)
+      % 11 - Quad Encoder 4 output LSB
+  */
+  
+  byte rx_buffer[12] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+  
+  if(blocking) //block until we have a full, good packet.
+  {
+    while(~full_packet_rxed)
+    {
+      while(Serial.available() < 12); // wait until we have enough bytes to make a packet
+      rx_buffer[0] = Serial.read(); //read first thing in the buffer.
+      if(rx_buffer[0] == PACKET_START_BYTE)//if the rxed byte corresponds to an actual packet...
+      {
+        for(i = 1; i < 12; i ++) //read in the full packet
+          rx_buffer[i] = Serial.read();
+        full_packet_rxed = true; // break out of while loop
+      }
+    }
+  }
+  else //read a packet if it's there and valid, otherwise return error
+  {
+    if(Serial.available() >= 12) // if there's enough serial data available to make a packet...
+    {
+      rx_buffer[0] = Serial.read(); //read first byte
+      if(rx_buffer[0] == PACKET_START_BYTE)//if the rxed byte corresponds to an actual packet...
+      {
+        for(i = 1; i < 12; i ++) //read in the full packet
+          rx_buffer[i] = Serial.read();
+        full_packet_rxed = true; // break out of while loop
+      }
+      else //if first byte doesn't look like the start of a packet, just exit
+        return -1;
+    }
+    else //if we don't have nough bytes available, just exit
+      return -1;
+  }
+  //If we reach this point, rx_buffer contains a (hopefully) valid packet.
+  
+  //set digital output values
+  for(i = 0; i < 8; i++)
+    digital_outputs[i] = (bool)((rx_buffer[1] >> i) & 0x01);
+    
+  //set analog outputs
+  analog_outputs[0] = (double)rx_buffer[2] * 0.019607;
+  analog_outputs[1] = (double)rx_buffer[3] * 0.019607;
+  
+  //set encoder outputs 
+  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[4])<<8)+((uint16_t)(rx_buffer[5])&0x00FF)),0);
+  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[6])<<8)+((uint16_t)(rx_buffer[7])&0x00FF)),1);
+  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[8])<<8)+((uint16_t)(rx_buffer[9])&0x00FF)),2);
+  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[10])<<8)+((uint16_t)(rx_buffer[11])&0x00FF)),3);
+  return 0;
+  
+}
+

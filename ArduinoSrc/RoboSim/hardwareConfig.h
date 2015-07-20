@@ -51,6 +51,10 @@
 //which triggers (possibly) state transitions
 #define ENCODER_INT_PERIOD_MS 0.1
 
+//Define longest supported encoder PWM period
+//30 seconds is the longest interrupt period we support. longer periods will map to "stop" (infinitely long period)
+#define MAX_PWM_PERIOD_MS 30000 
+
 //Sample time for main simulation loop
 #define MAIN_LOOP_TS_MS 50
 

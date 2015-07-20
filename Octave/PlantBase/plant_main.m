@@ -23,6 +23,10 @@
 
 %declare globals
 global motor_voltages
+global digital_inputs
+global digital_outputs
+global analog_outputs
+global encoder_outputs
 
 %Arduino->Plant Packet Definition:
 % byte (0 rxed first, n rxed last)
@@ -36,15 +40,23 @@ global motor_voltages
 % 7 - motor 6 voltage - signed int8, 0.09375 V/bit
 
 %Plant->Arduino Packet Definition:
-% byte (0 rxed first, n rxed last)
+% byte (0 txed first, n rxed last)
 % 0 - start of packet marker - always '~'
 % 1 - bit-packed digital outputs
-% 2 - analog output 1
-% 3 - analog output 2
-% 4 - Quad Encoder 1 output - in UNITS???
-% 5 - Quad Encoder 2 output - in UNITS???
-% 6 - Quad Encoder 3 output - in UNITS???
-% 7 - Quad Encoder 4 output - in UNITS???
+% 2 - analog output 1 - 0.019607 volts/bit (0-5V range)
+% 3 - analog output 2 - 0.019607 volts/bit (0-5V range)
+% 4 - Quad Encoder 1 output MSB (1ms/bit)
+% 5 - Quad Encoder 1 output LSB
+% 6 - Quad Encoder 2 output MSB (1ms/bit)
+% 7 - Quad Encoder 2 output LSB
+% 8 - Quad Encoder 3 output MSB (1ms/bit)
+% 9 - Quad Encoder 3 output LSB
+% 10 - Quad Encoder 4 output MSB (1ms/bit)
+% 11 - Quad Encoder 4 output LSB
+%Note - quad encoder outpus are in ms per full period of quadrature output.
+%Values are signed, where positive times yeild foreward motion, and negative
+%times yeild backward motion. Any specified period longer than 30 seconds
+%(ie, value > 30,000 or < -30,000) will mean "Stopped"
 
 
 %clear out the existing figure
