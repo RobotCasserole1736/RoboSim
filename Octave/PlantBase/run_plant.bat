@@ -1,1 +1,1 @@
-C:\Octave\Octave-4.0.0\octave.vbs --no-gui --persist plant_main.m > plant_main_log.txt 2>&1
+C:\Octave\Octave-4.0.0\octave.vbs --no-gui --persist plant_main.m
