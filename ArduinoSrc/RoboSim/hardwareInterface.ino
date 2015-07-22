@@ -27,7 +27,7 @@ volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
 volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
 int motor_input_readings[NUM_MOTOR_INPUTS];
 double motor_zero_points[NUM_MOTOR_INPUTS] = {512,512,512,512,512,512};
-double motor_conversion_factor[NUM_MOTOR_INPUTS] = {0.001953125,0.001953125,0.001953125,0.001953125,0.001953125,0.001953125}; // 1/512
+double motor_conversion_factor[NUM_MOTOR_INPUTS] = {0.0234375,0.0234375,0.0234375,0.0234375,0.0234375,0.0234375}; // 12/512
 bool digital_inputs[NUM_IO_CARDS*8];
 bool digital_outputs[NUM_IO_CARDS*8];
 double analog_outputs[NUM_IO_CARDS*2];
@@ -399,12 +399,12 @@ int send_packet_to_pc()
       % byte (0 txed first, n rxed last)
       % 0 - start of packet marker - always '~'
       % 1 - bit-packed digital inputs
-      % 2 - motor 1 voltage - signed int8, 0.09375 V/bit
-      % 3 - motor 2 voltage - signed int8, 0.09375 V/bit
-      % 4 - motor 3 voltage - signed int8, 0.09375 V/bit
-      % 5 - motor 4 voltage - signed int8, 0.09375 V/bit
-      % 6 - motor 5 voltage - signed int8, 0.09375 V/bit
-      % 7 - motor 6 voltage - signed int8, 0.09375 V/bit
+      % 2 - motor 1 voltage - signed int8, 0.094488 V/bit
+      % 3 - motor 2 voltage - signed int8, 0.094488 V/bit
+      % 4 - motor 3 voltage - signed int8, 0.094488 V/bit
+      % 5 - motor 4 voltage - signed int8, 0.094488 V/bit
+      % 6 - motor 5 voltage - signed int8, 0.094488 V/bit
+      % 7 - motor 6 voltage - signed int8, 0.094488 V/bit
   */
   byte tx_buffer[8]  = {PACKET_START_BYTE,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
   int i;
@@ -425,7 +425,9 @@ int send_packet_to_pc()
   
   //set motor voltages
   for(i = 2; i < 8; i++)
-    digital_inputs[i] = (byte)((int8_t)(round(get_motor_in_voltage(i - 2) / 0.09375)));
+  {
+    tx_buffer[i] = (unsigned char)((int8_t)(round(get_motor_in_voltage(i - 2) / 0.094488)));
+  }
     
   //Transmit byte (assuming serial port has been opened)
   //return proper error code

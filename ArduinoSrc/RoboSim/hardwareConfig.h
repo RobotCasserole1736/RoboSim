@@ -38,10 +38,10 @@
 #define HW_ENCODER_4B_PIN 9
 
 //serial IO card pins
-#define IO_SER_IN_PIN 10
-#define IO_SER_OUT_PIN 11
-#define IO_SER_CLK_PIN 12
-#define IO_SER_SYNC_PIN 13
+#define IO_SER_OUT_PIN 13
+#define IO_SER_IN_PIN 12
+#define IO_SER_SYNC_PIN 11
+#define IO_SER_CLK_PIN 10
 
 //Define number of hardware IO's
 #define NUM_ENCODER_OUTPUTS 4
@@ -74,8 +74,8 @@
 //arduino pin voltages to swing sufficently for stable operation.
 //Turns out these can be really tiny (1 us each, yeilding up to a 38kHz IO clock speed == 0.86ms data exchange time per io card)
 //but if instablilty sets in, one potential solution is to slow down the IO speed by cranking these up.
-#define IO_CLK_HALF_CYCLE_US 1
-#define IO_SYNC_PULSE_TIME_US 1
+#define IO_CLK_HALF_CYCLE_US 50
+#define IO_SYNC_PULSE_TIME_US 50
 
 
 

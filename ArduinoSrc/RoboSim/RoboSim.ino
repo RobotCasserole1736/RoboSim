@@ -92,16 +92,17 @@ void loop()
     plant_running_led_state = !plant_running_led_state;
     //need to actually use this data somehow...
   }
+  plant_periodic_loop();
   
   //recieve packet (non-blocking)
-  get_packet_from_pc(false);
+  //get_packet_from_pc(false);
   
   //Acquire input & output
   sample_motor_values();
   io_card_exchange_data();
   
   //send packet back to PC
-  send_packet_to_pc();
+  //send_packet_to_pc();
 
 }
 
