@@ -7,7 +7,7 @@ function ret_status = serial_write_packet(s_fp, packet_to_write)
     return;
   catch err
     disp("Warning: issue while sending serial packet:");
-    disp(lasterr.message);
+    disp(lasterr);
     ret_status = -1;
     return;
   end
