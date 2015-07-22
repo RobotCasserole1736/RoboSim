@@ -59,6 +59,14 @@ function gui_callbacks(source, callbackdata)
     btn_enc3_dir_callback(source,callbackdata);
   elseif(source == btn_enc4_dir)
     btn_enc4_dir_callback(source,callbackdata);
+  elseif(source == enc1_sld)
+    enc1_sld_callback(source,callbackdata);
+  elseif(source == enc2_sld)
+    enc2_sld_dir_callback(source,callbackdata);
+  elseif(source == enc3_sld)
+    enc3_sld_callback(source,callbackdata);
+  elseif(source == enc4_sld)
+    enc4_sld_callback(source,callbackdata);
   end
 
 end
@@ -66,13 +74,13 @@ end
 
 %Actual GUI callbacks
 function a1_sld_callback(source,callbackdata)
-  disp('called A1 callback')
-  fflush(stdout);
+  global analog_outputs;
+  analog_outputs(1) = get(source, 'Value');
 end
 
 function a2_sld_callback(source,callbackdata)
-  disp('called A2 callback')
-  fflush(stdout);
+  global analog_outputs;
+  analog_outputs(2) = get(source, 'Value');
 end
 
 function btn_DO0_callback(source, callbackdata)
@@ -193,4 +201,24 @@ function btn_enc4_dir_callback(source,callbackdata)
 	else
 		set(source,'String', 'Rev');
 	end
+end
+
+function enc1_sld_callback(source,callbackdata)
+  global encoder_periods;
+  encoder_periods(1) = get(source, 'Value');
+end
+
+function enc2_sld_callback(source,callbackdata)
+  global encoder_periods;
+  encoder_periods(2) = get(source, 'Value');
+end
+
+function enc3_sld_callback(source,callbackdata)
+  global encoder_periods;
+  encoder_periods(3) = get(source, 'Value');
+end
+
+function enc4_sld_callback(source,callbackdata)
+  global encoder_periods;
+  encoder_periods(4) = get(source, 'Value');
 end

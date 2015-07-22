@@ -67,7 +67,7 @@ encoder_periods = [32000, 32000, 32000, 32000];
 encoder_dir_fwd = [0, 0, 0, 0];
 
 %Create figure silently till we have addded all the controls
-f = figure('Visible', 'on');
+f = figure('Visible', 'off');
 
 % Create sliders for analog outputs
 a1_sld = uicontrol('Style', 'slider','Min',0,'Max',5,'Value',0,'Position', [10 20 120 20],'Callback', @gui_callbacks); 
@@ -100,8 +100,10 @@ txt_enc1 = uicontrol('Style','text','Position',[10 200 150 20],'String', 'Enc1 P
 enc2_sld = uicontrol('Style', 'slider','Min',1,'Max',32000,'Value',32000,'Position', [210 175 120 20],'Callback', @gui_callbacks);   
 btn_enc2_dir  = uicontrol('Style', 'pushbutton', 'String', 'Rev','Position', [335 175 40 20],'Callback', @gui_callbacks);  
 txt_enc2 = uicontrol('Style','text','Position',[210 200 150 20],'String', 'Enc2 Period (ms)');  
-                
+
+%make the GUI visible! Woo! Seeing things is awesome! 
 set(f, 'Visible', 'on');
+
 %Main execution loop. persist while figure is not closed
 while(isfigure(f))
 	[rx_packet, read_ret_status] = serial_read_packet(s1);
@@ -111,7 +113,7 @@ while(isfigure(f))
 	tx_packet(2) = 0;
 	
 	serial_write_packet(s1, tx_packet);
-	pause(0.008); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
+	pause(0.005); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
 end
 
                 
