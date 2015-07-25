@@ -58,16 +58,22 @@ global btn_enc3_dir
 global btn_enc4_dir
 
 %global vars for output states
-global digital_outputs
-global analog_outputs
+global digital_outputs 
+global analog_outputs %voltage, 0-5 V
 
 %global vars for input states
-global digital_inputs
+global digital_inputs 
 
 %global vars for encoder periods and dirs
-global encoder_periods
-global encoder_dir_fwd
+global encoder_periods %ms
+global encoder_dir_fwd %1 - fwd, 0 - rev
 
+%global vars for motor voltages
+global motor_voltages %voltage, -12 to 12 V
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Define Constants
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Main Script Initialization
@@ -81,31 +87,23 @@ disp(['~~~~~~~~~~RoboSim Test GUI Log Started ', datestr(now)])
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
-
-%Attempt to open serial port. Toss warning and continue if not possible.
-try
-  s1 = 0;
-  % Opens serial port ttyUSB1 with baudrate of 115200 (config defaults to 8-N-1)
-  s1 = serial("COM4", 115200); 
-  set(s1, "parity", "N");    % Changes parity checking 
-                            % possible values [E]ven, [O]dd, [N]one.
-  set(s1, "stopbits", 1);    % Changes stop bits, possible
-                            % values 1, 2.
-  % Flush input and output buffers
-  srl_flush(s1); 
-catch err
-  disp("Warning: issue while opening serial port");
-  disp(lasterr);
-end                            
+%Open serial port. Fixed to open COM4, with 0.1 second timeout
+s1 = serial_open_port("COM4",0.1);                    
 
 
 %Initialize variables
 digital_outputs = [0,0,0,0,0,0,0,0];
-analog_outputs = 0;                                     
+analog_outputs = [0, 0];     
+motor_voltages = [0,0,0,0,0,0];                                
 rx_packet = ['~',0x00,0x00,0x00,0x00,0x00,0x00,0x00];
 tx_packet = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00];
 encoder_periods = [32000, 32000, 32000, 32000];
 encoder_dir_fwd = [0, 0, 0, 0];
+loop_counter = 0;
+loop_start_time = 0;
+loop_end_time = 0;
+loop_rate_sec = 0.1; %100ms loop period
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% GUI Construction
@@ -149,20 +147,49 @@ txt_enc2 = uicontrol('Style','text','Position',[210 200 150 20],'String', 'Enc2 
 set(f, 'Visible', 'on');
 %User can now click buttons, which trigger callbacks to be run asynchronously
 
+%start timer for maintaining periodic loop rate
+tic();
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% GUI Mainloop
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Main execution loop. persist while figure is not closed
 while(isfigure(f))
-	[rx_packet, read_ret_status] = serial_read_packet(s1);
+    %mark loop start time
+    loop_start_time = toc();
+
+    %read packet from RoboSim
+	  [rx_packet, read_ret_status] = serial_read_packet(s1,30);
+    [digital_inputs, motor_voltages] = serial_decode_packet(rx_packet);
 	
+    disp(sprintf("\n~~~~~~~~~~~~~~~~~~%d\n",loop_counter));
+    
+    disp("~~~~~RX_DEBUG~~~~~")
+    disp(sprintf("Debug: RX Packet = 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X ", rx_packet(1),rx_packet(2),rx_packet(3),rx_packet(4),rx_packet(5),rx_packet(6),rx_packet(7),rx_packet(8)));
+    disp("Debug: Digital Inputs = ")
+    disp(digital_inputs)
+    disp("Debug: Motor Voltages (V) = ")
+    disp(motor_voltages)
+    
 	%assemble TX packet
-	tx_packet(1) = '~';
-	tx_packet(2) = 0;
-	
+	tx_packet = serial_assemble_packet(digital_outputs, analog_outputs, encoder_periods, encoder_dir_fwd);
 	serial_write_packet(s1, tx_packet);
-	pause(0.005); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
+    
+    disp("~~~~~TX_DEBUG~~~~~")
+    disp("Debug: Digital Outputs = ")
+    disp(digital_outputs)
+    disp("Debug: Analog Outputs (V) = ")
+    disp(analog_outputs)
+    disp("Debug: Encoder Periods (ms) = ")
+    disp(encoder_periods)
+    disp("Debug: Encoder Dirs (1=rev, 0=fwd) = ")
+    disp(encoder_dir_fwd)
+    disp(sprintf("Debug: TX Packet = 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X ", tx_packet(1),tx_packet(2),tx_packet(3),tx_packet(4),tx_packet(5),tx_packet(6),tx_packet(7),tx_packet(8),tx_packet(9),tx_packet(10),tx_packet(11),tx_packet(12)));
+    fflush(stdout);
+   
+    
+    loop_end_time = toc();
+	  pause(0.01); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
 end
 
 %Once we hit here, it means the user has closed the figure window. Cleanup time!
@@ -172,10 +199,4 @@ end
 %%% GUI Cleanup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-try            
-  % Close serial port, if at all possible.
-  fclose(s1);
-catch err
-  disp("Warning: issue while closing serial port");
-  disp(lasterr);
-end     
+serial_close_port(s1);  

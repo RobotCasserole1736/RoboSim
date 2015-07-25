@@ -1,3 +1,24 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Copyright (C) 2015 FRC Team 1736 
+%%%
+%%% File: 
+%%%
+%%% Description: 
+%%% 
+%%% Inputs: 
+%%%
+%%% Outputs: 
+%%%
+%%%  Change Log:
+%%%
+%%%     7/25/2015 - Chris Gerth
+%%%       -Created
+%%%        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 %switchyard for all gui callbacks. Use source to determine what to actually do.
 function gui_callbacks(source, callbackdata)
 	%global vars for handles
@@ -62,7 +83,7 @@ function gui_callbacks(source, callbackdata)
   elseif(source == enc1_sld)
     enc1_sld_callback(source,callbackdata);
   elseif(source == enc2_sld)
-    enc2_sld_dir_callback(source,callbackdata);
+    enc2_sld_callback(source,callbackdata);
   elseif(source == enc3_sld)
     enc3_sld_callback(source,callbackdata);
   elseif(source == enc4_sld)
