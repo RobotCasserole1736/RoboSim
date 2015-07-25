@@ -1,6 +1,41 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Copyright (C) 2015 FRC Team 1736 
+%%%
+%%% File: RoboSim_test_gui.m
+%%%
+%%% Description: Simple GUI to send/recieve RoboSim serial packet data
+%%%              Useful for debugging and basic setup
+%%% 
+%%% Inputs: Serial packets from Arduino on RoboSim
+%%%         GUI user inputs
+%%%
+%%% Outputs: Serial packets to Arduino
+%%%          GUI Display
+%%%          log files  
+%%%
+%%%  Change Log:
+%%%
+%%%     7/25/2015 - Chris Gerth
+%%%       -Created
+%%%        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Octave environment setup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%import serial modules
 pkg load instrument-control
-%First, enable logging to file (mostly for headless runs)
+%Add path to folder for custom serial functions
+addpath('..\SerialUtils\'); 
+%Enable logging to file (mostly for headless runs)
 diary "RoboSim_plant_log.txt"
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Global Variable Declarations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %global vars for handles
 global a1_sld
@@ -33,6 +68,11 @@ global digital_inputs
 global encoder_periods
 global encoder_dir_fwd
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Main Script Initialization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %Log some things
 disp(sprintf('\n\n'));
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
@@ -42,6 +82,7 @@ disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
 
+%Attempt to open serial port. Toss warning and continue if not possible.
 try
   s1 = 0;
   % Opens serial port ttyUSB1 with baudrate of 115200 (config defaults to 8-N-1)
@@ -58,15 +99,18 @@ catch err
 end                            
 
 
-%init some values
+%Initialize variables
 digital_outputs = [0,0,0,0,0,0,0,0];
 analog_outputs = 0;                                     
-tx_packet = ['~',0x00,0x00,0x00,0x00,0x00,0x00,0x00];
-rx_packet = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00];
+rx_packet = ['~',0x00,0x00,0x00,0x00,0x00,0x00,0x00];
+tx_packet = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00];
 encoder_periods = [32000, 32000, 32000, 32000];
 encoder_dir_fwd = [0, 0, 0, 0];
 
-%Create figure silently till we have addded all the controls
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% GUI Construction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Create figure to hold GUI silently till we have added all the controls
 f = figure('Visible', 'off');
 
 % Create sliders for analog outputs
@@ -103,7 +147,12 @@ txt_enc2 = uicontrol('Style','text','Position',[210 200 150 20],'String', 'Enc2 
 
 %make the GUI visible! Woo! Seeing things is awesome! 
 set(f, 'Visible', 'on');
+%User can now click buttons, which trigger callbacks to be run asynchronously
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% GUI Mainloop
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Main execution loop. persist while figure is not closed
 while(isfigure(f))
 	[rx_packet, read_ret_status] = serial_read_packet(s1);
@@ -116,10 +165,15 @@ while(isfigure(f))
 	pause(0.005); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
 end
 
+%Once we hit here, it means the user has closed the figure window. Cleanup time!
+
                 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% GUI Cleanup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 try            
-  % Close serial port
+  % Close serial port, if at all possible.
   fclose(s1);
 catch err
   disp("Warning: issue while closing serial port");
