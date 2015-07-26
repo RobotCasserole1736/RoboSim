@@ -74,6 +74,8 @@ global motor_voltages %voltage, -12 to 12 V
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Define Constants
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+loop_rate_sec = 0.1; %100ms loop period
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Main Script Initialization
@@ -102,7 +104,7 @@ encoder_dir_fwd = [0, 0, 0, 0];
 loop_counter = 0;
 loop_start_time = 0;
 loop_end_time = 0;
-loop_rate_sec = 0.1; %100ms loop period
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -155,6 +157,7 @@ tic();
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Main execution loop. persist while figure is not closed
 while(isfigure(f))
+
     %mark loop start time
     loop_start_time = toc();
 
@@ -188,8 +191,14 @@ while(isfigure(f))
     fflush(stdout);
    
     
-    loop_end_time = toc();
-	  pause(0.01); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
+    if(loop_start_time + loop_rate_sec > toc())
+      disp(sprintf('pause for %d s', (loop_start_time + loop_rate_sec) - toc()));
+	    pause((loop_start_time + loop_rate_sec) - toc()); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
+    else
+      warning("loop timing missed! Behind sample rate by %d s", toc() -(loop_start_time + loop_rate_sec) );
+    end
+        
+    loop_counter = loop_counter + 1;
 end
 
 %Once we hit here, it means the user has closed the figure window. Cleanup time!
