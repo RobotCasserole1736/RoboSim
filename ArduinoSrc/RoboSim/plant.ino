@@ -17,6 +17,7 @@
 
 void plant_periodic_loop()
 { 
+  /*
   analog_outputs[0] = 1.14;
   analog_outputs[1] = 2.14;
   digital_outputs[0] = true;
@@ -27,5 +28,6 @@ void plant_periodic_loop()
   digital_outputs[5] = false;
   digital_outputs[6] = true;
   digital_outputs[7] = false;
+  */
 
 }

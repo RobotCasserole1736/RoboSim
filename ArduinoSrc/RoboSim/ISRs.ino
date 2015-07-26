@@ -15,7 +15,7 @@
 //    Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
-
+//#define ISR_DEBUG_PRINT
 #include "hardwareInterface.h"
 
 
@@ -43,7 +43,9 @@ void encoderInit()
     pinMode(encoder_output_pin_numbers[i*2+1],OUTPUT);
     digitalWriteFast(encoder_output_pin_numbers[i*2], LOW); //start with everything at low voltage
     digitalWriteFast(encoder_output_pin_numbers[i*2+1], LOW);
+    #ifdef ISR_DEBUG_PRINT
     Serial.println("Finished init of encoder!");
+    #endif
   }
   
   Timer1.initialize(ENCODER_INT_PERIOD_MS*1000); // kick off timer1 at the right period

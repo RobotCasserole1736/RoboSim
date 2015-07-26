@@ -61,15 +61,15 @@ function packet = serial_assemble_packet(digital_outputs, analog_outputs, quad_e
         %In any event, since it's not impossible and I guess I enjoy writing things like this, we'll
         %do the 2's complement magic thing and hopefully all will work out.
         if(quad_encoder_dirs(i))
-            period_to_tx = int16(-quad_encoder_periods(i));
+            period_to_tx = double(quad_encoder_periods(i));
         else
-            period_to_tx = int16(quad_encoder_periods(i));
+            period_to_tx = -double(quad_encoder_periods(i));
         end
  
         if(period_to_tx > 0)
             temp = uint16(period_to_tx);
         else
-            temp = uint16(2^16 + period_to_tx);
+            temp = uint16(double(2^16) + period_to_tx);
         end
         packet(2*(i-1)+5) = uint8(bitshift(bitand(temp, 0xFF00), -8, 16));
         packet(2*(i-1)+6) = uint8(bitand(temp, 0x00FF));

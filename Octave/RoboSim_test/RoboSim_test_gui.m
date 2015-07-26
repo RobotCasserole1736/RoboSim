@@ -89,8 +89,9 @@ disp(['~~~~~~~~~~RoboSim Test GUI Log Started ', datestr(now)])
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
-%Open serial port. Fixed to open COM4, with 0.1 second timeout
-s1 = serial_open_port("COM4",0.1);                    
+%Open serial port. Try a couple different ports...
+s1 = serial_open_port("COM5",0.1);                    
+
 
 
 %Initialize variables
@@ -162,7 +163,7 @@ while(isfigure(f))
     loop_start_time = toc();
 
     %read packet from RoboSim
-	  [rx_packet, read_ret_status] = serial_read_packet(s1,30);
+	  [rx_packet, read_ret_status] = serial_read_packet(s1,1);
     [digital_inputs, motor_voltages] = serial_decode_packet(rx_packet);
 	
     disp(sprintf("\n~~~~~~~~~~~~~~~~~~%d\n",loop_counter));
@@ -192,10 +193,11 @@ while(isfigure(f))
    
     
     if(loop_start_time + loop_rate_sec > toc())
-      disp(sprintf('pause for %d s', (loop_start_time + loop_rate_sec) - toc()));
+        disp(sprintf('pause for %d s', (loop_start_time + loop_rate_sec) - toc()));
 	    pause((loop_start_time + loop_rate_sec) - toc()); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
     else
-      warning("loop timing missed! Behind sample rate by %d s", toc() -(loop_start_time + loop_rate_sec) );
+        warning("loop timing missed! Behind sample rate by %d s", toc() -(loop_start_time + loop_rate_sec) );
+	    pause(0); %we still need to pause for a bit otherwise the GUI won't update.
     end
         
     loop_counter = loop_counter + 1;

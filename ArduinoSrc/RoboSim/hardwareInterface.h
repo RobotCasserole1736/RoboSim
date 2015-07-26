@@ -91,6 +91,6 @@ void init_motor_inputs();
 unsigned char io_card_rx_byte();
 unsigned char io_card_tx_byte();
 int send_packet_to_pc();
-int get_packet_from_pc(bool blocking);
+int get_packet_from_pc();
 
 #endif /*HWINTERFACE_h*/

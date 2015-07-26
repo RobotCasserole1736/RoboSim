@@ -13,7 +13,7 @@
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
-#define HWIO_DEBUG_PRINT
+//#define HWIO_DEBUG_PRINT
 
 #include "hardwareInterface.h"
 
@@ -27,7 +27,7 @@ volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
 volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
 int motor_input_readings[NUM_MOTOR_INPUTS];
 double motor_zero_points[NUM_MOTOR_INPUTS] = {512,512,512,512,512,512};
-double motor_conversion_factor[NUM_MOTOR_INPUTS] = {0.0234375,0.0234375,0.0234375,0.0234375,0.0234375,0.0234375}; // 12/512
+double motor_conversion_factor[NUM_MOTOR_INPUTS] = {-0.0234375,-0.0234375,-0.0234375,-0.0234375,-0.0234375,-0.0234375}; // 12/512
 bool digital_inputs[NUM_IO_CARDS*8];
 bool digital_outputs[NUM_IO_CARDS*8];
 double analog_outputs[NUM_IO_CARDS*2];
@@ -101,7 +101,7 @@ void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num)
   //case, encoder running backward
   else
   {
-    encoder_periods[encoder_num] = (unsigned long)round(encoder_period_ms_in / 4.0 / (double)ENCODER_INT_PERIOD_MS);
+    encoder_periods[encoder_num] = (unsigned long)round(-encoder_period_ms_in / 4.0 / (double)ENCODER_INT_PERIOD_MS);
     encoder_enabled[encoder_num] = true;
     encoder_directions[encoder_num] = ENCODER_DIR_BKD;
   }
@@ -122,8 +122,7 @@ void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num)
 double get_motor_in_voltage(char motor_num)
 {
   //Scale and offset the analog value.
-  //negative is hard-coded because input filter circuit has an inverting amplifier
-  return -((double)motor_input_readings[motor_num] - motor_zero_points[motor_num])*motor_conversion_factor[motor_num] ;
+  return ((double)motor_input_readings[motor_num] - motor_zero_points[motor_num])*motor_conversion_factor[motor_num] ;
 }
 
 
@@ -442,18 +441,15 @@ int send_packet_to_pc()
 ////////////////////////////////////////////////////////////////////////////////
 // int get_packet_from_pc()
 // Description: pulls a single packet from the PC. Writes to global variables
-//              per those packet's demands
+//              per those packet's demands. Non-blocking.
 //
-// Input Arguments: blocking - true if this function should block until a
-//                             valid packet is recieved, false if it should
-//                             simply attempt to read whatever packet exists
-//                             and return failure if no packet.
+// Input Arguments: None.
 //                  
 // Output: 0 on successful read, -1 on no packet available
 // Globals Read: none
 // Globals Written: none
 ////////////////////////////////////////////////////////////////////////////////
-int get_packet_from_pc(bool blocking)
+int get_packet_from_pc()
 {
   bool full_packet_rxed = false;
   /* serial PC->arduino packet format: (must be synced with PC side)
@@ -474,37 +470,20 @@ int get_packet_from_pc(bool blocking)
   
   byte rx_buffer[12] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
   
-  if(blocking) //block until we have a full, good packet.
+  if(Serial.available() >= 12) // if there's enough serial data available to make a packet...
   {
-    while(~full_packet_rxed)
+    rx_buffer[0] = Serial.read(); //read first byte
+    if(rx_buffer[0] == PACKET_START_BYTE)//if the rxed byte corresponds to an actual packet...
     {
-      while(Serial.available() < 12); // wait until we have enough bytes to make a packet
-      rx_buffer[0] = Serial.read(); //read first thing in the buffer.
-      if(rx_buffer[0] == PACKET_START_BYTE)//if the rxed byte corresponds to an actual packet...
-      {
-        for(i = 1; i < 12; i ++) //read in the full packet
-          rx_buffer[i] = Serial.read();
-        full_packet_rxed = true; // break out of while loop
-      }
+      for(i = 1; i < 12; i ++) //read in the full packet
+        rx_buffer[i] = Serial.read();
+      full_packet_rxed = true; // break out of while loop
     }
-  }
-  else //read a packet if it's there and valid, otherwise return error
-  {
-    if(Serial.available() >= 12) // if there's enough serial data available to make a packet...
-    {
-      rx_buffer[0] = Serial.read(); //read first byte
-      if(rx_buffer[0] == PACKET_START_BYTE)//if the rxed byte corresponds to an actual packet...
-      {
-        for(i = 1; i < 12; i ++) //read in the full packet
-          rx_buffer[i] = Serial.read();
-        full_packet_rxed = true; // break out of while loop
-      }
-      else //if first byte doesn't look like the start of a packet, just exit
-        return -1;
-    }
-    else //if we don't have nough bytes available, just exit
+    else //if first byte doesn't look like the start of a packet, just exit
       return -1;
   }
+  else //if we don't have nough bytes available, just exit
+    return -1;
   //If we reach this point, rx_buffer contains a (hopefully) valid packet.
   
   //set digital output values
@@ -516,10 +495,10 @@ int get_packet_from_pc(bool blocking)
   analog_outputs[1] = (double)rx_buffer[3] * 0.019607;
   
   //set encoder outputs 
-  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[4])<<8)+((uint16_t)(rx_buffer[5])&0x00FF)),0);
-  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[6])<<8)+((uint16_t)(rx_buffer[7])&0x00FF)),1);
-  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[8])<<8)+((uint16_t)(rx_buffer[9])&0x00FF)),2);
-  set_encoder_period_ms((double)(((uint16_t)(rx_buffer[10])<<8)+((uint16_t)(rx_buffer[11])&0x00FF)),3);
+  set_encoder_period_ms((double)((int16_t)((((uint16_t)rx_buffer[4])<<8)|(((uint16_t)rx_buffer[5])&0x00FF))),0);
+  set_encoder_period_ms((double)((int16_t)((((uint16_t)rx_buffer[6])<<8)|(((uint16_t)rx_buffer[7])&0x00FF))),1);
+  set_encoder_period_ms((double)((int16_t)((((uint16_t)rx_buffer[8])<<8)|(((uint16_t)rx_buffer[9])&0x00FF))),2);
+  set_encoder_period_ms((double)((int16_t)((((uint16_t)rx_buffer[10])<<8)|(((uint16_t)rx_buffer[11])&0x00FF))),3);
   return 0;
   
 }

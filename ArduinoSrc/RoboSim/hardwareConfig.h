@@ -56,7 +56,7 @@
 #define MAX_PWM_PERIOD_MS 30000 
 
 //Sample time for main simulation loop
-#define MAIN_LOOP_TS_MS 50
+#define MAIN_LOOP_TS_MS 100
 
 //flash rate of plant active LED in loops
 #define HW_STATUS_FLASH_RATE_LOOPS 3
