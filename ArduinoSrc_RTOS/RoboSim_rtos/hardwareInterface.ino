@@ -451,6 +451,7 @@ int send_packet_to_pc()
 ////////////////////////////////////////////////////////////////////////////////
 int get_packet_from_pc()
 {
+  uint8_t i;
   bool full_packet_rxed = false;
   /* serial PC->arduino packet format: (must be synced with PC side)
       % byte (0 rxed first, n rxed last)

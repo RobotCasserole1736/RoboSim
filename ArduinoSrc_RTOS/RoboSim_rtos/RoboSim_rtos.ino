@@ -22,18 +22,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Top-Level Global Data
 ////////////////////////////////////////////////////////////////////////////////
-double ProcessorLoad; //actual time to run loop/desired loop time * 100
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Loop() global variables
 ////////////////////////////////////////////////////////////////////////////////
-int i;
 int plant_running_led_counter = 0;
 boolean plant_running_led_state = false;
-//processor load calculation vars
-unsigned long prev_loop_start_time_us = 0; 
-unsigned long prev_loop_end_time_us = 0; 
+
 
 static void vPCSerialTx(void *pvParameters) {
   TickType_t xLastWakeTime;
@@ -158,17 +154,17 @@ void setup()
   #endif
   
   //set up rtos tasks
-  xTaskCreate(vHWIOSample, "HWIOSample", 180 , NULL, tskIDLE_PRIORITY + 5, NULL);
+  xTaskCreate(vHWIOSample, "HWIO", 180 , NULL, tskIDLE_PRIORITY + 5, NULL);
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("created HWIOSample task");
   Serial.flush();
   #endif
-  xTaskCreate(vPCSerialTx, "PCSerTx", 180, NULL, tskIDLE_PRIORITY + 3, NULL);
+  xTaskCreate(vPCSerialTx, "SerTx", 180, NULL, tskIDLE_PRIORITY + 3, NULL);
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("created tx task");
   Serial.flush();
   #endif
-  xTaskCreate(vPCSerialRx, "PCSerRx", 180, NULL, tskIDLE_PRIORITY + 2, NULL);
+  xTaskCreate(vPCSerialRx, "SerRx", 180, NULL, tskIDLE_PRIORITY + 2, NULL);
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("created rx task");
   Serial.flush();

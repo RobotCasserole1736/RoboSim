@@ -79,9 +79,10 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
-
+//#define PVPORTMALLOC_DEBUG_PRINT //Leave this uncommentented to send serial info about malloc activity
+ 
 #define configUSE_PREEMPTION		1
-#define configUSE_IDLE_HOOK			1
+#define configUSE_IDLE_HOOK			0
 #define configUSE_TICK_HOOK			0
 
 //MUST BE CONFIGURED FOR ARDUINO UNO!
@@ -89,9 +90,8 @@
 #define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
 
 #define configMAX_PRIORITIES		( 10 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 100 )
-#define configTOTAL_HEAP_SIZE		( (size_t ) ( 1500 ) )  // WHG type 3 heap
-#define configMAX_TASK_NAME_LEN		( 50 )
+#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 80)
+#define configMAX_TASK_NAME_LEN		( 30 )
 #define configUSE_TRACE_FACILITY	0
 #define configUSE_16_BIT_TICKS		1
 #define configIDLE_SHOULD_YIELD		1
@@ -127,6 +127,7 @@ header file. */
 //
 // FreeRTOS default configASSERT
 //#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 
 void assertBlink();
 #define configASSERT( x ) if( ( x ) == 0 ) assertBlink()

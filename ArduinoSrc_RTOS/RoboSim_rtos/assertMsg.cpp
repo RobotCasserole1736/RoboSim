@@ -12,7 +12,5 @@ void assertMsg(const char* file, int line) {
     Serial.write('.');
     Serial.println(line);
     Serial.flush();
-    noInterrupts();
-    for (;;) {}
 }
 }  // extern "C"

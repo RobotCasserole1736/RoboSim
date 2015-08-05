@@ -75,7 +75,9 @@
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
 
+#include "Arduino.h"
 #include <stdlib.h>
+
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
@@ -88,15 +90,19 @@ task.h is included from an application file. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /*-----------------------------------------------------------*/
-
+extern "C"{
 void *pvPortMalloc( size_t xWantedSize )
 {
-void *pvReturn;
+	void *pvReturn;
 
 	vTaskSuspendAll();
 	{
 		pvReturn = malloc( xWantedSize );
 		traceMALLOC( pvReturn, xWantedSize );
+		#ifdef PVPORTMALLOC_DEBUG_PRINT
+		Serial.print("Malloc Called! - ");
+		Serial.println(xWantedSize);
+		#endif
 	}
 	( void ) xTaskResumeAll();
 
@@ -126,6 +132,8 @@ void vPortFree( void *pv )
 		( void ) xTaskResumeAll();
 	}
 }
+}
+
 
 
 

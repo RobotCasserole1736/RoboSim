@@ -91,6 +91,6 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
 	(void) pcTaskName;
 	(void) pxTask;
 //  void assertMsg(const char* file, int line);
-//  assertMsg(pcTaskName, 0);
+    assertMsg(pcTaskName, 0);
 	errorBlink(3);
 }
