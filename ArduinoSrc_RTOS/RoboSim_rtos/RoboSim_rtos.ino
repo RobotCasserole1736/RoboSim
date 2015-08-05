@@ -154,21 +154,24 @@ void setup()
   #endif
   
   //set up rtos tasks
-  xTaskCreate(vHWIOSample, "HWIO", 180 , NULL, tskIDLE_PRIORITY + 5, NULL);
+  //Priorities go from tskIdle_Priority to configMAX_PRIORITIES (0 to 4)
+  //empirically determined stack sizes seems to be the minimum stack size usable
+  xTaskCreate(vHWIOSample, "HWIO", 180 , NULL, tskIDLE_PRIORITY + 3, NULL);
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("created HWIOSample task");
   Serial.flush();
   #endif
-  xTaskCreate(vPCSerialTx, "SerTx", 180, NULL, tskIDLE_PRIORITY + 3, NULL);
+  xTaskCreate(vPCSerialTx, "SerTx", 120, NULL, tskIDLE_PRIORITY + 2, NULL);
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("created tx task");
   Serial.flush();
   #endif
-  xTaskCreate(vPCSerialRx, "SerRx", 180, NULL, tskIDLE_PRIORITY + 2, NULL);
+  xTaskCreate(vPCSerialRx, "SerRx", 120, NULL, tskIDLE_PRIORITY + 1, NULL);
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("created rx task");
   Serial.flush();
   #endif
+  
   
   
   // start RTOS
