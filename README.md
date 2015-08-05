@@ -23,7 +23,7 @@ RoboSim is currently in development. This section will be updated once the first
   - https://www.arduino.cc/en/Main/Software
 - GNU Octave + instrument-control package
   - http://www.gnu.org/software/octave/download.html
-  - Once installed, run "" at the Octave command window
+  - Once installed, run "pkg install -forge instrument-control" at the Octave command window
 - Eagle PCB design
   - http://www.cadsoftusa.com/download-eagle/
 - LtSpice circuit simulator
