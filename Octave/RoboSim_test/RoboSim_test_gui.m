@@ -216,5 +216,8 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% GUI Cleanup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Write one final packet to put RoboSim into a zero-output state
+disp("shutting down RoboSim...")
 
+disp("Closing serial port and exiting...")
 serial_close_port(s1);  
