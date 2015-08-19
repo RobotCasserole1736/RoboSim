@@ -89,8 +89,15 @@ disp(['~~~~~~~~~~RoboSim Test GUI Log Started ', datestr(now)])
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
-%Open serial port. Try a couple different ports...
-s1 = serial_open_port("COM4",0.1);                    
+%Look for RoboSim on the serial ports
+ser_port_name = serial_detect_port();
+if(ischar(ser_port_name) || ser_port_name ~= -1)
+	%Open serial port.
+	s1 = serial_open_port(ser_port_name,0.1);
+else
+	disp("Cannot find robosim! Serial coms will not take place!");
+	s1 = -1;
+end
 
 
 
