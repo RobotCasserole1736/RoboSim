@@ -1,0 +1,7 @@
+inputs (outptus from roboRIO
+    6x motor voltage
+    8x solenoid voltage
+outputs (inputs to roboRIO)
+    8 digital
+    2 analog
+    4 quadrature
