@@ -489,7 +489,7 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="IC1" library="SparkFun-AnalogIC" package="DIP08" value="LM358" x="44.45" y="67.31">
+<element name="IC1" library="SparkFun-AnalogIC" package="DIP08" value="TLV2772" x="44.45" y="67.31">
 <attribute name="PROD_ID" value="IC-09172" x="63.5" y="62.23" size="1.778" layer="27" display="off"/>
 </element>
 <element name="R1" library="SparkFun-Passives" package="0805" value="80K" x="31.75" y="67.31" rot="R180"/>
@@ -517,7 +517,7 @@ design rules under a new name.</description>
 <element name="RLED" library="SparkFun-Passives" package="AXIAL-0.4" value="220" x="12.7" y="10.16" rot="R90"/>
 <element name="JP1" library="SparkFun-Connectors" package="1X06_LOCK" value="" x="5.08" y="59.69" rot="R90"/>
 <element name="JP2" library="SparkFun-Connectors" package="1X06_LOCK" value="" x="69.85" y="44.45" rot="R270"/>
-<element name="IC2" library="SparkFun-AnalogIC" package="DIP08" value="LM358" x="50.8" y="44.45">
+<element name="IC2" library="SparkFun-AnalogIC" package="DIP08" value="TLV2772" x="50.8" y="44.45">
 <attribute name="PROD_ID" value="IC-09172" x="82.55" y="39.37" size="1.778" layer="27" display="off"/>
 </element>
 <element name="R15" library="SparkFun-Passives" package="0805" value="80K" x="15.24" y="66.04" rot="R90"/>
@@ -540,7 +540,7 @@ design rules under a new name.</description>
 <element name="C7" library="SparkFun-Passives" package="CAP-PTH-SMALL" value="0.5uF" x="36.83" y="33.02"/>
 <element name="TP4" library="SparkFun-Passives" package="PAD.03X.03" value="TEST-POINT3" x="21.59" y="48.26"/>
 <element name="C8" library="SparkFun-Passives" package="CAP-PTH-SMALL" value="100uF" x="59.69" y="39.37" rot="R180"/>
-<element name="IC3" library="SparkFun-AnalogIC" package="DIP08" value="LM358" x="52.07" y="15.24">
+<element name="IC3" library="SparkFun-AnalogIC" package="DIP08" value="TLV2772" x="52.07" y="15.24">
 <attribute name="PROD_ID" value="IC-09172" x="96.52" y="10.16" size="1.778" layer="27" display="off"/>
 </element>
 <element name="R29" library="SparkFun-Passives" package="0805" value="80K" x="10.16" y="60.96" rot="R90"/>
