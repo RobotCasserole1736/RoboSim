@@ -20,7 +20,7 @@
 
 function ret_status = serial_close_port(s_fp)
 
-    try            
+    try
         % Close serial port, if at all possible.
         fclose(s_fp);
         ret_status = 0;

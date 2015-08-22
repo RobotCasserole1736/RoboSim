@@ -43,7 +43,7 @@ function [read_packet, ret_status] = serial_read_packet(s_fp, retries = 0)
     
     %if we got here, we did not find a packet. sad day.
     read_packet = [0xDE,0xAD,0xBE,0xEF,0xDE,0xAD,0xBE,0xEF];
-    ret_status = 1
+    ret_status = 1;
 
 
   catch err
