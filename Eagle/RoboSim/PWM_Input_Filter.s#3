@@ -8,20 +8,20 @@
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="no"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="no"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="no"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="no"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="no"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="no"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="no"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="no"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="no"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="no"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
@@ -30,8 +30,8 @@
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
 <layer number="35" name="tGlue" color="7" fill="4" visible="no" active="no"/>
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="no"/>
-<layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
-<layer number="38" name="bTest" color="7" fill="1" visible="no" active="no"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="no"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="no"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="no"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="no"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="no"/>
@@ -39,16 +39,16 @@
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="no"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="no"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="no"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
-<layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
-<layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
-<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
-<layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="no"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="no"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="no"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="yes" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="yes" active="no"/>
+<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="yes" active="no"/>
+<layer number="56" name="wert" color="7" fill="1" visible="yes" active="no"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="93" name="Pins" color="2" fill="1" visible="no" active="yes"/>
@@ -3041,30 +3041,30 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <part name="JP1" library="SparkFun-Connectors" deviceset="M06" device="LOCK"/>
 <part name="JP2" library="SparkFun-Connectors" deviceset="M06" device="LOCK"/>
 <part name="JP4" library="SparkFun-Connectors" deviceset="M06" device="LOCK"/>
-<part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R2" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R1" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R3" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY4" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R4" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R4" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY5" library="supply2" deviceset="GND" device=""/>
 <part name="C1" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
 <part name="SUPPLY6" library="supply2" deviceset="GND" device=""/>
-<part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R6" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R7" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R8" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
+<part name="R5" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R6" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R7" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R8" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
 <part name="SUPPLY10" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY11" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY3" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R9" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R10" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R11" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R9" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R10" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R11" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY8" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R12" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R13" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R14" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R15" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R16" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
+<part name="R12" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R13" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R14" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R15" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R16" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
 <part name="SUPPLY12" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY13" library="supply2" deviceset="GND" device=""/>
 <part name="C3" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
@@ -3072,30 +3072,30 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <part name="SUPPLY14" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="SUPPLY17" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="C4" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
-<part name="R17" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R18" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R19" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R17" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R18" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R19" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY18" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R20" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R20" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY19" library="supply2" deviceset="GND" device=""/>
 <part name="C5" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
 <part name="SUPPLY20" library="supply2" deviceset="GND" device=""/>
-<part name="R21" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R22" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R23" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R24" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
+<part name="R21" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R22" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R23" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R24" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
 <part name="SUPPLY21" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY22" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY23" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R25" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R26" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R27" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R25" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R26" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R27" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY24" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R28" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R29" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R30" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R31" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R32" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
+<part name="R28" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R29" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R30" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R31" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R32" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
 <part name="SUPPLY25" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY26" library="supply2" deviceset="GND" device=""/>
 <part name="C6" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
@@ -3103,30 +3103,30 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <part name="SUPPLY27" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="SUPPLY28" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="C7" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
-<part name="R33" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R34" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R35" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R33" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R34" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R35" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY29" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R36" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R36" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY30" library="supply2" deviceset="GND" device=""/>
 <part name="C8" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
 <part name="SUPPLY31" library="supply2" deviceset="GND" device=""/>
-<part name="R37" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R38" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R39" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R40" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
+<part name="R37" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R38" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R39" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R40" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
 <part name="SUPPLY32" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY33" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY34" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R41" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R42" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R43" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
+<part name="R41" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R42" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R43" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
 <part name="SUPPLY35" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="R44" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="10K"/>
-<part name="R45" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R46" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R47" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
-<part name="R48" library="SparkFun-Passives" deviceset="RESISTOR" device="0805-RES" value="4.7K"/>
+<part name="R44" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="10K"/>
+<part name="R45" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R46" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R47" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
+<part name="R48" library="SparkFun-Passives" deviceset="RESISTOR" device="PTH-1/4W" value="4.7K"/>
 <part name="SUPPLY36" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY37" library="supply2" deviceset="GND" device=""/>
 <part name="C9" library="SparkFun-Passives" deviceset="CAP" device="PTH" value="100uF"/>
@@ -3200,7 +3200,10 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <instance part="SUPPLY23" gate="G$1" x="71.12" y="165.1"/>
 <instance part="R25" gate="G$1" x="68.58" y="139.7" rot="R180"/>
 <instance part="R26" gate="G$1" x="60.96" y="144.78" rot="R180"/>
-<instance part="R27" gate="G$1" x="71.12" y="157.48" rot="R270"/>
+<instance part="R27" gate="G$1" x="71.12" y="157.48" smashed="yes" rot="R270">
+<attribute name="NAME" x="72.6186" y="161.29" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="67.818" y="161.29" size="1.778" layer="96" rot="R270"/>
+</instance>
 <instance part="SUPPLY24" gate="G$1" x="78.74" y="165.1"/>
 <instance part="R28" gate="G$1" x="78.74" y="157.48" rot="R270"/>
 <instance part="R29" gate="G$1" x="88.9" y="157.48"/>
