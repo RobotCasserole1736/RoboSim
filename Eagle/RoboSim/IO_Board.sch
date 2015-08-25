@@ -3859,7 +3859,23 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0">
+<class number="0" name="default" width="0.6096" drill="0">
+<clearance class="0" value="0.508"/>
+</class>
+<class number="1" name="Clk" width="0.6096" drill="0">
+<clearance class="0" value="2.5146"/>
+<clearance class="1" value="0.508"/>
+</class>
+<class number="2" name="Data" width="0.6096" drill="0">
+<clearance class="0" value="0.508"/>
+<clearance class="1" value="2.5146"/>
+<clearance class="2" value="0.508"/>
+</class>
+<class number="3" name="Sync" width="0.6096" drill="0">
+<clearance class="0" value="0.508"/>
+<clearance class="1" value="2.5146"/>
+<clearance class="2" value="0.508"/>
+<clearance class="3" value="0.508"/>
 </class>
 </classes>
 <parts>
@@ -4618,7 +4634,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <wire x1="-55.88" y1="137.16" x2="-55.88" y2="129.54" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="CLK" class="0">
+<net name="CLK" class="1">
 <segment>
 <pinref part="SERIN" gate="G$1" pin="4"/>
 <wire x1="55.88" y1="7.62" x2="55.88" y2="12.7" width="0.1524" layer="91"/>
@@ -4650,7 +4666,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <pinref part="IC1" gate="A" pin="SCK"/>
 </segment>
 </net>
-<net name="SYNC" class="0">
+<net name="SYNC" class="3">
 <segment>
 <pinref part="SERIN" gate="G$1" pin="3"/>
 <wire x1="58.42" y1="7.62" x2="58.42" y2="12.7" width="0.1524" layer="91"/>
@@ -4682,7 +4698,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <wire x1="33.02" y1="210.82" x2="38.1" y2="210.82" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="DIN" class="0">
+<net name="DIN" class="2">
 <segment>
 <pinref part="SERIN" gate="G$1" pin="1"/>
 <label x="63.5" y="12.7" size="1.778" layer="95" rot="R90"/>
@@ -4693,7 +4709,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <pinref part="IC4" gate="A" pin="SER"/>
 </segment>
 </net>
-<net name="DFB" class="0">
+<net name="DFB" class="2">
 <segment>
 <pinref part="SEROUT" gate="G$1" pin="3"/>
 <wire x1="76.2" y1="236.22" x2="76.2" y2="228.6" width="0.1524" layer="91"/>
@@ -4705,7 +4721,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <label x="60.96" y="12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$62" class="0">
+<net name="N$62" class="2">
 <segment>
 <pinref part="SEROUT" gate="G$1" pin="4"/>
 <label x="78.74" y="228.6" size="1.778" layer="95" rot="R90"/>
@@ -4714,7 +4730,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <pinref part="IC1" gate="A" pin="QH*"/>
 </segment>
 </net>
-<net name="N$59" class="0">
+<net name="N$59" class="2">
 <segment>
 <wire x1="63.5" y1="33.02" x2="71.12" y2="33.02" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="33.02" x2="71.12" y2="66.04" width="0.1524" layer="91"/>
@@ -4724,7 +4740,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <wire x1="35.56" y1="101.6" x2="38.1" y2="101.6" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$63" class="0">
+<net name="N$63" class="2">
 <segment>
 <wire x1="60.96" y1="124.46" x2="73.66" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="124.46" x2="73.66" y2="185.42" width="0.1524" layer="91"/>
@@ -4735,7 +4751,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <wire x1="17.78" y1="223.52" x2="38.1" y2="223.52" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$60" class="0">
+<net name="N$60" class="2">
 <segment>
 <pinref part="IC2" gate="A" pin="QH"/>
 <wire x1="63.5" y1="99.06" x2="76.2" y2="99.06" width="0.1524" layer="91"/>
