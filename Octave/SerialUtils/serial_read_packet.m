@@ -24,24 +24,27 @@
 
 function [read_packet, ret_status] = serial_read_packet(s_fp, retries = 0)
 
+    persistent bad_pkt_ct = 0;
     %Attempt to get packet at least once. Retry "retires" number of times.
     % read single characters to see if it's the packet start character
-    for i = 1:1:retries+1
 
-        header_char = srl_read(s_fp, 1);
-        
+    header_char = srl_read(s_fp, 1);
+    for i = 1:1:retries+1
+        disp(bad_pkt_ct)
         if(header_char == '~')
             %If So, pull the rest of the packet
             packet = srl_read(s_fp, 7); 
-            disp(packet)
 
             %Assume good packet and write it.
             read_packet(1) = header_char;
-            read_packet(2:8) = packet;
+            read_packet(2:8) = packet(1:7);
             ret_status = 0;
             return; %we have a packet, return
         end
-        disp(sprintf("Retry %d\n",i))
+        bad_pkt_ct = bad_pkt_ct + 1;
+        srl_flush(s_fp);
+        header_char = srl_read(s_fp, 1);
+        pause(0);
     end
     
     %if we got here, we did not find a packet. sad day.

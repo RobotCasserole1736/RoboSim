@@ -439,8 +439,10 @@ int send_packet_to_pc()
   
   
   if(Serial.write(tx_buffer, sizeof(tx_buffer)) == sizeof(tx_buffer))
-    Serial.flush()
+  {
+    Serial.flush();
     return 0;
+  }
   else
     return -1;
   

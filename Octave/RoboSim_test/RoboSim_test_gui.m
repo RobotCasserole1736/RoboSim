@@ -93,7 +93,7 @@ disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ser_port_name = serial_detect_port();
 if(ischar(ser_port_name) || ser_port_name ~= -1)
 	%Open serial port.
-	s1 = serial_open_port(ser_port_name,0.1);
+	s1 = serial_open_port(ser_port_name,0.2);
 else
 	disp("Cannot find robosim! Serial coms will not take place!");
 	s1 = -1;
@@ -198,7 +198,7 @@ while(isfigure(f))
     loop_start_time = toc();
 
     %read packet from RoboSim
-	[rx_packet, read_ret_status] = serial_read_packet(s1,9);
+	[rx_packet, read_ret_status] = serial_read_packet(s1,0);
     [digital_inputs, motor_voltages] = serial_decode_packet(rx_packet);
     disp(sprintf("Packet acq delta t = %f\n", toc()-packet_arr_time))
     packet_arr_time = toc();

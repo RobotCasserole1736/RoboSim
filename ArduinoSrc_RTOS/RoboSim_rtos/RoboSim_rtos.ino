@@ -67,11 +67,14 @@ static void vPCSerialRx(void *pvParameters) {
   for(;;)
   {
     vTaskDelayUntil( &xLastWakeTime, xFrequency );
+    send_packet_to_pc();
+    get_packet_from_pc();
     //recieve packet (blocking, but let RTOS run in background)
-    while(get_packet_from_pc() == -1)
-    {
-        vTaskDelayUntil( &xLastWakeTime, 1);
-    } 
+    //while(get_packet_from_pc() == -1)
+    //{
+     //   vTaskDelayUntil( &xLastWakeTime, xFrequency);
+      //  send_packet_to_pc();
+    //} 
     #ifdef ENABLE_TASK_DEBUG_PRINT
     Serial.println("Finished loop of Rx");
     Serial.flush();
@@ -161,7 +164,7 @@ void setup()
   Serial.println("created HWIOSample task");
   Serial.flush();
   #endif
-  xTaskCreate(vPCSerialTx, "SerTx", 120, NULL, tskIDLE_PRIORITY + 2, NULL);
+  //xTaskCreate(vPCSerialTx, "SerTx", 120, NULL, tskIDLE_PRIORITY + 2, NULL);
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("created tx task");
   Serial.flush();
