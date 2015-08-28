@@ -24,21 +24,24 @@
 
 function [read_packet, ret_status] = serial_read_packet(s_fp, retries = 0)
 
-  try
-  
     %Attempt to get packet at least once. Retry "retires" number of times.
-    for i=1:1:retries+1
-        % read single characters to see if it's the packet start character
+    % read single characters to see if it's the packet start character
+    for i = 1:1:retries+1
+
         header_char = srl_read(s_fp, 1);
+        
         if(header_char == '~')
             %If So, pull the rest of the packet
             packet = srl_read(s_fp, 7); 
+            disp(packet)
+
             %Assume good packet and write it.
             read_packet(1) = header_char;
             read_packet(2:8) = packet;
             ret_status = 0;
             return; %we have a packet, return
         end
+        disp(sprintf("Retry %d\n",i))
     end
     
     %if we got here, we did not find a packet. sad day.
@@ -46,14 +49,15 @@ function [read_packet, ret_status] = serial_read_packet(s_fp, retries = 0)
     ret_status = 1;
 
 
-  catch err
+
     %if we got here, something wacko happened.
     disp("Warning: issue while getting serial packet:");
     disp(lasterr);
     read_packet = [0xDE,0xAD,0xBE,0xEF,0xDE,0xAD,0xBE,0xEF];
     ret_status = -1;
+    srl_flush(s_fp);
     return;
-  end
+
     
 
 end

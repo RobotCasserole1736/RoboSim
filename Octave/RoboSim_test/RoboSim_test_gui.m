@@ -74,7 +74,7 @@ global motor_voltages %voltage, -12 to 12 V
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Define Constants
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-loop_rate_sec = 0.1; %100ms loop period
+loop_rate_sec = 0.2; %100ms loop period
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,7 +119,7 @@ loop_end_time = 0;
 %%% GUI Construction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Create figure to hold GUI silently till we have added all the controls
-f = figure('Visible', 'off');
+f = figure('Visible', 'off', 'Position', [100 100 400 500], 'name', 'RoboSim Test Gui', 'numberTitle', 'off');
 
 % Create sliders for analog outputs
 a1_sld = uicontrol('Style', 'slider','Min',0,'Max',5,'Value',0,'Position', [10 20 120 20],'Callback', @gui_callbacks); 
@@ -153,9 +153,37 @@ enc2_sld = uicontrol('Style', 'slider','Min',1,'Max',32000,'Value',32000,'Positi
 btn_enc2_dir  = uicontrol('Style', 'pushbutton', 'String', 'Rev','Position', [335 175 40 20],'Callback', @gui_callbacks);  
 txt_enc2 = uicontrol('Style','text','Position',[210 200 150 20],'String', 'Enc2 Period (ms)');  
 
+%Outputs Label
+outputs_label = uicontrol('Style','text','Position',[10 225 380 20],'String', '==============OUTPUTS==============','Backgroundcolor','c');    
+
+%Create text outputs for voltages
+voltage_disp_label = uicontrol('Style','text','Position',[120 375 120 20],'String', 'Voltage Inputs');    
+voltage_disp1 = uicontrol('Style','text','Position',[10 350 120 20],'String', 'M1 : +00.000V');
+voltage_disp2 = uicontrol('Style','text','Position',[210 350 120 20],'String', 'M2 : +00.000V');
+voltage_disp3 = uicontrol('Style','text','Position',[10 325 120 20],'String', 'M3 : +00.000V');
+voltage_disp4 = uicontrol('Style','text','Position',[210 325 120 20],'String', 'M4 : +00.000V');
+voltage_disp5 = uicontrol('Style','text','Position',[10 300 120 20],'String', 'M5 : +00.000V');
+voltage_disp6 = uicontrol('Style','text','Position',[210 300 120 20],'String', 'M6 : +00.000V');
+
+%Create indicators for digital inputs
+dig_inputs_label = uicontrol('Style', 'text', 'Position', [120 450 120 20],'String', 'Digital Inputs');
+dig_input_1 = uicontrol('Style', 'text', 'Position', [10 425 20 20],'Backgroundcolor','r','String', '0');
+dig_input_2 = uicontrol('Style', 'text', 'Position', [40 425 20 20],'Backgroundcolor','r','String', '1');
+dig_input_3 = uicontrol('Style', 'text', 'Position', [70 425 20 20],'Backgroundcolor','r','String', '2');
+dig_input_4 = uicontrol('Style', 'text', 'Position', [100 425 20 20],'Backgroundcolor','r','String', '3');
+dig_input_5 = uicontrol('Style', 'text', 'Position', [130 425 20 20],'Backgroundcolor','r','String', '4');
+dig_input_6 = uicontrol('Style', 'text', 'Position', [160 425 20 20],'Backgroundcolor','r','String', '5');
+dig_input_7 = uicontrol('Style', 'text', 'Position', [190 425 20 20],'Backgroundcolor','r','String', '6');
+dig_input_8 = uicontrol('Style', 'text', 'Position', [220 425 20 20],'Backgroundcolor','r','String', '7');
+
+%Inputs Label
+inputs_label = uicontrol('Style','text','Position',[10 475 380 20],'String', '==============INPUTS==============','Backgroundcolor','c');   
+
 %make the GUI visible! Woo! Seeing things is awesome! 
 set(f, 'Visible', 'on');
 %User can now click buttons, which trigger callbacks to be run asynchronously
+
+packet_arr_time = 0;
 
 %start timer for maintaining periodic loop rate
 tic();
@@ -170,38 +198,102 @@ while(isfigure(f))
     loop_start_time = toc();
 
     %read packet from RoboSim
-	  [rx_packet, read_ret_status] = serial_read_packet(s1,1);
+	[rx_packet, read_ret_status] = serial_read_packet(s1,9);
     [digital_inputs, motor_voltages] = serial_decode_packet(rx_packet);
+    disp(sprintf("Packet acq delta t = %f\n", toc()-packet_arr_time))
+    packet_arr_time = toc();
 	
     disp(sprintf("\n~~~~~~~~~~~~~~~~~~%d\n",loop_counter));
     
-    disp("~~~~~RX_DEBUG~~~~~")
-    disp(sprintf("Debug: RX Packet = 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X ", rx_packet(1),rx_packet(2),rx_packet(3),rx_packet(4),rx_packet(5),rx_packet(6),rx_packet(7),rx_packet(8)));
-    disp("Debug: Digital Inputs = ")
-    disp(digital_inputs)
-    disp("Debug: Motor Voltages (V) = ")
-    disp(motor_voltages)
+    %disp("~~~~~RX_DEBUG~~~~~")
+    %disp(sprintf("Debug: RX Packet = 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X ", rx_packet(1),rx_packet(2),rx_packet(3),rx_packet(4),rx_packet(5),rx_packet(6),rx_packet(7),rx_packet(8)));
+    %disp("Debug: Digital Inputs = ")
+    %disp(digital_inputs)
+    %disp("Debug: Motor Voltages (V) = ")
+    %disp(motor_voltages)
     
-	%assemble TX packet
+    %assemble TX packet
 	tx_packet = serial_assemble_packet(digital_outputs, analog_outputs, encoder_periods, encoder_dir_fwd);
 	serial_write_packet(s1, tx_packet);
     
-    disp("~~~~~TX_DEBUG~~~~~")
-    disp("Debug: Digital Outputs = ")
-    disp(digital_outputs)
-    disp("Debug: Analog Outputs (V) = ")
-    disp(analog_outputs)
-    disp("Debug: Encoder Periods (ms) = ")
-    disp(encoder_periods)
-    disp("Debug: Encoder Dirs (1=rev, 0=fwd) = ")
-    disp(encoder_dir_fwd)
-    disp(sprintf("Debug: TX Packet = 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X ", tx_packet(1),tx_packet(2),tx_packet(3),tx_packet(4),tx_packet(5),tx_packet(6),tx_packet(7),tx_packet(8),tx_packet(9),tx_packet(10),tx_packet(11),tx_packet(12)));
-    fflush(stdout);
+    %disp("~~~~~TX_DEBUG~~~~~")
+    %disp("Debug: Digital Outputs = ")
+    %disp(digital_outputs)
+    %disp("Debug: Analog Outputs (V) = ")
+    %disp(analog_outputs)
+    %disp("Debug: Encoder Periods (ms) = ")
+    %disp(encoder_periods)
+    %disp("Debug: Encoder Dirs (1=rev, 0=fwd) = ")
+    %disp(encoder_dir_fwd)
+    %disp(sprintf("Debug: TX Packet = 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X ", tx_packet(1),tx_packet(2),tx_packet(3),tx_packet(4),tx_packet(5),tx_packet(6),tx_packet(7),tx_packet(8),tx_packet(9),tx_packet(10),tx_packet(11),tx_packet(12)));
+    %fflush(stdout);
+  
+    %update gui with rxed packet data
+    %voltages
+    set(voltage_disp1, 'String', sprintf('M1 : %+7.3fV', motor_voltages(1)))
+    set(voltage_disp2, 'String', sprintf('M2 : %+7.3fV', motor_voltages(2)))
+    set(voltage_disp3, 'String', sprintf('M3 : %+7.3fV', motor_voltages(3)))
+    set(voltage_disp4, 'String', sprintf('M4 : %+7.3fV', motor_voltages(4)))
+    set(voltage_disp5, 'String', sprintf('M5 : %+7.3fV', motor_voltages(5)))
+    set(voltage_disp6, 'String', sprintf('M6 : %+7.3fV', motor_voltages(6)))
+    %digital
+    if(digital_inputs(1))
+        set(dig_input_1,'Backgroundcolor','g')
+    else
+        set(dig_input_1,'Backgroundcolor','r')
+    end
+    
+    if(digital_inputs(2))
+        set(dig_input_2,'Backgroundcolor','g')
+    else              
+        set(dig_input_2,'Backgroundcolor','r')
+    end
+    
+    if(digital_inputs(3))
+        set(dig_input_3,'Backgroundcolor','g')
+    else              
+        set(dig_input_3,'Backgroundcolor','r')
+    end
+    
+    if(digital_inputs(4))
+        set(dig_input_4,'Backgroundcolor','g')
+    else              
+        set(dig_input_4,'Backgroundcolor','r')
+    end
+    
+    if(digital_inputs(5))
+        set(dig_input_5,'Backgroundcolor','g')
+    else              
+        set(dig_input_5,'Backgroundcolor','r')
+    end
+    
+    if(digital_inputs(6))
+        set(dig_input_6,'Backgroundcolor','g')
+    else              
+        set(dig_input_6,'Backgroundcolor','r')
+    end
+    
+    if(digital_inputs(7))
+        set(dig_input_7,'Backgroundcolor','g')
+    else              
+        set(dig_input_7,'Backgroundcolor','r')
+    end
+    
+    if(digital_inputs(8))
+        set(dig_input_8,'Backgroundcolor','g')
+    else              
+        set(dig_input_8,'Backgroundcolor','r')
+    end
+    
+    
+    
+
    
     
     if(loop_start_time + loop_rate_sec > toc())
         disp(sprintf('pause for %d s', (loop_start_time + loop_rate_sec) - toc()));
-	    pause((loop_start_time + loop_rate_sec) - toc()); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
+	    %pause((loop_start_time + loop_rate_sec) - toc()); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
+        pause(0)
     else
         warning("loop timing missed! Behind sample rate by %d s", toc() -(loop_start_time + loop_rate_sec) );
 	    pause(0); %we still need to pause for a bit otherwise the GUI won't update.

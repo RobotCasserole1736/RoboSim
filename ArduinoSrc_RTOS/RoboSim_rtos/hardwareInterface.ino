@@ -430,12 +430,16 @@ int send_packet_to_pc()
   for(i = 2; i < 8; i++)
   {
     tx_buffer[i] = (unsigned char)((int8_t)(round(get_motor_in_voltage(i - 2) / 0.094488)));
+    if(tx_buffer[i] == PACKET_START_BYTE)
+        tx_buffer[i] = PACKET_START_BYTE+1;
   }
     
   //Transmit byte (assuming serial port has been opened)
   //return proper error code
   
+  
   if(Serial.write(tx_buffer, sizeof(tx_buffer)) == sizeof(tx_buffer))
+    Serial.flush()
     return 0;
   else
     return -1;
