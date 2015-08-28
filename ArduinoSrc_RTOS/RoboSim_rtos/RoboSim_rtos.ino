@@ -33,7 +33,7 @@ boolean plant_running_led_state = false;
 
 static void vPCSerialTx(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.09 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
+  const TickType_t xFrequency = (TickType_t)round(0.1 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
   xLastWakeTime = xTaskGetTickCount();
 
   #ifdef ENABLE_TASK_DEBUG_PRINT
