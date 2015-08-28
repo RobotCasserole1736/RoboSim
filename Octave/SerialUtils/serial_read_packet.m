@@ -35,13 +35,14 @@ function [read_packet, ret_status] = serial_read_packet(s_fp, retries = 0)
             packet = srl_read(s_fp, 7); 
             %Assume good packet and write it.
             read_packet(1) = header_char;
-            read_packet(2:8) = packet;
+            read_packet(2:8) = packet(1:7);
             ret_status = 0;
             return; %we have a packet, return
         end
     end
     
     %if we got here, we did not find a packet. sad day.
+    disp("Warning: no serial packet recieved");
     read_packet = [0xDE,0xAD,0xBE,0xEF,0xDE,0xAD,0xBE,0xEF];
     ret_status = 1;
 
