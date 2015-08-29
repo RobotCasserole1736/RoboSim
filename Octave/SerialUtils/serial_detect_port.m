@@ -41,6 +41,9 @@ function ret_port_name = serial_detect_port()
 		  end
 		  
 		  port_handle = serial(port_name_iter, 115200,temp); 
+          set(port_handle, "bytesize", 8);
+          set(port_handle, "parity", "E");
+          set(port_handle, "stopbits", 2);
 
 		  % Flush input and output buffers
 		  srl_flush(port_handle); 

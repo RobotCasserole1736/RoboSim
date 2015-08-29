@@ -33,7 +33,7 @@ boolean plant_running_led_state = false;
 
 static void vPCSerialTx(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.09 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
+  const TickType_t xFrequency = (TickType_t)round(0.1 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
   xLastWakeTime = xTaskGetTickCount();
 
   #ifdef ENABLE_TASK_DEBUG_PRINT
@@ -136,7 +136,7 @@ static void vPlantRunLoop(void *pvParameters) {
 void setup()
 {
   //Open Serial port
-  Serial.begin(115200);
+  Serial.begin(115200, SERIAL_8E2); //config to 8 data bits, even parity, 2 stop bits
   //ensure it will actually run
   
   //start up encoders
