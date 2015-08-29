@@ -23,7 +23,7 @@ function port_handle = serial_open_port(port_name, timeout = -1)
     %Attempt to open serial port. Toss warning and continue if not possible.
     try
       port_handle = 0;
-      % Opens serial port ttyUSB1 with baudrate of 115200 (config defaults to 8-N-1)
+      % Opens serial port ttyUSB1 with baudrate of 57600 
 
       %establish timeout
       if(timeout == -1)
@@ -33,6 +33,9 @@ function port_handle = serial_open_port(port_name, timeout = -1)
       end
       
       port_handle = serial(port_name, 115200,temp); 
+      set(port_handle, "bytesize", 8);
+      set(port_handle, "parity", "E");
+      set(port_handle, "stopbits", 2);
 
       % Flush input and output buffers
       srl_flush(port_handle); 

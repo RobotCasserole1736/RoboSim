@@ -226,20 +226,48 @@ end
 
 function enc1_sld_callback(source,callbackdata)
   global encoder_periods;
-  encoder_periods(1) = get(source, 'Value');
+  freq = double(get(source, 'Value'));
+  per = 0;
+  if(freq == 0)
+    per = 32000;
+  else
+    per = 1000.0/freq;
+  end
+  encoder_periods(1) = per;
 end
 
 function enc2_sld_callback(source,callbackdata)
   global encoder_periods;
-  encoder_periods(2) = get(source, 'Value');
+  freq = double(get(source, 'Value'));
+  per = 0;
+  if(freq == 0)
+    per = 32000;
+  else
+    per = 1000.0/freq;
+  end
+  encoder_periods(2) = per;
 end
 
 function enc3_sld_callback(source,callbackdata)
   global encoder_periods;
-  encoder_periods(3) = get(source, 'Value');
+  freq = double(get(source, 'Value'));
+  per = 0;
+  if(freq == 0)
+    per = 32000;
+  else
+    per = 1000.0/freq;
+  end
+  encoder_periods(3) = per;
 end
 
 function enc4_sld_callback(source,callbackdata)
   global encoder_periods;
-  encoder_periods(4) = get(source, 'Value');
+  freq = double(get(source, 'Value'));
+  per = 0;
+  if(freq == 0)
+    per = 32000;
+  else
+    per = 1000.0/freq;
+  end
+  encoder_periods(4) = per;
 end

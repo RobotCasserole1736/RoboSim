@@ -408,8 +408,9 @@ int send_packet_to_pc()
       % 5 - motor 4 voltage - signed int8, 0.094488 V/bit
       % 6 - motor 5 voltage - signed int8, 0.094488 V/bit
       % 7 - motor 6 voltage - signed int8, 0.094488 V/bit
+      % 8 - checksum (bitwise xor of all other bytes)
   */
-  byte tx_buffer[8]  = {PACKET_START_BYTE,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+  byte tx_buffer[9]  = {PACKET_START_BYTE,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
   int i;
   
   //note throughout this funciton we have hardcoded many array lengths. This
@@ -432,6 +433,18 @@ int send_packet_to_pc()
     tx_buffer[i] = (unsigned char)((int8_t)(round(get_motor_in_voltage(i - 2) / 0.094488)));
   }
     
+  //temp - debug tx buffer
+  //tx_buffer[1] = 0x01;
+  //tx_buffer[2] = 0x02;
+  //tx_buffer[3] = 0x03;
+  //tx_buffer[4] = 0xF1;
+  //tx_buffer[5] = 0xE1;
+  //tx_buffer[6] = 0xC1;
+  //tx_buffer[7] = 0xA1;
+  
+  // Calculate Checksum
+  tx_buffer[8] = tx_buffer[0] ^ tx_buffer[1] ^ tx_buffer[2] ^ tx_buffer[3] ^ tx_buffer[4] ^ tx_buffer[5] ^ tx_buffer[6] ^ tx_buffer[7];
+  
   //Transmit byte (assuming serial port has been opened)
   //return proper error code
   

@@ -74,7 +74,7 @@ global motor_voltages %voltage, -12 to 12 V
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Define Constants
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-loop_rate_sec = 0.08; %80ms min loop period
+loop_rate_sec = 0.01; %80ms min loop period
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -141,19 +141,19 @@ btn_DO7 = uicontrol('Style', 'pushbutton', 'String', 'DO7','Position', [360 75 4
 txt_DO = uicontrol('Style','text','Position',[130 100 140 20],'String', 'Digital Out (T/F)');    
 
 % Create sliders for quad encoder outputs
-enc3_sld = uicontrol('Style', 'slider','Min',1,'Max',32000,'Value',32000,'Position', [10 125 120 20],'Callback', @gui_callbacks); 
+enc3_sld = uicontrol('Style', 'slider','Min',0,'Max',500,'Value',0,'Position', [10 125 120 20],'Callback', @gui_callbacks); 
 btn_enc3_dir = uicontrol('Style', 'pushbutton', 'String', 'Rev','Position', [135  125 40 20],'Callback', @gui_callbacks);  
-txt_enc3 = uicontrol('Style','text','Position',[10 150 150 20],'String', 'Enc3 Period (ms)');
-enc4_sld = uicontrol('Style', 'slider','Min',1,'Max',32000,'Value',32000,'Position', [210 125 120 20],'Callback', @gui_callbacks);   
+txt_enc3 = uicontrol('Style','text','Position',[10 150 150 20],'String', 'Enc3 Freq (Hz)');
+enc4_sld = uicontrol('Style', 'slider','Min',0,'Max',500,'Value',0,'Position', [210 125 120 20],'Callback', @gui_callbacks);   
 btn_enc4_dir  = uicontrol('Style', 'pushbutton', 'String', 'Rev','Position', [335 125 40 20],'Callback', @gui_callbacks);  
-txt_enc4 = uicontrol('Style','text','Position',[210 150 150 20],'String', 'Enc4 Period (ms)');   
+txt_enc4 = uicontrol('Style','text','Position',[210 150 150 20],'String', 'Enc4 Freq (Hz)');   
 
-enc1_sld = uicontrol('Style', 'slider','Min',1,'Max',32000,'Value',32000,'Position', [10 175 120 20],'Callback', @gui_callbacks); 
+enc1_sld = uicontrol('Style', 'slider','Min',0,'Max',500,'Value',0,'Position', [10 175 120 20],'Callback', @gui_callbacks); 
 btn_enc1_dir = uicontrol('Style', 'pushbutton', 'String', 'Rev','Position', [135  175 40 20],'Callback', @gui_callbacks);  
-txt_enc1 = uicontrol('Style','text','Position',[10 200 150 20],'String', 'Enc1 Period (ms)');
-enc2_sld = uicontrol('Style', 'slider','Min',1,'Max',32000,'Value',32000,'Position', [210 175 120 20],'Callback', @gui_callbacks);   
+txt_enc1 = uicontrol('Style','text','Position',[10 200 150 20],'String', 'Enc1 Freq (Hz)');
+enc2_sld = uicontrol('Style', 'slider','Min',0,'Max',500,'Value',0,'Position', [210 175 120 20],'Callback', @gui_callbacks);   
 btn_enc2_dir  = uicontrol('Style', 'pushbutton', 'String', 'Rev','Position', [335 175 40 20],'Callback', @gui_callbacks);  
-txt_enc2 = uicontrol('Style','text','Position',[210 200 150 20],'String', 'Enc2 Period (ms)');  
+txt_enc2 = uicontrol('Style','text','Position',[210 200 150 20],'String', 'Enc2 Freq (Hz)');  
 
 %Outputs Label
 outputs_label = uicontrol('Style','text','Position',[10 225 380 20],'String', '==============OUTPUTS==============','Backgroundcolor','c');    
@@ -196,11 +196,11 @@ while(isfigure(f))
 
     %mark loop start time
     loop_start_time = toc();
-
+    disp(bad_reads_cnt);
     %read packet from RoboSim
     old_rx_packet = rx_packet;
-	[rx_packet, read_ret_status] = serial_read_packet(s1,1);
-    if(rx_packet == [0xDE,0xAD,0xBE,0xEF,0xDE,0xAD,0xBE,0xEF])
+	[rx_packet, read_ret_status] = serial_read_packet(s1,10);
+    if(read_ret_status !=0 )
         bad_reads_cnt = bad_reads_cnt + 1;
         rx_packet = old_rx_packet;
     end
@@ -279,8 +279,7 @@ while(isfigure(f))
     
     if(loop_start_time + loop_rate_sec > toc())
         %disp(sprintf('pause for %d s', (loop_start_time + loop_rate_sec) - toc()));
-	    %pause((loop_start_time + loop_rate_sec) - toc()); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
-        pause(0)
+	    pause((loop_start_time + loop_rate_sec) - toc()); %Crucial pause - times the main loop, and gives the GUI a chance to register mouse clicks and update gui and stuff
     else
         %warning("loop timing missed! Behind sample rate by %d s", toc() -(loop_start_time + loop_rate_sec) );
 	    pause(0); %we still need to pause for a bit otherwise the GUI won't update.

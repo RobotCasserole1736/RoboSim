@@ -136,7 +136,7 @@ static void vPlantRunLoop(void *pvParameters) {
 void setup()
 {
   //Open Serial port
-  Serial.begin(115200);
+  Serial.begin(115200, SERIAL_8E2); //config to 8 data bits, even parity, 2 stop bits
   //ensure it will actually run
   
   //start up encoders
