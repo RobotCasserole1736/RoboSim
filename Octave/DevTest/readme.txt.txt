@@ -1,0 +1,1 @@
+This folder (RoboSim\Octave\dev_test) contains developement tests used to evaluate Octave's ability to draw images, and send/recieve serial data in real time. The code herein is good for examples, but is not referenced by any other part of RoboSim
