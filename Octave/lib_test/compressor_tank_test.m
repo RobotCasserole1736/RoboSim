@@ -27,7 +27,7 @@ global Ts;
 Ts = 0.1; %Sample time, seconds
 
 %Define testcase
-SimEndTime = 30; %seconds
+SimEndTime = 15; %seconds
 comp_enable_input = [0 0 1 1];
 comp_enable_times = [0 1-Ts 1 SimEndTime];
 comp_outflow_rate_Lps_input = [0 0];
