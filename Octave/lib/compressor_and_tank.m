@@ -2,6 +2,7 @@
 %
 % Inputs - Compressor_enabled - 1 for compressor on, 0 for off.
 %        - Outflow_rate - flow rate of air out of the air tank (usually small due to leaks, larger while pistons are moving)
+%        - Reset - set to 1 to reset state variables to initial values
 %
 % Outputs - System Pressure - pressure in air tank and present at outlet of system
 %         - System Current - electrical current through compressor (varies as function of enablement and system PSI)
@@ -11,7 +12,7 @@
 %        - 
 %
 
-function [sys_press_kPa, comp_current_A] = compressor_and_tank(enabled, outflow_rate_L_per_s)
+function [sys_press_kPa, comp_current_A] = compressor_and_tank(enabled, outflow_rate_L_per_s, reset)
 
 % access the plant sample time global
 global Ts;
@@ -21,12 +22,12 @@ persistent moles_air_stored
 
 %User Constants
 tank_volume_L = 14.15; %(in L. 0.5 ft^3 = 14.15L)
-tank_air_temp_C = 37.77; %(in DegC. 100degF = 37.77degC)
+tank_air_temp_C = 21; %(in DegC. 70degF ~= 21degC)
 
-%Viair 090 air compressor constants (from http://www.viaircorp.com/90C.html#tabs-2)
-comp_perf_data_sys_press_psi = [0 10 20 30 40 50 60 70 80 90 100 110 120];
-comp_perf_data_flow_ft3_per_min = [0.73 0.64 0.59 0.64 0.51 0.45 0.39 0.35 0.28 0.28 0.27 0.24 0.21];
-comp_perf_data_current_A = [7 8 8 9 9 9 9 10 10 10 11 10 9];
+%Viair 090 air compressor constants (from andymark's page)
+comp_perf_data_sys_press_psi = [0 10 20 30 40 50 60 70 80 90 100 110 120 150];
+comp_perf_data_flow_ft3_per_min = [0.88 0.71 0.67 0.64 0.60 0.57 0.53 0.48 0.45 0.43 0.39 0.36 0.34 0];
+comp_perf_data_current_A = [7 8 8 9 9 9 10 10 10 10 9 9 9 9];
 
 %Physical constants
 gas_const_r = 8.3144621; %(in L*kPa/(K*mol))
@@ -39,7 +40,7 @@ comp_perf_data_flow_L_per_s = comp_perf_data_flow_ft3_per_min * 0.471947443;
 min_moles_air = min_press_kpa * tank_volume_L / (gas_const_r * tank_air_temp_K); %(n = PV/rT)
 
 %init - start at min moles (one atmosphere of pressure)
-if(isempty(moles_air_stored))
+if(reset)
 	moles_air_stored = min_moles_air;
 end
 
@@ -50,10 +51,10 @@ sys_starting_press_kPa = moles_air_stored * gas_const_r * tank_air_temp_K / (tan
 %Calculate current draw at the same time too.
 if(enabled)
 	volume_in = interp1(comp_perf_data_sys_press_kPa, comp_perf_data_flow_L_per_s, sys_starting_press_kPa) * Ts;
-	comp_current_I = interp1(comp_perf_data_sys_press_kPa, comp_perf_data_flow_L_per_s, sys_starting_press_kPa);
+	comp_current_A = interp1(comp_perf_data_sys_press_kPa, comp_perf_data_current_A, sys_starting_press_kPa);
 else
 	volume_in = 0;
-	comp_current_I = 0;
+	comp_current_A = 0;
 end
 
 %calc moles of air in (n = PV/rT)
@@ -68,6 +69,4 @@ moles_air_stored = max(min_moles_air, moles_air_stored + moles_air_in - moles_ai
 %Calculate output pressure based on new mole count (P = nrT/V)
 sys_press_kPa = moles_air_stored * gas_const_r * tank_air_temp_K / (tank_volume_L);
 
-
-end
 
