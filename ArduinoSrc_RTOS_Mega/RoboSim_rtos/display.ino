@@ -82,7 +82,6 @@ void display_update()
     
   display.clearDisplay();
   
-  
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
@@ -160,6 +159,13 @@ void display_update()
             display.print(digital_outputs[i]);
             display.print(" ");
         }
+      break;
+      
+      case 6:
+        display.println("~~System Status");
+        //display.print("Mem Usage: "); //This doesn't seem to be working at the moment...
+        //display.print(calc_memory_usage_pct(), 1);
+        //display.println("%");
       break;
       
       case 255: //logos everywhere!

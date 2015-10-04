@@ -19,6 +19,7 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306.h"
 #include "hardwareInterface.h"
+#include "memory_monitor.h"
 
 #define OLED_RESET_PIN 22
 Adafruit_SSD1306 display(OLED_RESET_PIN);
