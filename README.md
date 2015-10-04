@@ -21,9 +21,9 @@ RoboSim is currently in development. This section will be updated once the first
 ## Required software:
 - Arduino IDE
   - https://www.arduino.cc/en/Main/Software
-- Python 3.X
-  - https://www.python.org/downloads/
-- PySerial
+- Python 3.2 (32bit)- other versions may work but are untested
+  - https://www.python.org/download/releases/3.2.5/
+- PySerial 2.7 win32 py3k
   -https://pypi.python.org/pypi/pyserial
 - GNU Octave + instrument-control package
   - http://www.gnu.org/software/octave/download.html
