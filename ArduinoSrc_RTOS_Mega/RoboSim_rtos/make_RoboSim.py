@@ -23,23 +23,49 @@
 ##      Chris Gerth - 204Oct2015 - Created
 #######################################################################################################################
 
-import serial #You'll need PySerial! https://pypi.python.org/pypi/pyserial
+
+import serial.tools.list_ports #You'll need PySerial! https://pypi.python.org/pypi/pyserial
 import os,sys
 import shutil,glob, subprocess
 
 #Config params
-temp_folder_name = "./temp/"
+temp_folder_name = "./temp_sketch_dir/"
 sketch_name = "RoboSim_rtos" #name of sketch to assemble. Must match the filename of your top-level .ino file.
 code_search_specs = ["./*/*.c", "./*/*.cpp", "./*/*.h", "./*/*.ino"]
+#todo - parse this info out of the serial port reads.
 board_param = "arduino:avr:mega:cpu=atmega2560" #for standard arduino mega. See https://github.com/arduino/Arduino/blob/ide-1.5.x/build/shared/manpage.adoc for help with other boards.
 
-#TODO - autodetect this from as many possible locations as we can think of!
-arduino_bin_path = "B:\Program Files (x86)\Arduino"
-arduino_exe = "arduino_debug.exe"
-arduino_cmd = os.path.abspath(os.path.join(arduino_bin_path, arduino_exe))
+# Scan for available ports with arduinos on them.
+arduino_serial_port = []
+ports = list(serial.tools.list_ports.comports()) #super fancy function that lists descriptions of the ports! 
+for p in ports:
+    print(p)
+    if "Arduino" in p[1] or "arduino" in p[1]: #Detects normal arduinos
+        arduino_serial_port = str(p[0])
+        print("Arduino found on port " + arduino_serial_port)
+    if "FTDI" in p[2]: #detects the FTDI chip on older arduinos (but other things use FTDI too, so this isn't horribly robust.)
+        arduino_serial_port = str(p[0])
+        print("Found an FTDI on " + arduino_serial_port + ". No idea if this is what you want, but I'll try anyway.") 
 
-#TODO - autodetect this using the PySerial library!
-arduino_serial_port = "COM4"
+if arduino_serial_port == []:
+    print("Schnazzle! No Arduino was found on any ports! Is it plugged in? Are you using an official Arduino board? (it must enumerate to USB as 'arduino')")
+    sys.exit(-1)
+
+#AutoDetect arduino tool path from a list of possibilities:
+arduino_bin_possible_paths = ["B:\Program Files (x86)\Arduino", "C:\Program Files (x86)\Arduino", "B:\Program Files\Arduino", "C:\Program Files\Arduino", "C:\Arduino", "B:\Arduino", "./"]
+arduino_exe = "arduino_debug.exe"
+arduino_cmd = []
+for path in arduino_bin_possible_paths:
+    possible_exe = os.path.abspath(os.path.join(path, arduino_exe)).replace("/","\\")
+    if(os.path.isfile(possible_exe)):
+        arduino_cmd = possible_exe
+        print("Found arduino executable at " + arduino_cmd);
+        break;
+        
+if(arduino_cmd == []):
+    print("Schnazzle! Arduino executable not found! Be sure to install the arduino IDE, version 1.5.0 or later.")
+    sys.exit(-1);
+
 
 file_copy_list = []
 
@@ -63,11 +89,10 @@ print("Creating temporary sketch at " + sketch_location)
 os.makedirs(sketch_location)
 
 for file in file_copy_list:
-    print("Copying " + file + " to temp sketch location")
     shutil.copy2(file, sketch_location)
     
 #Build - call arduino executables on the temp sketch
-cmd = [arduino_cmd.replace("/","\\"), "--upload", os.path.abspath(os.path.join(sketch_location, sketch_name + ".ino")).replace("/","\\"), "--board", board_param, "--port", arduino_serial_port, "--verbose-build", "--preserve-temp-files"]
+cmd = [arduino_cmd, "--upload", os.path.abspath(os.path.join(sketch_location, sketch_name + ".ino")).replace("/","\\"), "--board", board_param, "--port", arduino_serial_port, "--verbose-build", "--preserve-temp-files"]
 print("Running arduino build!")
 print(" ".join(cmd))
 ret_code = subprocess.call(cmd)
