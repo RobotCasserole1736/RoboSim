@@ -39,7 +39,6 @@ board_param = "arduino:avr:mega:cpu=atmega2560" #for standard arduino mega. See 
 arduino_serial_port = []
 ports = list(serial.tools.list_ports.comports()) #super fancy function that lists descriptions of the ports! 
 for p in ports:
-    print(p)
     if "Arduino" in p[1] or "arduino" in p[1]: #Detects normal arduinos
         arduino_serial_port = str(p[0])
         print("Arduino found on port " + arduino_serial_port)

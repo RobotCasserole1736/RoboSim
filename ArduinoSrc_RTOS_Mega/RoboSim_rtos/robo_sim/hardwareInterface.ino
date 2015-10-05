@@ -336,7 +336,6 @@ void io_card_tx_and_rx_byte_arrays(unsigned int num_cards, unsigned char * tx_by
    for(byte_iter = num_bytes-1; byte_iter >= 0; byte_iter --)
    {
      rx_bytes[byte_iter] = 0;
-	 noInterrupts();
      for(bit_iter = 7; bit_iter >= 0; bit_iter--)
      {
         //calcualte the bit
@@ -352,7 +351,6 @@ void io_card_tx_and_rx_byte_arrays(unsigned int num_cards, unsigned char * tx_by
         delayMicroseconds(IO_CLK_HALF_CYCLE_US);
         rx_bytes[byte_iter] = rx_bytes[byte_iter] | ((unsigned char)(rx_bit & 0x01) << bit_iter); 
      }
-	 interrupts();
    }
    
 }

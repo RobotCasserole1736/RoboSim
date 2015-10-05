@@ -90,6 +90,7 @@ void display_update()
   else
     display.println("PC Host Disconnected");
       
+  display_screen_index = 6; //debug
   switch (display_screen_index){
       case 0:
         display.println("~~Packet Counts");
@@ -133,7 +134,7 @@ void display_update()
       
       case 3:
         display.println("~~Solenoid Inputs");
-        display.println("1 2 3 4 5 6 7 8");
+        display.println("0 1 2 3 4 5 6 7");
         for(i = 0;i < NUM_IO_CARDS*8; i++)
         {
             display.print(digital_inputs[i]);
@@ -153,7 +154,7 @@ void display_update()
       
       case 5:
         display.println("~~Digital Outputs");
-        display.println("1 2 3 4 5 6 7 8");
+        display.println("0 1 2 3 4 5 6 7");
         for(i = 0;i < NUM_IO_CARDS*8; i++)
         {
             display.print(digital_outputs[i]);
@@ -162,6 +163,38 @@ void display_update()
       break;
       
       case 6:
+        display.println("~~Encoder Periods");
+        display.print("E1:");
+        if(encoder_enabled[0])
+            display.print((double)(encoder_periods[0]*4*ENCODER_INT_PERIOD_MS));
+        else
+            display.print("inf ");
+        display.println("ms");
+        display.print("E2:");
+        if(encoder_enabled[1])
+            display.print((double)(encoder_periods[1]*4*ENCODER_INT_PERIOD_MS));
+        else
+            display.print("inf ");
+        display.println("ms");
+      break;
+      
+      case 7:
+        display.println("~~Encoder Periods");
+        display.print("E3:");
+        if(encoder_enabled[2])
+            display.print((double)(encoder_periods[2]*4*ENCODER_INT_PERIOD_MS));
+        else
+            display.print("inf ");
+        display.println("ms");
+        display.print("E4:");
+        if(encoder_enabled[3])
+            display.print((double)(encoder_periods[3]*4*ENCODER_INT_PERIOD_MS));
+        else
+            display.print("inf ");
+        display.println("ms");
+      break;
+      
+      case 8:
         display.println("~~System Status");
         //display.print("Mem Usage: "); //This doesn't seem to be working at the moment...
         //display.print(calc_memory_usage_pct(), 1);
@@ -192,7 +225,7 @@ void display_update()
   }
 
   
-  display.display();
+  display.display(); //actually write the text defined above to the screen
     
     
 }
@@ -209,7 +242,7 @@ void display_update()
 void display_calc_screen_index()
 {
     const int delay_loops = 10;
-    const int max_display_screen_index = 5;
+    const int max_display_screen_index = 8;
     static int i = 0;
     
     if(i == delay_loops)
