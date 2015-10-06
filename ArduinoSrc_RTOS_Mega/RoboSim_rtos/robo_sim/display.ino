@@ -16,6 +16,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include "display.h"
+#include <math.h>
 
 //global vars
 unsigned char display_screen_index; //which status screen should be shown?
@@ -90,7 +91,6 @@ void display_update()
   else
     display.println("PC Host Disconnected");
       
-  display_screen_index = 6; //debug
   switch (display_screen_index){
       case 0:
         display.println("~~Packet Counts");
@@ -194,7 +194,11 @@ void display_update()
         display.println("ms");
       break;
       
-      case 8:
+     case 8: //screensaver
+        display_screensaver_update();
+      break;
+      
+      case 245:
         display.println("~~System Status");
         //display.print("Mem Usage: "); //This doesn't seem to be working at the moment...
         //display.print(calc_memory_usage_pct(), 1);
@@ -241,7 +245,7 @@ void display_update()
 ////////////////////////////////////////////////////////////////////////////////
 void display_calc_screen_index()
 {
-    const int delay_loops = 10;
+    const int delay_loops = 35;
     const int max_display_screen_index = 8;
     static int i = 0;
     
@@ -287,6 +291,166 @@ void display_disp_msg(char * msg)
   display.setTextColor(WHITE);
   display.setCursor(0,0);
   display.println(msg);
+  
+  display.display();
+    
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// void display_screensaver_update()
+// Description: update and display bouncing hats for a "screensaver"
+//
+// Input Arguments: none
+// Output: None
+// Globals Read: None
+// Globals Written: None
+////////////////////////////////////////////////////////////////////////////////
+void display_screensaver_update(void)
+{
+  const int hat_radius = 8;
+  
+  const double speed_scale = 0.5;
+  
+  const double hat_1_mass = 2;
+  const double hat_2_mass = 2;
+  
+  const int top_wall_limit = 0;
+  const int bottom_wall_limit = 31;
+  const int left_wall_limit = 0;
+  const int right_wall_limit = 127;
+  
+  static double hat_1_pos_x = 30;
+  static double hat_1_pos_y = 8;
+  static double hat_1_vel_x = 3;
+  static double hat_1_vel_y = 1;
+  
+  static double hat_2_pos_x = 100;
+  static double hat_2_pos_y = 13;
+  static double hat_2_vel_x = -2;
+  static double hat_2_vel_y = 3;
+  
+  static char prev_hats_in_contact = 0;
+  char hats_in_contact = 0;
+  char hat_collision_occurred = 0;
+ 
+
+  
+  double A = 0; //angle of collision
+  
+  display.clearDisplay();
+  
+  //wall collisions are simpler - just invert the velocity.
+  //Hat 1:
+  if(hat_1_pos_y - hat_radius < top_wall_limit)
+  {
+      hat_1_vel_y = -hat_1_vel_y;
+      hat_1_pos_y = top_wall_limit + hat_radius;
+  }
+  else if(hat_1_pos_y + hat_radius > bottom_wall_limit)
+  {
+      hat_1_vel_y = -hat_1_vel_y;
+      hat_1_pos_y = bottom_wall_limit - hat_radius;
+  }
+  if(hat_1_pos_x - hat_radius < left_wall_limit)
+  {
+      hat_1_vel_x = -hat_1_vel_x;
+      hat_1_pos_x = left_wall_limit + hat_radius;
+  }
+  else if(hat_1_pos_x + hat_radius > right_wall_limit)
+  {
+      hat_1_vel_x = -hat_1_vel_x;
+      hat_1_pos_x = right_wall_limit - hat_radius;
+  }
+  
+  //Hat 2:
+  if(hat_2_pos_y - hat_radius < top_wall_limit)
+  {
+      hat_2_vel_y = -hat_2_vel_y;
+      hat_2_pos_y = top_wall_limit + hat_radius;
+  }
+  else if(hat_2_pos_y + hat_radius > bottom_wall_limit)
+  {
+      hat_2_vel_y = -hat_2_vel_y;
+      hat_2_pos_y = bottom_wall_limit - hat_radius;
+  }
+  if(hat_2_pos_x - hat_radius < left_wall_limit)
+  {
+      hat_2_vel_x = -hat_2_vel_x;
+      hat_2_pos_x = left_wall_limit + hat_radius;
+  }
+  else if(hat_2_pos_x + hat_radius > right_wall_limit)
+  {
+      hat_2_vel_x = -hat_2_vel_x;
+      hat_2_pos_x = right_wall_limit - hat_radius;
+  }
+  
+  //Determine if hats are colliding with eachother
+  if(sqrt(pow((hat_1_pos_x - hat_2_pos_x),2) + pow((hat_1_pos_y - hat_2_pos_y),2)) < 2*hat_radius)
+      hats_in_contact = 1;
+  else
+      hats_in_contact = 0;
+
+  if(hats_in_contact == 1 & prev_hats_in_contact == 0)
+      hat_collision_occurred = 1;
+  else
+      hat_collision_occurred = 0;
+  
+  prev_hats_in_contact = hats_in_contact;
+  
+  //handle hat collision
+  if(hat_collision_occurred)
+  {
+    double magnitude_1;
+    double magnitude_2;
+    double direction_1;
+    double direction_2;
+    
+    double new_xspeed_1;
+    double new_yspeed_1;
+    double new_xspeed_2;
+    double new_yspeed_2;
+    
+    double final_xspeed_1;
+    double final_xspeed_2;
+    double final_yspeed_1;
+    double final_yspeed_2;
+    
+    double dx;
+    double dy;
+    dx = hat_1_pos_x-hat_2_pos_x;
+    dy = hat_1_pos_y-hat_2_pos_y;
+    A = atan2(dy, dx);
+    magnitude_1 = sqrt(hat_1_vel_x*hat_1_vel_x+hat_1_vel_y*hat_1_vel_y);
+    magnitude_2 = sqrt(hat_2_vel_x*hat_2_vel_x+hat_2_vel_y*hat_2_vel_y);
+    direction_1 = atan2(hat_1_vel_y, hat_1_vel_x);
+    direction_2 = atan2(hat_2_vel_y, hat_2_vel_x);
+    new_xspeed_1 = magnitude_1*cos(direction_1-A);
+    new_yspeed_1 = magnitude_1*sin(direction_1-A);
+    new_xspeed_2 = magnitude_2*cos(direction_2-A);
+    new_yspeed_2 = magnitude_2*sin(direction_2-A);
+    final_xspeed_1 = ((hat_1_mass-hat_2_mass)*new_xspeed_1+(hat_2_mass+hat_2_mass)*new_xspeed_2)/(hat_1_mass+hat_2_mass);
+    final_xspeed_2 = ((hat_1_mass+hat_1_mass)*new_xspeed_1+(hat_2_mass-hat_1_mass)*new_xspeed_2)/(hat_1_mass+hat_2_mass);
+    final_yspeed_1 = new_yspeed_1;
+    final_yspeed_2 = new_yspeed_2;
+    hat_1_vel_x = cos(A)*final_xspeed_1+cos(A+3.14159/2)*final_yspeed_1;
+    hat_1_vel_y = sin(A)*final_xspeed_1+sin(A+3.14159/2)*final_yspeed_1;
+    hat_2_vel_x = cos(A)*final_xspeed_2+cos(A+3.14159/2)*final_yspeed_2;
+    hat_2_vel_y = sin(A)*final_xspeed_2+sin(A+3.14159/2)*final_yspeed_2;
+  }
+  
+
+  
+  //update Position
+  hat_1_pos_x += hat_1_vel_x * speed_scale;
+  hat_1_pos_y += hat_1_vel_y * speed_scale;
+  hat_2_pos_x += hat_2_vel_x * speed_scale;
+  hat_2_pos_y += hat_2_vel_y * speed_scale;
+  
+  //draw hats
+  display.drawBitmap(hat_1_pos_x-hat_radius, hat_1_pos_y-hat_radius, chef_hat_logo_bmp, 16, 16, 1);
+  display.drawBitmap(hat_2_pos_x-hat_radius, hat_2_pos_y-hat_radius, chef_hat_logo_bmp, 16, 16, 1);
+
   
   display.display();
     

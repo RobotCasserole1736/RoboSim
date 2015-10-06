@@ -74,8 +74,8 @@
 //arduino pin voltages to swing sufficently for stable operation.
 //Turns out these can be really tiny (1 us each, yeilding up to a 38kHz IO clock speed == 0.86ms data exchange time per io card)
 //but if instablilty sets in, one potential solution is to slow down the IO speed by cranking these up.
-#define IO_CLK_HALF_CYCLE_US 5
-#define IO_SYNC_PULSE_TIME_US 5
+#define IO_CLK_HALF_CYCLE_US 1
+#define IO_SYNC_PULSE_TIME_US 1
 
 
 

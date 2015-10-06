@@ -125,7 +125,7 @@ static void vPlantRunLoop(void *pvParameters) {
 
 static void vDisplayUpdate(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.2 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
+  const TickType_t xFrequency = (TickType_t)round(0.05 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
   xLastWakeTime = xTaskGetTickCount();
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("done initalizing display update task");

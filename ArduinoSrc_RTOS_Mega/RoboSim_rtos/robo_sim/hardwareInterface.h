@@ -35,7 +35,7 @@
 
 #define PACKET_START_BYTE (byte)'~'
 
-#define DISCONNECT_DBNC_TIME 10
+#define DISCONNECT_DBNC_TIME 30 //number of reads w/o a full packet before we say there's no more PC
 
 
 //Function prototypes from ISRs.cpp
