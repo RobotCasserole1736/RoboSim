@@ -11,7 +11,7 @@ struct  (
         'gear_ratio',           [1/12, 1/8],...     % gear ratio of the drivetrain [low, high]
         'encoder_ratio',        [1/12, 1/8],...     % ratio of the gearbox from the motor to the encoder [low, high]
         'wheel_diameter',       6 * 0.0254,...      % drive wheel diameter (meters)
-        'weight',               100,...             % robot weight (pounds)
+        'weight',               10,...             % robot weight (pounds)
         'drive_motors',         3,...               % number of motors per side of drivetrain
         'mechanism_motors',     0,...               % total number of mechanism motors
         'scratch',              0

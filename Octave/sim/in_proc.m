@@ -10,10 +10,29 @@
 % required physical inputs:
 %   6x motor voltage
 %   8x solenoid voltage
+global s1
+global use_serial
 
-% these should read from the serial interface
-in = ...
-struct  (
-        'motor_voltage',    [12,12,0,0,0,0],... % array of input motor voltages
-        'solenoid_voltage', [0,0,0,0,0,0,0,0]   % array of input solenoid voltages
-        );
+
+if(use_serial == 0)
+    in = ...
+    struct  (
+            'motor_voltage',    [12,12,0,0,0,0],... % array of input motor voltages
+            'solenoid_voltage', [0,0,0,0,0,0,0,0]   % array of input solenoid voltages
+            );
+else
+    %read packet from RoboSim
+	[rx_packet, read_ret_status] = serial_read_packet(s1,10);
+    if(read_ret_status !=0 )
+        disp("Warning - bad packet read from RoboSim!");
+        rx_packet = old_rx_packet;
+    end
+
+    [digital_inputs, motor_voltages] = serial_decode_packet(rx_packet);
+    in = ...
+    struct  (
+            'motor_voltage',    motor_voltages,... % array of input motor voltages
+            'solenoid_voltage', digital_inputs.*12   % array of input solenoid voltages
+            );
+    old_rx_packet = rx_packet;
+end

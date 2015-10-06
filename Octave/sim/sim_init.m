@@ -7,14 +7,29 @@
 % 
 
 %% Preload
+
+%Log some things
+disp(sprintf('\n\n'));
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+disp(['~~~~~~~~~~RoboSim Plant Model Log Started ', datestr(now)])
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
+
 clf;    % clear figure
 %uncomment the path when we move to a library architecture:
 %addpath("../lib");   % add the lib path to the sim
 
-global Ts
-global simTime
+global Ts %sample time (seconds)
+global simTime %total length os simulation run
+global s1 %serial port for robosim coms
+global use_serial
+
+
 Ts = 0.1;
-simTime = .5;
+simTime = 5;
+use_serial = 1; %if set to 1, robosim hardware will be used for IO. Otherwise, test vectors in a purely PC environment will be used.
 
 %% Load model
 field_15; % load the field
@@ -51,5 +66,20 @@ lms = lmt= rms = rmt = t;
 
 %loop counter
 i =1;
+
+%initalize serial connection
+if(use_serial)
+    %Look for RoboSim on the serial ports
+    ser_port_name = serial_detect_port();
+    if(ischar(ser_port_name) || ser_port_name ~= -1)
+        %Open serial port.
+        s1 = serial_open_port(ser_port_name,0.1);
+    else
+        disp("Cannot find robosim! Serial coms will not take place!");
+        s1 = -1;
+    end
+else
+    s1 = -1;
+end
 
 
