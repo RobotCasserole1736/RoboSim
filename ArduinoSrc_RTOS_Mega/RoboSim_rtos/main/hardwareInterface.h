@@ -21,6 +21,7 @@
 #include "plantConfig.h"
 #include "FlexiTimer2.h"
 #include "digitalWriteFast.h"
+#include "five_point_map.h"
 
 //encoder state machine def's
 #define ENCODER_DISABLED 0 //all outputs at 0
@@ -29,13 +30,21 @@
 #define ENCODER_STATE_3 3 //encoder output 11
 #define ENCODER_STATE_4 4 //encoder output 10
 #define ENCODER_UNAVAILABLE -1
-
 #define ENCODER_DIR_FWD true
 #define ENCODER_DIR_BKD false
 
 #define PACKET_START_BYTE (byte)'~'
 
 #define DISCONNECT_DBNC_TIME 30 //number of reads w/o a full packet before we say there's no more PC
+
+//Calibration values for analog input boards
+const uint16_t input_map[][] PROGMEM = {{0,256,512,767,1023},  //brd 1, ch 1
+                                        {0,256,512,767,1023},  //brd 1, ch 2
+                                        {0,256,512,767,1023},  //brd 2, ch 1
+                                        {0,256,512,767,1023},  //brd 2, ch 2
+                                        {0,256,512,767,1023},  //brd 3, ch 1
+                                        {0,256,512,767,1023}}; //brd 3, ch 2
+const double output_map[] PROGMEM = {-12.0,-6.0,0.0,6.0,12.0}; //same for all
 
 
 //Function prototypes from ISRs.cpp

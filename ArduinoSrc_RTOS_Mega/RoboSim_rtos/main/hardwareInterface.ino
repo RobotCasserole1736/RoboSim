@@ -124,8 +124,8 @@ void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num)
 ////////////////////////////////////////////////////////////////////////////////
 double get_motor_in_voltage(char motor_num)
 {
-  //Scale and offset the analog value.
-  return ((double)motor_input_readings[motor_num] - motor_zero_points[motor_num])*motor_conversion_factor[motor_num] ;
+  //run motor value through five point map
+  return five_point_map(motor_input_readings[motor_num],input_map[motor_num],output_map);
 }
 
 
