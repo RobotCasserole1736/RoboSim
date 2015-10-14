@@ -38,10 +38,10 @@
 #define DISCONNECT_DBNC_TIME 30 //number of reads w/o a full packet before we say there's no more PC
 
 //Calibration values for analog input boards
-const uint16_t input_map[][] PROGMEM = {{0,256,512,767,1023},  //brd 1, ch 1
-                                        {0,256,512,767,1023},  //brd 1, ch 2
-                                        {0,256,512,767,1023},  //brd 2, ch 1
-                                        {0,256,512,767,1023},  //brd 2, ch 2
+const uint16_t input_map[][] PROGMEM = {{892,717,563,354,174},  //brd 1, ch 1
+                                        {896,719,536,357,175},  //brd 1, ch 2
+                                        {894,720,538,352,177},  //brd 2, ch 1
+                                        {894,719,537,356,181},  //brd 2, ch 2
                                         {0,256,512,767,1023},  //brd 3, ch 1
                                         {0,256,512,767,1023}}; //brd 3, ch 2
 const double output_map[] PROGMEM = {-12.0,-6.0,0.0,6.0,12.0}; //same for all
