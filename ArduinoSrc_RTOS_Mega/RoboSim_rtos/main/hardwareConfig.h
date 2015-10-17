@@ -38,7 +38,7 @@
 #define HW_ENCODER_4B_PIN 9
 
 //serial IO card pins
-#define IO_SER_OUT_PIN 13
+#define IO_SER_OUT_PIN 24
 #define IO_SER_IN_PIN 12
 #define IO_SER_SYNC_PIN 11
 #define IO_SER_CLK_PIN 10
