@@ -28,8 +28,8 @@ global use_serial
 
 
 Ts = 0.1;
-simTime = 5;
-use_serial = 1; %if set to 1, robosim hardware will be used for IO. Otherwise, test vectors in a purely PC environment will be used.
+simTime = 8
+use_serial = 0; %if set to 1, robosim hardware will be used for IO. Otherwise, test vectors in a purely PC environment will be used.
 
 %% Load model
 field_15; % load the field

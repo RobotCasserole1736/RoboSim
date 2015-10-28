@@ -20,8 +20,8 @@ Ki = (12-(2.7*Rc))/(5310*2*pi/60); %V/(rad/s). Calculated from Vemf@FreeSpeed/(2
 
 %The following are again total guesses, this data is not available anywhere I can find.
 Kf = 0.25; %Kinetic rotational coefficent of friction in Nm-s for motor
-Tfs = 0.2; %Static friction maximum torque magnititude
-speed_mag_zero_limit = 10; %in rad/sec This and below define pratical deadzones for speed 
+Tfs = 0.01; %Static friction maximum torque magnititude
+speed_mag_zero_limit = 0; %in rad/sec This and below define pratical deadzones for speed 
 
 SystemMomentOfInertia = 0.555 * 0.0254^2; % kg-m^2 - just a guess the rotating member of CIM - model as 1.25lb, 1 in. radius solid cylinder
 

@@ -14,14 +14,13 @@ global s1
 global use_serial
 
 %% pass outputs
-lmv(i) = motor(1,1).voltage;
-lms(i) = motor(1,1).speed;
-lmt(i) = motor(1,1).torque;
-lml(i) = motor(1,1).load_torque;
-rmv(i) = motor(2,1).voltage;
-rms(i) = motor(2,1).speed;
-rmt(i) = motor(2,1).torque;
-rml(i) = motor(2,1).load_torque;
+lmv(i) = motor(1).voltage;
+lms(i) = motor(1).speed;
+lmt(i) = motor(1).torque;
+
+rb_x_vel(i) = robot_state.linear_vel_x;
+rb_x_pos(i) = robot_state.pos_x;
+
 t(i) = n;
 
 %% serial write

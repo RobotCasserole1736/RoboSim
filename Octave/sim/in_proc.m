@@ -15,9 +15,11 @@ global use_serial
 
 
 if(use_serial == 0)
+	test_waveform_1_t = [0, 0.2, 10];
+	test_waveform_1_v = [0,  12,  12];
     in = ...
     struct  (
-            'motor_voltage',    [12,12,0,0,0,0],... % array of input motor voltages
+            'motor_voltage',    [interp1(test_waveform_1_t, test_waveform_1_v, n),12,0,0,0,0],... % array of input motor voltages
             'solenoid_voltage', [0,0,0,0,0,0,0,0]   % array of input solenoid voltages
             );
 else
