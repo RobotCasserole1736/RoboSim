@@ -15,7 +15,7 @@ global use_serial
 
 
 if(use_serial == 0)
-	test_waveform_1_t = [0, 0.2, 10];
+	test_waveform_1_t = [0, 0.2, simTime];
 	test_waveform_1_v = [0,  12,  12];
     in = ...
     struct  (

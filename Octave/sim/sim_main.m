@@ -30,14 +30,14 @@ for n = 0:Ts:simTime
     loop_start_time = toc();
     waitbar(i/(simTime/Ts+1), h, sprintf("Running Simulation. (%d/%d)",i, (simTime/Ts+1)));
 
-	disp("")
-	disp("Time (s):")
-	disp(n)
     %% get inputs
     in_proc;
 
-    %% run plant
+    %% run robot plant
     robot_15;
+    
+    %% check robot field interactions
+    field_robot_physics;
 
     %% set outputs
     out_proc;

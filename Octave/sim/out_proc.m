@@ -33,3 +33,14 @@ end
 
 %% visual processing
 % draw robot
+
+%calculate robot drawing verticies
+robot_TL_vertex = [robot_state.pos_y, robot_state.pos_x] + [-robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_height * sin(robot_state.rotation),   robot_config.half_height * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
+robot_TR_vertex = [robot_state.pos_y, robot_state.pos_x] + [ robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_height * sin(robot_state.rotation),   robot_config.half_height * cos(robot_state.rotation) +  robot_config.half_width * sin(robot_state.rotation)];
+robot_BR_vertex = [robot_state.pos_y, robot_state.pos_x] + [ robot_config.half_width * cos(robot_state.rotation) +   robot_config.half_height * sin(robot_state.rotation),  -robot_config.half_height * cos(robot_state.rotation) +  robot_config.half_width * sin(robot_state.rotation)];
+robot_BL_vertex = [robot_state.pos_y, robot_state.pos_x] + [-robot_config.half_width * cos(robot_state.rotation) +   robot_config.half_height * sin(robot_state.rotation),  -robot_config.half_height * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
+marker_coords = (robot_TL_vertex + robot_TR_vertex) ./ 2;
+set(robot_obj_handle, 'XData', [ robot_TL_vertex(1) robot_TR_vertex(1) robot_BR_vertex(1) robot_BL_vertex(1) ]);
+set(robot_obj_handle, 'YData', [ robot_TL_vertex(2) robot_TR_vertex(2) robot_BR_vertex(2) robot_BL_vertex(2) ]);
+set(robot_front_marker, "Position",[marker_coords(1)-marker_radius/2, marker_coords(2)-marker_radius/2,marker_radius,marker_radius]);
+drawnow("expose"); %force update the figure with the new robot state

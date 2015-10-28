@@ -43,8 +43,8 @@ robot_state.linear_accel_x = robot_x_force_net/mass_kg;
 robot_state.linear_accel_y = robot_y_force_net/mass_kg;
 
 %Discrete-time integration of acceleration to get velocity
-robot_state.linear_vel_x = robot_state.linear_vel_x_prev + robot_state.linear_accel_x*Ts;
-robot_state.linear_vel_y = robot_state.linear_vel_y_prev + robot_state.linear_accel_y*Ts;
+robot_state.linear_vel_x = robot_state.linear_vel_x + robot_state.linear_accel_x*Ts;
+robot_state.linear_vel_y = robot_state.linear_vel_y + robot_state.linear_accel_y*Ts;
 
 motor(1).speed = robot_state.linear_vel_x *...             % linear speed (m/s)
                     (1/robot_config.wheel_diameter*pi)*... % 1/wheel circumfrence (rev/m)
@@ -54,8 +54,8 @@ motor(2).speed = robot_state.linear_vel_x *...             % linear speed (m/s)
 					(2*pi);                                % (rad/rev)
 
 %Discrete-time integration of velocity to get pos
-robot_state.pos_x = robot_state.pos_x_prev + robot_state.linear_vel_x*Ts;
-robot_state.pos_y = robot_state.pos_y_prev + robot_state.linear_vel_y*Ts;
+robot_state.pos_x = robot_state.pos_x + robot_state.linear_vel_x*Ts;
+robot_state.pos_y = robot_state.pos_y + robot_state.linear_vel_y*Ts;
 
 % repopulate speed_prev
 % Left
