@@ -35,9 +35,12 @@ robot_x_force_net = (motor(1).torque + motor(2).torque)*...   %torque from motor
                     robot_config.drive_motors_per_side*...    %multiplier for multiple drive motors per side (unitless)
                     (1/(robot_config.wheel_diameter))*...     %wheel lever arm (1/m)
 					(1/robot_config.gear_ratio(1));           %torque ratio = 1/gear ratio (unitless)
+                    
+robot_y_force_net = 0;
 
 %F/m = a					
 robot_state.linear_accel_x = robot_x_force_net/mass_kg;
+robot_state.linear_accel_y = robot_y_force_net/mass_kg;
 
 %Discrete-time integration of acceleration to get velocity
 robot_state.linear_vel_x = robot_state.linear_vel_x_prev + robot_state.linear_accel_x*Ts;
