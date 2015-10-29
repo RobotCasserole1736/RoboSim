@@ -42,7 +42,7 @@ for n = 0:Ts:simTime
     %% set outputs
     out_proc;
 
-    if(use_serial)
+    if(use_serial || enforce_realtime)
         %enforce real-time execution only if running serial
         if(loop_start_time + Ts > toc())
             %disp(sprintf('pause for %d s', (loop_start_time + Ts) - toc()));

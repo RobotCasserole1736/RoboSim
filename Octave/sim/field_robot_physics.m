@@ -6,7 +6,7 @@
 
 %Check for collisions with walls:
 
-if(robot_state.pos_x + robot_config.half_height > feild.half_height)
+if(robot_state.pos_x + robot_config.half_length > feild.half_height)
     disp("Colission with X wall occurred! Time:")
     disp(n)
     %adjust velocity, assuming elastic colision with object of infinite mass (eg, big wall)
@@ -17,7 +17,7 @@ if(robot_state.pos_x + robot_config.half_height > feild.half_height)
     robot_state.linear_accel_x = robot_state.linear_vel_x - robot_state.linear_vel_x_prev;
     %Correct position to ensure robot stays inside arena
     robot_state.pos_x_prev = robot_state.pos_x;
-    robot_state.pos_x = feild.half_height - robot_config.half_height;
+    robot_state.pos_x = feild.half_height - robot_config.half_length;
     %Update motor speeds
     motor(1).speed = robot_state.linear_vel_x *...         % linear speed (m/s)
                     (1/robot_config.wheel_diameter*pi)*... % 1/wheel circumfrence (rev/m)
@@ -25,7 +25,7 @@ if(robot_state.pos_x + robot_config.half_height > feild.half_height)
     motor(2).speed = robot_state.linear_vel_x *...         % linear speed (m/s)
                     (1/robot_config.wheel_diameter*pi)*... % 1/wheel circumfrence (rev/m)
 					(2*pi);                                % (rad/rev)
-elseif(robot_state.pos_x - robot_config.half_height < -feild.half_height)
+elseif(robot_state.pos_x - robot_config.half_length < -feild.half_height)
     disp("Colission with X wall occurred! Time:")
     disp(n)
     %adjust velocity, assuming elastic colision with object of infinite mass (eg, big wall)
@@ -36,7 +36,7 @@ elseif(robot_state.pos_x - robot_config.half_height < -feild.half_height)
     robot_state.linear_accel_x = robot_state.linear_vel_x - robot_state.linear_vel_x_prev;
     %Correct position to ensure robot stays inside arena
     robot_state.pos_x_prev = robot_state.pos_x;
-    robot_state.pos_x = feild.half_height + robot_config.half_height;
+    robot_state.pos_x = -feild.half_height + robot_config.half_length;
     %Update motor speeds
     motor(1).speed = robot_state.linear_vel_x *...         % linear speed (m/s)
                     (1/robot_config.wheel_diameter*pi)*... % 1/wheel circumfrence (rev/m)
@@ -58,7 +58,7 @@ if(robot_state.pos_y + robot_config.half_width > feild.half_width)
     robot_state.linear_accel_y = robot_state.linear_vel_y - robot_state.linear_vel_y_prev;
     %Correct position to ensure robot stays inside arena
     robot_state.pos_y_prev = robot_state.pos_y;
-    robot_state.pos_y = feild.half_width - robot_config.half_height;
+    robot_state.pos_y = feild.half_width - robot_config.half_length;
     %Update motor speeds
     motor(1).speed = robot_state.linear_vel_x *...         % linear speed (m/s)
                     (1/robot_config.wheel_diameter*pi)*... % 1/wheel circumfrence (rev/m)
@@ -77,7 +77,7 @@ elseif(robot_state.pos_y - robot_config.half_width < -feild.half_width)
     robot_state.linear_accel_y = robot_state.linear_vel_y - robot_state.linear_vel_y_prev;
     %Correct position to ensure robot stays inside arena
     robot_state.pos_y_prev = robot_state.pos_y;
-    robot_state.pos_y = feild.half_width + robot_config.half_height;
+    robot_state.pos_y = -feild.half_width + robot_config.half_length;
     %Update motor speeds
     motor(1).speed = robot_state.linear_vel_x *...         % linear speed (m/s)
                     (1/robot_config.wheel_diameter*pi)*... % 1/wheel circumfrence (rev/m)

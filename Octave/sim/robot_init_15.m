@@ -41,10 +41,12 @@ struct  (
         'wheel_diameter',       6 * 0.0254,...      % drive wheel diameter (meters)
         'drive_motors_per_side', 2,...              % number of motors per side of drivetrain
         'motor_width',          0.45,...            % distance from robot center to left/right drive wheel sets (m)
+        %Wheel-floor interactions
+        'coef_fric_kin_wheel_floor_net',   200,...  % net kinetic frictional coefficent for side-to-side motion against wheel's rotational axis
         %Overall physical characteristics
         'weight',               150,...             % robot weight (pounds)
         'half_width',           0.5,...             % distance from robot center to left/right bumpers (m)
-        'half_height',          0.75,...            % distance from robot center to front/back bumpers (m)
+        'half_length',          0.75,...            % distance from robot center to front/back bumpers (m)
         %Mechanism config
         'mechanism_motors',     0,...               % total number of mechanism motors
         'scratch',              0
@@ -64,8 +66,12 @@ struct  (
 		'pos_y',                     0,... % position of the robot center point in y (m)
         'pos_x_prev',                0,... % position of the robot center point in x (m) from the previous loop
 		'pos_y_prev',                0,... % position of the robot center point in y (m) from the previous loop
-        'rotation',                  pi/4,... % rotation about the Z axis in radians
-        'rotation_prev',             pi/4,... % rotation about the Z axis in radians
+        'rotational_accel',          0,... % rotational acceleration about the Z axis in radians/s/s
+        'rotational_accel_prev',     0,... % rotation acceleration about the Z axis in radians/s/s
+        'rotational_vel',            0,... % rotation velocity about the Z axis in radians/s
+        'rotational_vel_prev',       0,... % rotation velocity about the Z axis in radians/s
+        'rotation',                  0,... % rotation about the Z axis in radians
+        'rotation_prev',             0,... % rotation about the Z axis in radians
         'scratch',                   0
         );
 
@@ -86,10 +92,10 @@ end
 figure(1);
 % draw Robot
 %calculate robot drawing verticies
-robot_TL_vertex = [robot_state.pos_x, robot_state.pos_y] + [-robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_height * sin(robot_state.rotation),   robot_config.half_height * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
-robot_TR_vertex = [robot_state.pos_x, robot_state.pos_y] + [ robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_height * sin(robot_state.rotation),   robot_config.half_height * cos(robot_state.rotation) +  robot_config.half_width * sin(robot_state.rotation)];
-robot_BR_vertex = [robot_state.pos_x, robot_state.pos_y] + [ robot_config.half_width * cos(robot_state.rotation) +   robot_config.half_height * sin(robot_state.rotation),  -robot_config.half_height * cos(robot_state.rotation) +  robot_config.half_width * sin(robot_state.rotation)];
-robot_BL_vertex = [robot_state.pos_x, robot_state.pos_y] + [-robot_config.half_width * cos(robot_state.rotation) +   robot_config.half_height * sin(robot_state.rotation),  -robot_config.half_height * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
+robot_TL_vertex = [robot_state.pos_x, robot_state.pos_y] + [-robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_length * sin(robot_state.rotation),   robot_config.half_length * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
+robot_TR_vertex = [robot_state.pos_x, robot_state.pos_y] + [ robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_length * sin(robot_state.rotation),   robot_config.half_length * cos(robot_state.rotation) +  robot_config.half_width * sin(robot_state.rotation)];
+robot_BR_vertex = [robot_state.pos_x, robot_state.pos_y] + [ robot_config.half_width * cos(robot_state.rotation) +   robot_config.half_length * sin(robot_state.rotation),  -robot_config.half_length * cos(robot_state.rotation) +  robot_config.half_width * sin(robot_state.rotation)];
+robot_BL_vertex = [robot_state.pos_x, robot_state.pos_y] + [-robot_config.half_width * cos(robot_state.rotation) +   robot_config.half_length * sin(robot_state.rotation),  -robot_config.half_length * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
 %Calculate a front-of-robot marker location
 marker_coords = (robot_TL_vertex + robot_TR_vertex) ./ 2;
 marker_radius = 0.5;

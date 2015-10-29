@@ -21,22 +21,29 @@ end
 % left motor plot
 figure(2);
 subplot(3,1,1);
-plot(t,lmt,'-+b');
-legend('Left motor output torque (Nm)');
+plot(t,lmt,'-+b',t,rmt,'-+r');
+title('Motor output torque (Nm)');
+legend('Left', 'Right');
 subplot(3,1,2);
-plot(t,lms,'-+g');
-legend('Left motor output shaft speed (rad/s)');
+plot(t,lms,'-+b',t,rms,'-+r');
+title('Motor output shaft speed (rad/s)');
+legend('Left', 'Right');
 subplot(3,1,3);
-plot(t,lmv,'-+g');
-legend('Left Motor input voltage (V)');
-set(gcf,'numbertitle','off','name','Left Motor')
+plot(t,lmv,'-+b',t,rmv,'-+r');
+title('Motor input voltages (V)');
+legend('Left', 'Right');
+set(gcf,'numbertitle','off','name','Motors')
 
 % robot plot
 figure(3);
-subplot(2,1,1);
-plot(t,rb_x_vel,'-+b');
-legend('Robot X Velocity (m/s)');
-subplot(2,1,2);
-plot(t,rb_x_pos,'-+g');
-legend('Robot X Displacement (m)');
+subplot(3,1,1);
+plot(t,rb_x_vel,'-+g',t,rb_y_vel,'-+r');
+legend('X', 'Y');
+title('Robot Velocity (m/s)');
+subplot(3,1,2);
+plot(-rb_y_pos,rb_x_pos,'-+r');
+title('Robot Position Trace(m)');
+subplot(3,1,3);
+plot(t,rb_rot_vel,'-+r');
+title('Robot Rotational Velocity(rad/s)');
 set(gcf,'numbertitle','off','name','Robot')
