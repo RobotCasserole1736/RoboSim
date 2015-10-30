@@ -73,14 +73,14 @@ motor(1).speed = (robot_state.linear_vel_x*cos(robot_state.rotation) +...
                  -robot_state.rotational_vel*robot_config.motor_width) *...    % linear speed at wheel location(m/s)
                     (1/robot_config.wheel_diameter*pi)*...             % 1/wheel circumfrence (rev/m)
 					(2*pi)*...                                         % (rad/rev)
-                    1/robot_config.gear_ratio(1);                      % Gear ratio, inverse b/c motor rotates faster than wheels
+                    1;                      % Gear ratio, inverse b/c motor rotates faster than wheels
                     
 motor(2).speed = (robot_state.linear_vel_x*cos(robot_state.rotation) +...
                   robot_state.linear_vel_y*sin(robot_state.rotation) +...
                   robot_state.rotational_vel*robot_config.motor_width) *...     % linear speed at wheel location(m/s)
                     (1/robot_config.wheel_diameter*pi)*...             % 1/wheel circumfrence (rev/m)
 					(2*pi)*...                                         % (rad/rev)
-                    1/robot_config.gear_ratio(1);                      % Gear ratio, inverse b/c motor rotates faster than wheels
+                    1;                      % Gear ratio, inverse b/c motor rotates faster than wheels
 
 
 % repopulate speed_prev

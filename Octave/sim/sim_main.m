@@ -11,6 +11,9 @@ global use_serial
 
 %% INITIALIZE
 
+%Clear all pre-existing variables
+clear;
+clc;
 %import serial modules
 pkg load instrument-control
 %Add path to folder for custom serial functions

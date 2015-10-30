@@ -70,8 +70,8 @@ struct  (
         'rotational_accel_prev',     0,... % rotation acceleration about the Z axis in radians/s/s
         'rotational_vel',            0,... % rotation velocity about the Z axis in radians/s
         'rotational_vel_prev',       0,... % rotation velocity about the Z axis in radians/s
-        'rotation',                  0,... % rotation about the Z axis in radians
-        'rotation_prev',             0,... % rotation about the Z axis in radians
+        'rotation',                  pi/5,... % rotation about the Z axis in radians
+        'rotation_prev',             pi/5,... % rotation about the Z axis in radians
         'scratch',                   0
         );
 
@@ -82,8 +82,6 @@ for ii = 1:2+robot_config.mechanism_motors %Left and right drive motors, plus me
 			'speed',        0,...   % motor speed in rad/s
 			'torque',       0,...   % motor torque in Nm
 			'voltage',      0,...   % motor voltage in Volts
-			'load_torque',  0,...   % load on motor in Nm
-			'speed_prev',   0,...   % 1-loop delayed motor speed in rad/s
 			'scratch',      0
 			);
 end
@@ -91,6 +89,7 @@ end
 %% Initialize Robot Drawing
 figure(1);
 % draw Robot
+
 %calculate robot drawing verticies
 robot_TL_vertex = [robot_state.pos_x, robot_state.pos_y] + [-robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_length * sin(robot_state.rotation),   robot_config.half_length * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
 robot_TR_vertex = [robot_state.pos_x, robot_state.pos_y] + [ robot_config.half_width * cos(robot_state.rotation) +  -robot_config.half_length * sin(robot_state.rotation),   robot_config.half_length * cos(robot_state.rotation) +  robot_config.half_width * sin(robot_state.rotation)];
