@@ -18,7 +18,7 @@ if(use_serial == 0)
 	test_waveform_1_t = [0, 0.2, simTime];
 	test_waveform_1_v = [0,  12,  12];
 	test_waveform_2_t = [0, 0.2, simTime];
-	test_waveform_2_v = [0,  8,  12];
+	test_waveform_2_v = [0,  12,  12];
     in = ...
     struct  (
             'motor_voltage',    [interp1(test_waveform_1_t, test_waveform_1_v, n),interp1(test_waveform_2_t, test_waveform_2_v, n),0,0,0,0],... % array of input motor voltages

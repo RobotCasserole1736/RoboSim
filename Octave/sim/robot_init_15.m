@@ -36,17 +36,17 @@
 robot_config = ...
 struct  (
         %Drivetrain config
-        'gear_ratio',           [1/12, 1/8],...     % gear ratio of the drivetrain [low, high]
-        'encoder_ratio',        [1/12, 1/8],...     % ratio of the gearbox from the motor to the encoder [low, high]
+        'gear_ratio',           [1/8, 1/12],...     % gear ratio of the drivetrain [low, high]
+        'encoder_ratio',        [1/8, 1/12],...     % ratio of the gearbox from the motor to the encoder [low, high]
         'wheel_diameter',       6 * 0.0254,...      % drive wheel diameter (meters)
         'drive_motors_per_side', 2,...              % number of motors per side of drivetrain
-        'motor_width',          0.45,...            % distance from robot center to left/right drive wheel sets (m)
+        'motor_width',          0.3,...             % distance from robot center to left/right drive wheel sets (m)
         %Wheel-floor interactions
         'coef_fric_kin_wheel_floor_net',   200,...  % net kinetic frictional coefficent for side-to-side motion against wheel's rotational axis
         %Overall physical characteristics
-        'weight',               150,...             % robot weight (pounds)
-        'half_width',           0.5,...             % distance from robot center to left/right bumpers (m)
-        'half_length',          0.75,...            % distance from robot center to front/back bumpers (m)
+        'weight',               130,...             % robot weight (pounds)
+        'half_width',           0.35,...            % distance from robot center to left/right bumpers (m)
+        'half_length',          0.44,...            % distance from robot center to front/back bumpers (m)
         %Mechanism config
         'mechanism_motors',     0,...               % total number of mechanism motors
         'scratch',              0
@@ -70,9 +70,21 @@ struct  (
         'rotational_accel_prev',     0,... % rotation acceleration about the Z axis in radians/s/s
         'rotational_vel',            0,... % rotation velocity about the Z axis in radians/s
         'rotational_vel_prev',       0,... % rotation velocity about the Z axis in radians/s
-        'rotation',                  pi/5,... % rotation about the Z axis in radians
-        'rotation_prev',             pi/5,... % rotation about the Z axis in radians
+        'rotation',                  0,... % rotation about the Z axis in radians
+        'rotation_prev',             0,... % rotation about the Z axis in radians
         'scratch',                   0
+        );
+        
+%Physical properties of the robot which are derived from other constants
+%Reason for this is to do the calcultion once and speed up the runtime loop
+robot_calc_config = ...
+struct  (
+        %Drivetrain config
+        'torque_ratio',           robot_config.gear_ratio.^-1,...      % Torque ratio of motor to wheels. 
+        'wheel_circumference',    robot_config.wheel_diameter*pi,...   % drive wheel circumference (meters)
+        'mass_kg',                0.453592*robot_config.weight,...     % mass of robot in kg. 
+        'moment_of_inertia',     (1/12 * 0.453592*robot_config.weight * ((0.9*robot_config.half_length*2)^2 + (robot_config.motor_width*2)^2)),... %Wacked-up model of robot as a rectangular prisim for rotational inerita purposes
+        'scratch',              0
         );
 
 % motor workspace
@@ -82,6 +94,7 @@ for ii = 1:2+robot_config.mechanism_motors %Left and right drive motors, plus me
 			'speed',        0,...   % motor speed in rad/s
 			'torque',       0,...   % motor torque in Nm
 			'voltage',      0,...   % motor voltage in Volts
+			'current',      0,...   % motor current draw in Amps
 			'scratch',      0
 			);
 end
@@ -97,7 +110,7 @@ robot_BR_vertex = [robot_state.pos_x, robot_state.pos_y] + [ robot_config.half_w
 robot_BL_vertex = [robot_state.pos_x, robot_state.pos_y] + [-robot_config.half_width * cos(robot_state.rotation) +   robot_config.half_length * sin(robot_state.rotation),  -robot_config.half_length * cos(robot_state.rotation) + -robot_config.half_width * sin(robot_state.rotation)];
 %Calculate a front-of-robot marker location
 marker_coords = (robot_TL_vertex + robot_TR_vertex) ./ 2;
-marker_radius = 0.5;
+marker_radius = 0.3;
 %create robot patch drawing object
 robot_obj_handle= patch( [ robot_TL_vertex(1) robot_TR_vertex(1) robot_BR_vertex(1) robot_BL_vertex(1) ],[ robot_TL_vertex(2) robot_TR_vertex(2) robot_BR_vertex(2) robot_BL_vertex(2) ], 'r');
 %Create marker object
