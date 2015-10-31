@@ -9,10 +9,11 @@
 %% Drivetrain
 
 %% Get Motor Voltage
+%% scale by system voltage
 % Left
-motor(1).voltage = in.motor_voltage(1);
+motor(1).voltage = in.motor_voltage(1)*(robot_state.supply_voltage/robot_config.battery_nominal_voltage);
 % Right
-motor(2).voltage = in.motor_voltage(2);
+motor(2).voltage = in.motor_voltage(2)*(robot_state.supply_voltage/robot_config.battery_nominal_voltage);
 
 %% Physics Model
 
