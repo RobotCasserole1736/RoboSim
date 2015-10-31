@@ -16,17 +16,15 @@ motor(2).voltage = in.motor_voltage(2);
 
 %% Physics Model
 
-% calculate new torques for this loop
+% calculate new torques and currents for this loop
 % Left
-[garbage, motor(1).torque] = motor_CIM(motor(1).voltage,...
-                                       0,...
-                                       motor(1).torque,...
-                                       motor(1).speed);
+[motor(1).current, motor(1).torque] = motor_CIM(motor(1).voltage,...
+                                                motor(1).torque,...
+                                                motor(1).speed);
 % Right
-[garbage, motor(2).torque] = motor_CIM(motor(2).voltage,...
-                                       0,...
-                                       motor(2).torque,...
-                                       motor(2).speed);
+[motor(2).current, motor(2).torque] = motor_CIM(motor(2).voltage,...
+                                                motor(2).torque,...
+                                                motor(2).speed);
 
 %Calculate the drivetrain's motion-inducing force magnititude
 drivetrain_linear_force = (motor(1).torque + motor(2).torque)*...   %torque from motors (Nm)
@@ -78,6 +76,18 @@ motor(2).speed = (robot_state.linear_vel_x*cos(robot_state.rotation) +...
                  (1/(robot_calc_config.wheel_circumference))*...             % 1/wheel circumfrence (rev/m)
                  (2*pi)*...                                                  % (rad/rev)
                  (1/(robot_config.gear_ratio(1)));                           % Gear ratio, inverse b/c motor rotates faster than wheels
+
+%Electrical calculations
+
+%Sum the total current draw
+robot_state.current_draw = (abs(motor(1).current) + abs(motor(2).current)) * robot_config.drive_motors_per_side + robot_config.nominal_current_draw;
+
+%Update the battery charge based on current draw
+robot_state.battery_charge = max(robot_state.battery_charge - robot_state.current_draw*Ts/3600,0); %Ts in seconds, charge in amp-HOURS
+
+%Calculate the current-draw-induced voltage drop from nominal battery voltage using V=IR
+%Does not account for the fact that the battery decreases voltage as it discharges
+robot_state.supply_voltage = robot_config.battery_nominal_voltage - robot_state.current_draw * robot_config.battery_internal_resistance;
 
 
 % repopulate speed_prev

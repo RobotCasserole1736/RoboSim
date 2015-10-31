@@ -44,7 +44,7 @@ t = zeros(1,simTime/Ts+1);
 
 
 %loop counter
-i =1;
+i = 1;
 
 %initalize serial connection
 if(use_serial)

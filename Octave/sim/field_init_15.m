@@ -6,7 +6,7 @@
 
 feild = ...
 struct  (
-        'half_width',           4.11,...             % distance from feild center to left/right walls (m)
+        'half_width',           4.11,...               % distance from feild center to left/right walls (m)
         'half_height',          8.19,...               % distance from feild center to front/back (alliance station) walls (m)
         'scratch',                   0
         );

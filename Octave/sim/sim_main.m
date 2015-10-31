@@ -16,8 +16,9 @@ clear;
 clc;
 %import serial modules
 pkg load instrument-control
-%Add path to folder for custom serial functions
-addpath('..\SerialUtils\'); 
+%Add paths for execution
+addpath('..\SerialUtils\');  % Serial coms utilities
+addpath('..\lib\');          % component model libraries
 %Enable logging to file (mostly for headless runs)
 diary "RoboSim_plant_log.txt"
 

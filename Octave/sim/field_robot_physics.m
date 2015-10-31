@@ -9,9 +9,9 @@
 if(robot_state.pos_x + robot_config.half_length > feild.half_height)
     disp("Colission with X wall occurred! Time:")
     disp(n)
-    %adjust velocity, assuming elastic colision with object of infinite mass (eg, big wall)
+    %adjust velocity, assuming semi-elastic colision with object of infinite mass (eg, big wall)
     robot_state.linear_vel_x_prev = robot_state.linear_vel_x;
-    robot_state.linear_vel_x = -robot_state.linear_vel_x;
+    robot_state.linear_vel_x = -robot_state.linear_vel_x*(1-robot_config.bumper_p_absorption_factor);
     %calculate acceleration based off of new delta V
     robot_state.linear_accel_x_prev = robot_state.linear_accel_x;
     robot_state.linear_accel_x = robot_state.linear_vel_x - robot_state.linear_vel_x_prev;
@@ -30,7 +30,7 @@ elseif(robot_state.pos_x - robot_config.half_length < -feild.half_height)
     disp(n)
     %adjust velocity, assuming elastic colision with object of infinite mass (eg, big wall)
     robot_state.linear_vel_x_prev = robot_state.linear_vel_x;
-    robot_state.linear_vel_x = -robot_state.linear_vel_x;
+    robot_state.linear_vel_x = -robot_state.linear_vel_x*(1-robot_config.bumper_p_absorption_factor);
     %calculate acceleration based off of new delta V
     robot_state.linear_accel_x_prev = robot_state.linear_accel_x;
     robot_state.linear_accel_x = robot_state.linear_vel_x - robot_state.linear_vel_x_prev;
@@ -52,7 +52,7 @@ if(robot_state.pos_y + robot_config.half_width > feild.half_width)
     disp(n)
     %adjust velocity, assuming elastic colision with object of infinite mass (eg, big wall)
     robot_state.linear_vel_y_prev = robot_state.linear_vel_y;
-    robot_state.linear_vel_y = -robot_state.linear_vel_y;
+    robot_state.linear_vel_y = -robot_state.linear_vel_y*(1-robot_config.bumper_p_absorption_factor);
     %calculate acceleration based off of new delta V
     robot_state.linear_accel_y_prev = robot_state.linear_accel_y;
     robot_state.linear_accel_y = robot_state.linear_vel_y - robot_state.linear_vel_y_prev;
@@ -71,7 +71,7 @@ elseif(robot_state.pos_y - robot_config.half_width < -feild.half_width)
     disp(n)
     %adjust velocity, assuming elastic colision with object of infinite mass (eg, big wall)
     robot_state.linear_vel_y_prev = robot_state.linear_vel_y;
-    robot_state.linear_vel_y = -robot_state.linear_vel_y;
+    robot_state.linear_vel_y = -robot_state.linear_vel_y*(1-robot_config.bumper_p_absorption_factor);
     %calculate acceleration based off of new delta V
     robot_state.linear_accel_y_prev = robot_state.linear_accel_y;
     robot_state.linear_accel_y = robot_state.linear_vel_y - robot_state.linear_vel_y_prev;

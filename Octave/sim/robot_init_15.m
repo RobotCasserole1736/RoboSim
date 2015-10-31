@@ -39,21 +39,29 @@ struct  (
         'gear_ratio',           [1/8, 1/12],...     % gear ratio of the drivetrain [low, high]
         'encoder_ratio',        [1/8, 1/12],...     % ratio of the gearbox from the motor to the encoder [low, high]
         'wheel_diameter',       6 * 0.0254,...      % drive wheel diameter (meters)
-        'drive_motors_per_side', 2,...              % number of motors per side of drivetrain
+        'drive_motors_per_side', 3,...              % number of motors per side of drivetrain
         'motor_width',          0.3,...             % distance from robot center to left/right drive wheel sets (m)
         %Wheel-floor interactions
         'coef_fric_kin_wheel_floor_net',   200,...  % net kinetic frictional coefficent for side-to-side motion against wheel's rotational axis
+        %Robot-wall interactions
+        'bumper_p_absorption_factor',      0.5,...  % How much of the momentum is absorbed by the bumpers in a wall-robot impact? (0 = none, 1 = all)
         %Overall physical characteristics
         'weight',               130,...             % robot weight (pounds)
         'half_width',           0.35,...            % distance from robot center to left/right bumpers (m)
         'half_length',          0.44,...            % distance from robot center to front/back bumpers (m)
         %Mechanism config
         'mechanism_motors',     0,...               % total number of mechanism motors
+        %Electrical constraints                     
+        'battery_capacity',     18,...              %Energy storage of main battery in Amp-Hours
+        'battery_nominal_voltage', 12,...           %Battery nominal voltage. Usually 12, but can go lower to simulate dead battery behavior
+        'battery_internal_resistance', 0.012,...    %Battery internal resistance. This is what causes battery voltage to drop under load.
+        'nominal_current_draw', 0.5,...             %Background average current draw of roboRIO, cooling fans, lights, etc.
         'scratch',              0
         );
 		
 robot_state = ...
 struct  (
+        %Macro linear motion 
         'linear_accel_x',            0,... % acceleration of the robot in the x direction (m/s)
 		'linear_accel_y',            0,... % acceleration of the robot in the y direction (m/s)
         'linear_accel_x_prev',       0,... % acceleration of the robot in the x direction (m/s) from the previous loop
@@ -66,12 +74,17 @@ struct  (
 		'pos_y',                     0,... % position of the robot center point in y (m)
         'pos_x_prev',                0,... % position of the robot center point in x (m) from the previous loop
 		'pos_y_prev',                0,... % position of the robot center point in y (m) from the previous loop
-        'rotational_accel',          0,... % rotational acceleration about the Z axis in radians/s/s
-        'rotational_accel_prev',     0,... % rotation acceleration about the Z axis in radians/s/s
-        'rotational_vel',            0,... % rotation velocity about the Z axis in radians/s
-        'rotational_vel_prev',       0,... % rotation velocity about the Z axis in radians/s
-        'rotation',                  0,... % rotation about the Z axis in radians
-        'rotation_prev',             0,... % rotation about the Z axis in radians
+        %Macro rotational motion
+        'rotational_accel',          0,... % rotational acceleration about the Z axis (radians/s)/s
+        'rotational_accel_prev',     0,... % rotation acceleration about the Z axis (radians/s)/s
+        'rotational_vel',            0,... % rotation velocity about the Z axis (radians/s)
+        'rotational_vel_prev',       0,... % rotation velocity about the Z axis (radians/s)
+        'rotation',                  0,... % rotation about the Z axis (radians)
+        'rotation_prev',             0,... % rotation about the Z axis (radians)
+        %Electrical
+        'battery_charge', robot_config.battery_capacity,... % current charge of battery (Amp Hours)
+        'supply_voltage', robot_config.battery_nominal_voltage,... %system voltage available to all components (V)
+        'current_draw',              0,... % Total current draw from the battery (A)
         'scratch',                   0
         );
         

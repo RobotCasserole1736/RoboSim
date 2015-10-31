@@ -27,6 +27,10 @@ rb_y_vel(i) = robot_state.linear_vel_y;
 rb_y_pos(i) = robot_state.pos_y;
 rb_rot_vel(i) = robot_state.rotational_vel;
 
+rb_cur_draw(i) = robot_state.current_draw;
+rb_bat_chg(i) = robot_state.battery_charge;
+rb_sply_v(i) = robot_state.supply_voltage;
+
 t(i) = n;
 
 %% serial write

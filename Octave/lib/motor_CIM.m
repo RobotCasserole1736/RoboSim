@@ -1,12 +1,12 @@
 % motor_CIM.m
 % CIM Motor Model
 %
-%   This function takes in the real motor voltage, load torque, previous torque, 
-%   and previous speed. Then returns a new torque and new speed.
+%   This function takes in the real motor voltage (V), previous torque (Nm), 
+%   and previous speed (rad/s). Then returns a new torque (Nm) and current draw (A).
 %
 % Created July 20, 2015 - Andrew Gurik & Chris Gerth
 % 
-function [speed, torque] = motor_CIM(voltage, load_torque, torque_prev, speed_prev)
+function [current, torque] = motor_CIM(voltage, torque_prev, speed_prev)
 
 % access the Ts global
 global Ts
@@ -28,14 +28,17 @@ SystemMomentOfInertia = 0.555 * 0.0254^2; % kg-m^2 - just a guess the rotating m
 % torque calculation
 torque = torque_prev + Ts*(Kt/Lc * (voltage - torque_prev*Rc/Kt - Ki*speed_prev));
 
+%current calculation
+current = torque / Kt;
+
 %If motor is rotating, speed is increased by torque and decreased by friction
 if(abs(speed_prev) > speed_mag_zero_limit)
-    speed = speed_prev + Ts*(1/SystemMomentOfInertia * (torque_prev-load_torque) - Kf*speed_prev );
+    speed = speed_prev + Ts*(1/SystemMomentOfInertia * (torque_prev) - Kf*speed_prev );
 %If motor is stopped  
 else
     %If torque has exceeded static friction, the motor may spin per normal equations
     if(abs(torque_prev) > Tfs )
-        speed = speed_prev + Ts*(1/SystemMomentOfInertia * (torque_prev-load_torque) - Kf*speed_prev);
+        speed = speed_prev + Ts*(1/SystemMomentOfInertia * (torque_prev) - Kf*speed_prev);
     %Else, motor sticks and speed remains zero
     else
         speed = 0;
