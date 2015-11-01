@@ -20,8 +20,8 @@ step_time = 1;
 end_time = 10;
 V_start = 0;
 V_end = 12;
-voltage = [V_start*ones(1,step_time/Ts), V_end*ones(1,(end_time-step_time)/Ts)]; %Step from V_start to V_end
-%voltage = [V_start:(V_end-V_start)/(step_time/Ts-1):V_end, V_end*ones(1,(end_time-step_time)/Ts)]; %ramp from V_start to V_end from 0 to step_time, then hold V_end till end_time
+%voltage = [V_start*ones(1,step_time/Ts), V_end*ones(1,(end_time-step_time)/Ts)]; %Step from V_start to V_end
+voltage = [V_start:(V_end-V_start)/(step_time/Ts-1):V_end, V_end*ones(1,(end_time-step_time)/Ts)]; %ramp from V_start to V_end from 0 to step_time, then hold V_end till end_time
 
 num_samples = length(voltage);
 
@@ -30,10 +30,11 @@ time = (0:1:num_samples-1)*Ts;
 torque = zeros(1,num_samples);
 speed = zeros(1,num_samples);
 current = zeros(1,num_samples);
+results = [0,0];
 
 for i = 1:1:num_samples-1
-    current(i+1), torque(i+1) = motor_CIM(voltage(i), torque(i), speed(i));
-    
+    [current(i+1),torque(i+1)] = motor_CIM(voltage(i), torque(i), speed(i));
+
     %plant-ish model of the rotating member & bearings
     %If motor is rotating, speed is increased by torque and decreased by friction
     if(abs(speed(i)) > speed_mag_zero_limit)
@@ -54,16 +55,16 @@ end
 
 subplot(4,1,1);
 plot(time, voltage);
-title('Voltage (V) vs. Time (S)');
+title('Voltage (V) vs. Time (s)');
 subplot(4,1,2);
 plot(time, torque);
-title('Torque (Nm) vs. Time (S)');
+title('Torque (Nm) vs. Time (s)');
 subplot(4,1,3);
 plot(time, speed*60/2/pi);
-title('Speed (RPM) vs. Time (S)');
+title('Speed (RPM) vs. Time (s)');
 subplot(4,1,4);
 plot(time, current);
-title('Current (I) vs. Time (S)');
+title('Current (I) vs. Time (s)');
 
 
 
