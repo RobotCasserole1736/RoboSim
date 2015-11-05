@@ -47,7 +47,7 @@
 #define NUM_ENCODER_OUTPUTS 4
 #define NUM_MOTOR_INPUTS 6
 
-//period between evaluating the encoder isr function
+//period between evaluating the encoder ISR function
 //which triggers (possibly) state transitions
 #define ENCODER_INT_PERIOD_MS 0.1
 
@@ -58,9 +58,15 @@
 //Sample time for main simulation loop
 #define MAIN_LOOP_TS_MS 100
 
+//RTOS Task rates
+#define SERIAL_TX_TASK_RATES_S 0.05
+#define SERIAL_RX_TASK_RATES_S 0.04
+#define HW_IO_SAMPLE_TASK_RATES_S 0.05
+#define PLANT_LOOP_TASK_RATES_S 1
+#define DISPLAY_UPDATE_TASK_RATES_S 0.2
+
 //flash rate of plant active LED in loops
 #define HW_STATUS_FLASH_RATE_LOOPS 3
-
 
 
 //IO Card constants

@@ -34,7 +34,7 @@ boolean plant_running_led_state = false;
 
 static void vPCSerialTx(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.1 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
+  const TickType_t xFrequency = (TickType_t)round(SERIAL_TX_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
   xLastWakeTime = xTaskGetTickCount();
 
   #ifdef ENABLE_TASK_DEBUG_PRINT
@@ -57,7 +57,7 @@ static void vPCSerialTx(void *pvParameters) {
 
 static void vPCSerialRx(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.08 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
+  const TickType_t xFrequency = (TickType_t)round(SERIAL_RX_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
   xLastWakeTime = xTaskGetTickCount();
   
   #ifdef ENABLE_TASK_DEBUG_PRINT
@@ -82,7 +82,7 @@ static void vPCSerialRx(void *pvParameters) {
 
 static void vHWIOSample(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.1 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
+  const TickType_t xFrequency = (TickType_t)round(HW_IO_SAMPLE_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
   xLastWakeTime = xTaskGetTickCount();
   
   #ifdef ENABLE_TASK_DEBUG_PRINT
@@ -105,7 +105,7 @@ static void vHWIOSample(void *pvParameters) {
 
 static void vPlantRunLoop(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.1 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
+  const TickType_t xFrequency = (TickType_t)round(PLANT_LOOP_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
   xLastWakeTime = xTaskGetTickCount();
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("done initalizing plant task");
@@ -125,7 +125,7 @@ static void vPlantRunLoop(void *pvParameters) {
 
 static void vDisplayUpdate(void *pvParameters) {
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = (TickType_t)round(0.05 * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
+  const TickType_t xFrequency = (TickType_t)round(DISPLAY_UPDATE_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
   xLastWakeTime = xTaskGetTickCount();
   #ifdef ENABLE_TASK_DEBUG_PRINT
   Serial.println("done initalizing display update task");
