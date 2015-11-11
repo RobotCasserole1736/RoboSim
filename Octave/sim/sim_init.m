@@ -27,8 +27,8 @@ global s1 %serial port for robosim coms
 global use_serial
 
 
-Ts = 0.06;
-simTime = 20;
+Ts = 0.05;
+simTime = 120;
 use_serial = 1; %if set to 1, robosim hardware will be used for IO. Otherwise, test vectors in a purely PC environment will be used.
 enforce_realtime = 0; %if set to 1, delays simulation to display in real-time. if 0, runs sim as fast as the PC can.
                       %Sim is always real-time if serial is used.
