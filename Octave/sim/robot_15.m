@@ -83,6 +83,9 @@ motor(2).speed = (robot_state.linear_vel_x*cos(robot_state.rotation) +...
 %Sum the total current draw
 robot_state.current_draw = (abs(motor(1).current) + abs(motor(2).current)) * robot_config.drive_motors_per_side + robot_config.nominal_current_draw;
 
+%Main Breaker
+[robot_state.current_draw, mcb_state] = circuit_breaker(robot_state.current_draw, main_circuit_breaker);
+
 %Update the battery charge based on current draw
 robot_state.battery_charge = max(robot_state.battery_charge - robot_state.current_draw*Ts/3600,0); %Ts in seconds, charge in amp-HOURS
 

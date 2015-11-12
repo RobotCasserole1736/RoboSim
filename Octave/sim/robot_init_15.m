@@ -100,6 +100,28 @@ struct  (
         'scratch',              0
         );
 
+% Main Circuit Breaker
+% http://files.andymark.com/PDFs/am-0282_data_sheet.pdf
+main_circuit_breaker = ...
+struct  (
+        %configuration
+        'rated_current',          120,... % Rated Current (Amps)
+        %Time vs Percent Rated Current
+        'time_map',               [0.2,   1,   5,  10,  15,  20,  30,  40, 100, 200, 500],...  % time (seconds)
+        'time_rated_current_map', [600, 500, 300, 200, 175, 150, 140, 130, 115, 105, 100],...  % rated current (% rated)
+        %Temperature vs Percent Rated Current
+        'temperature_map',        [-50, 250],...  % temperature (deg C)
+        'temp_rated_current_map', [100, 100],...  % rated current (%)
+        
+        %workspace
+        'state',               0,... % the input current
+        'accum_current',       0,... % MCB accumulation
+        'accum_time',          0,... % MCB accumulation time
+        'history',             zeros(1, 150/Ts),... % current history for 2.5 minutes (length of a match)
+        'history_pt',          0,... % pointer used by the circuit breaker library
+        'history_rollover',    0,... % flag to indicate if the cusum has rolled over
+        );
+        
 % motor workspace
 for ii = 1:2+robot_config.mechanism_motors %Left and right drive motors, plus mechanism motors
 	motor(ii) = ...
