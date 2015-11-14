@@ -219,7 +219,14 @@ Derivative
  of a function describes how quickly the function is changing as time goes
  on.
  On a curve on a Cartesian (x/y) plot, the derivative is the same as the
- slope of the curve at any given point.
+ slope of the curve at any given point, as shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:deriv"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -245,6 +252,52 @@ x=\frac{dy}{dt}
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/deriv_example.gif
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Illustration of a derivative as the 
+\begin_inset Quotes eld
+\end_inset
+
+instantaneous slope
+\begin_inset Quotes erd
+\end_inset
+
+ of a curve
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:deriv"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 An 
 \series bold
 Integral
@@ -252,7 +305,14 @@ Integral
  of a function describes how big or small the function's value has been
  historically.
  On a Cartesian plot, the integral is the same as the area between the curve
- and the x axis over a given period of time.
+ and the x axis over a given period of time, as shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:integral"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -271,6 +331,52 @@ x=y(t)
 \[
 X=\int y(t)dt+c
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/integral_example.gif
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Illustration of a integral as the 
+\begin_inset Quotes eld
+\end_inset
+
+area under a curve
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:integral"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -318,6 +424,56 @@ Discrete functions
 \[
 \{0.00,3\},\{0.01,2\},\{0.02,1\},\{0.03,0\},...
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We might turn a continuous function into a descrete one by 
+\series bold
+sampling
+\series default
+ it at regular intervals.
+ This is usually the way that sensors and digital systems are integrated
+ - the sensor reads an analog value continuously, and the digital system
+ records the sensor's value at specific points in time.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/sampling_a_function.png
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sampling a continuous function x=y(t) to produce descrete function x=y[n]
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sampling a Function"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -619,6 +775,55 @@ x[n]=\stackrel[i=0]{n}{\sum}v[i]*Ts
 \end_layout
 
 \begin_layout Standard
+Plots of these relationships are shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:accel_vel_pos"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/pos_vel_accel.png
+	width 15cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Examples of motion, relating acceleration, velocity, and position
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:accel_vel_pos"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 For units, we will always use 
 \series bold
 metric
@@ -632,6 +837,10 @@ metric
 Forces and Linear motion
 \end_layout
 
+\begin_layout Subsubsection
+Newton's Law
+\end_layout
+
 \begin_layout Standard
 
 \series bold
@@ -639,6 +848,45 @@ Force
 \series default
  is something pushing on another thing.
  The more you push, the faster and faster you will go.
+ The larger the object, the harder it is to make it go faster.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/f=ma.png
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Newton's Second Law
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:f=ma"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -677,6 +925,293 @@ Note that Force is measured in Newtons (N), mass is measured in kilograms
 Note also that force changes over time, and acceleration changes over time,
  but we assume mass is constant.
  
+\end_layout
+
+\begin_layout Subsubsection
+Sources of Forces
+\end_layout
+
+\begin_layout Standard
+Forces come from many places.
+ A student pushing on a robot frame is one possible, simple source.
+ A turning wheel in contact with the floor is another.
+ Meshed gear teeth pushing on one another is yet another transfer of force.
+ 
+\end_layout
+
+\begin_layout Standard
+Of the list mentioned so far, friction is very important and has some special
+ calculations associated with it.
+\end_layout
+
+\begin_layout Subsubsection
+Frictional Forces
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Friction
+\series default
+ is a force which opposes two contacting surfaces from sliding relative
+ to each other.
+ It comes from microscopic interactions of matter in contact with each other.
+ It can get very complex and is not fully understood, but can be well modeled
+ at a macro level.
+ We will discuss this model, as it is the most useful for FRC robotics applicati
+ons.
+ There are two main types of friction: Static and Kinetic.
+\end_layout
+
+\begin_layout Subsubsection
+Static Friction
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Static friction
+\series default
+ deals with the case where two surfaces are not moving relative to one another.
+ If you were to pin a book in place on a wall by only pressing on the book
+ toward the wall, you would be using the static friction between the book
+ and the wall to oppose the force of gravity, keeping the book from falling.
+ This is illustrated in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:static_fric_book"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/static_friction_on_wall.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Static friction pinning a book to a wall
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:static_fric_book"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Static frictional force will take on whatever value it needs to to counter
+ out other forces, up to a certain point.
+ This certain point is called the 
+\series bold
+maximum static frictional force
+\series default
+.
+ It is calculated with the following formula:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{Smax}[n]=\mu_{S}*F_{N}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula $F_{Smax}$
+\end_inset
+
+ is the maximum static frictional force.
+ It always points in the opposite direction as any force acting along the
+ same axis.
+ 
+\begin_inset Formula $F_{N}$
+\end_inset
+
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ force, or the force pinning the two surfaces together.
+ 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+ is the Coefficent of Static Friction, which is derived from how effictive
+ the two surfaces are at sticking to eachother.
+ Two smooth, slick surfaces (like two pieces of smooth hard plastic) will
+ have a small 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+, while two rough surfaces (like concrete) will have a large 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+.
+ Usually, 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+ is just looked up in a table.
+ 
+\end_layout
+
+\begin_layout Standard
+Static friction is often informally called 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Stiction
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ in the engineering world, since it causes things to stick together.
+ Also, 
+\begin_inset Quotes eld
+\end_inset
+
+Stiction
+\begin_inset Quotes erd
+\end_inset
+
+ is a portmanteau of 
+\begin_inset Quotes eld
+\end_inset
+
+Static Friction
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Engineers are a clever bunch.
+\end_layout
+
+\begin_layout Subsubsection
+Kinetic Friction
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Kinetic friction
+\series default
+ deals with the case where two surfaces are sliding relative to each other.
+ If you were to slide a book along the ground, the force that opposes your
+ efforts to push the book is the kinetic frictional force of the book in
+ contact with the ground.
+ It is calculated by this formula:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{K}[n]=\mu_{K}*F_{N}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again, 
+\begin_inset Formula $F_{K}$
+\end_inset
+
+is the kinetic frictional force.
+ It always points in the opposite direction of motion of the interface (opposes
+ the motion occuring).
+ 
+\begin_inset Formula $F_{N}$
+\end_inset
+
+ is still the 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ force, or the force pinning the two surfaces together.
+ 
+\begin_inset Formula $\mu_{K}$
+\end_inset
+
+ is the coefficent of kinetic friction, which again determines how effective
+ the materials can interface with each other to produce an opposing force.
+ 
+\end_layout
+
+\begin_layout Standard
+For most materials, 
+\begin_inset Formula $\mu_{K}$
+\end_inset
+
+ is slightly than 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that as a wheel is rotating with the ground, there is no relative motion
+ between the ground and the point of contact with the wheel.
+ Indeed, the motion of the robot is due to the rotation of the wheel, and
+ not due to the wheel slipping over the ground.
+ A non-slipping robot's wheel-ground interface lies in the Static Friction
+ domain.
+ When wheel-ground interfaces start to enter the Kinetic friction domain,
+ the effect is what many young people refer to as 
+\begin_inset Quotes eld
+\end_inset
+
+drifting
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -740,6 +1275,44 @@ This is why wrenches have long handles.
  Assuming a human can only exert a maximum amount of force, a longer handle
  makes for a longer lever arm, which in turn means a higher max torque applied.
  If a bolt is stuck, one option is a bigger wrench with a longer handle.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/wrench turning nuts.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Torque exerted on a nut
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:torque_nut"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -1325,6 +1898,45 @@ This equation states that for a given amount of current running through
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/ohms.gif
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Ohm's Law, with various electrical quantities modeld as anthropomorphic
+ peanuts.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Ohms"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 For example, Ohm's law explains why system voltage drops when you drive
  a robot very hard.
  All batteries have some small amount of internal resistance (something
@@ -1399,12 +2011,53 @@ W
 ).
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
 \begin_layout Part
 Component Models
 \end_layout
 
+\begin_layout Section
+Electric Motor
+\end_layout
+
+\begin_layout Section
+Main Battery
+\end_layout
+
+\begin_layout Section
+Main Circuit Breaker
+\end_layout
+
+\begin_layout Section
+Compressor and Tank
+\end_layout
+
+\begin_layout Section
+Traction Wheel
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
 \begin_layout Part
 Integrated Model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
