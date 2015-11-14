@@ -12,14 +12,24 @@
 //      Chris Gerth - 04Oct2015 - Created
 //
 /******************************************************************************/
+
+
+/******************************************************************************/
+/** HEADER INCLUDES                                                          **/
+/******************************************************************************/
+
+#include "memory_monitor.h"
+
+/******************************************************************************/
+/** DATA DEFINITIONS                                                         **/
+/******************************************************************************/
 extern unsigned int __bss_end;
 extern unsigned int __heap_start;
 extern void *__brkval;
 
-
-#include "memory_monitor.h"
-
-
+/******************************************************************************/
+/** FUNCTIONS                                                                **/
+/******************************************************************************/
 int freeMemory() {
   int free_memory;
 
@@ -33,5 +43,5 @@ int freeMemory() {
 
 double calc_memory_usage_pct()
 {
-    return ((double)(TOTAL_RAM-freeMemory()))/((double)TOTAL_RAM) * 100.0; //Doesn't seem to actually work right now...
+    return ((double)(TOTAL_RAM-freeMemory()))/((double)TOTAL_RAM) * 100.0; //TBD - why the heck doesn't this work???
 }

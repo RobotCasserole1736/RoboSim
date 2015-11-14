@@ -6,8 +6,8 @@
 // RoboSim - an Arduino-based, Hardware-in-the-loop Robot simulation platform
 //
 // File: ISRs.cpp
-// Description:  - Main entry function for Arduino
-//               - Performs all setup actions and contains main control loop
+// Description:  All functions for executing Interrupt-based Encoder emulation
+//               
 //
 // Note: Shares a .h with the hardwareInterface functions
 //
@@ -16,17 +16,27 @@
 //
 /******************************************************************************/
 //#define ISR_DEBUG_PRINT
+
+/******************************************************************************/
+/** HEADER INCLUDES                                                          **/
+/******************************************************************************/
 #include "hardwareInterface.h"
 
+/******************************************************************************/
+/** DATA DEFINITIONS                                                         **/
+/******************************************************************************/
+
+/******************************************************************************/
+/** FUNCTIONS                                                                **/
+/******************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
 // void encoderInit() 
-// Description: Initalizes encoder emulation module
+// Description: Initalizes encoder emulation data structures and pins. Starts
+//              up a timer and attaches the encoderISR function to that timer
 //
 // Input Arguments: None
-// Output: None
-// Globals Read: None?
-// Globals Written: None?
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void encoderInit()
 {
@@ -48,7 +58,12 @@ void encoderInit()
     #endif
   }
   
-  FlexiTimer2::set((unsigned long)((double)ENCODER_INT_PERIOD_MS*10.0),0.0001, encoderISR); // kick off timer2 at the right period. Timer1 is used by the RTOS.
+  // Timer1 is used by the RTOS, so don't use that one!
+  // Set up arduino internal HW timer2 at the right period. 
+  // Set up interrupts to be triggered on timer rollover
+  // set up encoderISR to be called on each interrupt trigger
+  FlexiTimer2::set((unsigned long)((double)ENCODER_INT_PERIOD_MS*10.0),0.0001, encoderISR); 
+  // Actually kick off the timer running.
   FlexiTimer2::start();
    
 }
@@ -57,12 +72,12 @@ void encoderInit()
 
 ////////////////////////////////////////////////////////////////////////////////
 // void encoderISR() 
-// Description: Function to be called each time Timer1 fires off.
+// Description: Function to be called each time Timer2 fires off.
 //              Moves through a four-state state machine to emulate the 
 //              quadrature encoder data outputs
 //
 // Input Arguments: None
-// Output: None
+// Returns: None
 // Globals Read: Encoder tick periods
 // Globals Written: Encoder output pin voltages
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +112,7 @@ void encoderISR()
           else
             encoder_next_state = ENCODER_DISABLED;
             
-          digitalWriteFast(encoder_output_pin_numbers[i*2], LOW);
+          digitalWriteFast(encoder_output_pin_numbers[i*2], LOW); //might be able to make this double-write faster
           digitalWriteFast(encoder_output_pin_numbers[i*2+1], LOW);
         break;
         
@@ -152,10 +167,6 @@ void encoderISR()
     }
     
     encoder_states[i] = encoder_next_state;
-
-    
+   
   }
-  
-  
-  
 }

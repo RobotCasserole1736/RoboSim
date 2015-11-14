@@ -17,40 +17,34 @@
 #ifndef HWINTERFACE_h
 #define HWINTERFACE_h
 
+
+/******************************************************************************/
+/** HEADER INCLUDES                                                          **/
+/******************************************************************************/
+
 #include "hardwareConfig.h"
 #include "plantConfig.h"
 #include "FlexiTimer2.h"
 #include "digitalWriteFast.h"
 #include "five_point_map.h"
 
+/******************************************************************************/
+/** DATA DEFINITIONS                                                         **/
+/******************************************************************************/
+
 //encoder state machine def's
 #define ENCODER_DISABLED 0 //all outputs at 0
-#define ENCODER_STATE_1 1 //encoder output 00
-#define ENCODER_STATE_2 2 //encoder output 01
-#define ENCODER_STATE_3 3 //encoder output 11
-#define ENCODER_STATE_4 4 //encoder output 10
+#define ENCODER_STATE_1 1  //encoder output 00
+#define ENCODER_STATE_2 2  //encoder output 01
+#define ENCODER_STATE_3 3  //encoder output 11
+#define ENCODER_STATE_4 4  //encoder output 10
 #define ENCODER_UNAVAILABLE -1
 #define ENCODER_DIR_FWD true
 #define ENCODER_DIR_BKD false
 
+//PC Communication Constants
 #define PACKET_START_BYTE (byte)'~'
 
-#define DISCONNECT_DBNC_TIME 30 //number of reads w/o a full packet before we say there's no more PC
-
-//Calibration values for analog input boards
-const uint16_t input_map_m1[5]  = {892,717,563,354,174};  //brd 1, ch 1
-const uint16_t input_map_m2[5]  = {896,719,536,357,175};  //brd 1, ch 2
-const uint16_t input_map_m3[5]  = {894,720,538,352,177};  //brd 2, ch 1
-const uint16_t input_map_m4[5]  = {894,719,537,356,181};  //brd 2, ch 2
-const uint16_t input_map_m5[5]  = {890,712,535,357,172};  //brd 3, ch 1
-const uint16_t input_map_m6[5]  = {896,714,536,357,174};  //brd 3, ch 2
-const uint16_t * input_map[6]  = {input_map_m1,input_map_m2,input_map_m3,input_map_m4,input_map_m5,input_map_m6};
-const double output_map[5] = {-12.0,-6.0,0.0,6.0,12.0}; //same for all
-
-
-//Function prototypes from ISRs.cpp
-void encoderInit();
-void encoderISR();
 
 //encoder state variables
 extern volatile unsigned long encoder_periods[NUM_ENCODER_OUTPUTS];
@@ -70,10 +64,8 @@ const char encoder_output_pin_numbers[NUM_ENCODER_OUTPUTS*2] = {
   }; //Must have NUM_ENCODER_OUTPUTS*2 elements //must be of size NUM_ENCODER_OUTPUTS*2
 
 
-//Motor input values
-extern double motor_speeds[NUM_MOTOR_INPUTS]; //speed, normalized to range [-1, 1]
-extern double motor_zero_points[NUM_MOTOR_INPUTS]; //full-stop of normalized reading from ADC (in range [0, 2^12]
-extern double motor_conversion_factor[NUM_MOTOR_INPUTS]; //conversion from analog bits to -1 -> 1 range
+//Motor inputs
+extern int motor_input_readings[NUM_MOTOR_INPUTS]; 
 const char motor_int_pin_numbers[NUM_MOTOR_INPUTS] = { // array of numbers for pins used for analog input
   HW_MOTOR_0_INPUT_PIN,
   HW_MOTOR_1_INPUT_PIN,
@@ -98,9 +90,16 @@ extern long rx_packet_count;
 extern long tx_packet_count;
 
 
+/******************************************************************************/
+/** FUNCTION HEADERS                                                         **/
+/******************************************************************************/
+//Function prototypes from ISRs.ino
+void encoderInit();
+void encoderISR();
 
-//Function prototypes
-void set_encoder_RPM( double encoder_RPM_in, char encoder_num);
+
+//Function prototypes from hardwareInterface.ino
+void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num);
 double get_motor_in_voltage(char motor_num);
 void sample_motor_values();
 void init_motor_inputs();

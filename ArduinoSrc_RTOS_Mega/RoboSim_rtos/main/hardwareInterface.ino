@@ -13,21 +13,23 @@
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
-//#define HWIO_DEBUG_PRINT
+
+
+/******************************************************************************/
+/** HEADER INCLUDES                                                          **/
+/******************************************************************************/
 
 #include "hardwareInterface.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//  Global variables
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
+/** DATA DEFINITIONS                                                         **/
+/******************************************************************************/
 volatile unsigned long encoder_periods[NUM_ENCODER_OUTPUTS];
 volatile unsigned long encoder_state_timers[NUM_ENCODER_OUTPUTS];
 volatile char encoder_states[NUM_ENCODER_OUTPUTS];
 volatile char encoder_directions[NUM_ENCODER_OUTPUTS];
 volatile char encoder_enabled[NUM_ENCODER_OUTPUTS];
 int motor_input_readings[NUM_MOTOR_INPUTS];
-double motor_zero_points[NUM_MOTOR_INPUTS] = {512,512,512,512,512,512};
-double motor_conversion_factor[NUM_MOTOR_INPUTS] = {-0.0234375,-0.0234375,-0.0234375,-0.0234375,-0.0234375,-0.0234375}; // 12/512
 bool digital_inputs[NUM_IO_CARDS*8];
 bool digital_outputs[NUM_IO_CARDS*8];
 double analog_outputs[NUM_IO_CARDS*2];
@@ -35,45 +37,9 @@ bool pc_connected = 0;
 long rx_packet_count = 0;
 long tx_packet_count = 0;
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// void set_encoder_RPM() 
-// Description: Takes an RPM and sets the encoder outputs
-//
-// Input Arguments: double - speed to set to encoder outputs in RPM
-//                  char - encoder number to change output of
-// Output: None
-// Globals Read: None
-// Globals Written: Encoder globals
-////////////////////////////////////////////////////////////////////////////////
-void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
-{
-  double cycles_per_interrupt_state_delay = 0;
-  
-  if(encoder_RPM_in > 0)
-  {
-    encoder_directions[encoder_num] = ENCODER_DIR_FWD;
-    cycles_per_interrupt_state_delay = encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] * ((double)ENCODER_INT_PERIOD_MS/1000.0);
-  }
-  else
-  {
-    encoder_directions[encoder_num] = ENCODER_DIR_BKD;
-    cycles_per_interrupt_state_delay = -encoder_RPM_in/60.0 * 4 * (double)encoder_ticks_per_revolution[encoder_num] * ((double)ENCODER_INT_PERIOD_MS/1000.0);
-  }
-  
-  if(cycles_per_interrupt_state_delay > 0)
-  {
-    encoder_periods[encoder_num] = (unsigned long)round(1.0/cycles_per_interrupt_state_delay);
-    encoder_enabled[encoder_num] = true;
-  }
-  else
-  {
-    encoder_periods[encoder_num] = 0;
-    encoder_enabled[encoder_num] = false;
-  }
-  
-}
+/******************************************************************************/
+/** FUNCTIONS                                                                **/
+/******************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
 // void set_encoder_period_ms() 
@@ -82,8 +48,7 @@ void set_encoder_RPM( double encoder_RPM_in, char encoder_num)
 // Input Arguments: double - period of the pwm wave in ms
 //                  bool - direction of the encoder's travel. ENCODER_DIR_FWD or ENCODER_DIR_BKD.
 //                  char - encoder number to change output of
-// Output: None
-// Globals Read: None
+// Returns: None
 // Globals Written: Encoder globals
 ////////////////////////////////////////////////////////////////////////////////
 void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num)
@@ -111,7 +76,6 @@ void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num)
   
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // double get_motor_in_voltage
 // Description: Takes a motor number, and returns the most recent voltage read
@@ -120,15 +84,12 @@ void set_encoder_period_ms( double encoder_period_ms_in, char encoder_num)
 //                  
 // Output: Motor voltage
 // Globals Read: motor_input_readings
-// Globals Written: none
 ////////////////////////////////////////////////////////////////////////////////
 double get_motor_in_voltage(char motor_num)
 {
   //run motor value through five point map
   return five_point_map(motor_input_readings[motor_num],input_map[motor_num],output_map);
-  //return double(input_map[motor_num][motor_num]);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // void sample_motor_values
@@ -136,8 +97,7 @@ double get_motor_in_voltage(char motor_num)
 //
 // Input Arguments: none
 //                  
-// Output: none
-// Globals Read: none
+// Returns: None
 // Globals Written: motor_input_readings
 ////////////////////////////////////////////////////////////////////////////////
 void sample_motor_values()
@@ -152,19 +112,16 @@ void sample_motor_values()
 
 ////////////////////////////////////////////////////////////////////////////////
 // void init_motor_inputs
-// Description: Sets up motor analog pins as inputs. Currently, no action is
-//              actually required.
+// Description: Initalizes motor input pins and data structures
+//              Analog pins currently require no special init functions
+//              Zeros out all intiial motor readings.
 //
-// Input Arguments: none
-//                  
-// Output: none
-// Globals Read: none
-// Globals Written: none
+// Input Arguments: none            
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void init_motor_inputs()
 {
   memset(motor_input_readings, 0, sizeof(motor_input_readings));
-  
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,11 +129,8 @@ void init_motor_inputs()
 // Description: Get current readings for digital inputs, and set digital and 
 //              analog outputs
 //
-// Input Arguments: none
-//                  
-// Output: none
-// Globals Read: none
-// Globals Written: none
+// Input Arguments: none           
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void io_card_exchange_data()
 {
@@ -320,11 +274,8 @@ void io_card_exchange_data()
 //       the MSB of its last byte represents the register furthest from the
 //       arduino's output pin (but closest to its input pin).
 //                  
-// Output: nothing returned, rx_bytes populated with data
-// Globals Read: none
-// Globals Written: none
+// Output: nothing returned, but rx_bytes populated with data
 ////////////////////////////////////////////////////////////////////////////////
-
 void io_card_tx_and_rx_byte_arrays(unsigned int num_cards, unsigned char * tx_bytes, unsigned char * rx_bytes)
 {
    int num_bytes = num_cards * 4;
@@ -358,13 +309,10 @@ void io_card_tx_and_rx_byte_arrays(unsigned int num_cards, unsigned char * tx_by
   
 ////////////////////////////////////////////////////////////////////////////////
 // void init_io_card
-// Description: Set up io card
+// Description: Set up io card pins and data structures
 //
 // Input Arguments: none
-//                  
-// Output: none
-// Globals Read: none
-// Globals Written: none
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void init_io_card()
 {
@@ -393,10 +341,7 @@ void init_io_card()
 //              be opened already. Pulls from global variables.
 //
 // Input Arguments: none
-//                  
-// Output: 0 on successful send, -1 on failures
-// Globals Read: none
-// Globals Written: none
+// Returns: 0 on successful send, -1 on failures
 ////////////////////////////////////////////////////////////////////////////////
 int send_packet_to_pc()
 {
@@ -434,22 +379,12 @@ int send_packet_to_pc()
   {
     tx_buffer[i] = (unsigned char)((int8_t)(round(get_motor_in_voltage(i - 2) / 0.094488)));
   }
-    
-  //temp - debug tx buffer
-  //tx_buffer[1] = 0x01;
-  //tx_buffer[2] = 0x02;
-  //tx_buffer[3] = 0x03;
-  //tx_buffer[4] = 0xF1;
-  //tx_buffer[5] = 0xE1;
-  //tx_buffer[6] = 0xC1;
-  //tx_buffer[7] = 0xA1;
   
   // Calculate Checksum
   tx_buffer[8] = tx_buffer[0] ^ tx_buffer[1] ^ tx_buffer[2] ^ tx_buffer[3] ^ tx_buffer[4] ^ tx_buffer[5] ^ tx_buffer[6] ^ tx_buffer[7];
   
   //Transmit byte (assuming serial port has been opened)
   //return proper error code
-  
   if(Serial.write(tx_buffer, sizeof(tx_buffer)) == sizeof(tx_buffer))
   {
     tx_packet_count++;
@@ -462,14 +397,14 @@ int send_packet_to_pc()
 
 ////////////////////////////////////////////////////////////////////////////////
 // int get_packet_from_pc()
-// Description: pulls a single packet from the PC. Writes to global variables
-//              per those packet's demands. Non-blocking.
+// Description: pulls a single packet from the PC. Immedeately writes to global 
+//              variables per those packet's contents. Non-blocking.
+//              Also keeps track of whether the PC is connected or not by debouncing
+//              the number of missed packet reads and setting a state variable
+//              if enough sequential reads are missed.
 //
 // Input Arguments: None.
-//                  
-// Output: 0 on successful read, -1 on no packet available
-// Globals Read: none
-// Globals Written: none
+// Returns: 0 on successful read, -1 on no packet available
 ////////////////////////////////////////////////////////////////////////////////
 int get_packet_from_pc()
 {

@@ -6,15 +6,27 @@
 // RoboSim - an Arduino-based, Hardware-in-the-loop Robot simulation platform
 //
 // File: five_point_map.ino
-// Description:  - re-scale map for analog inputs
+// Description:  - Flexible re-scaling & offset map for mapping measured input
+//                 bits to real-world motor voltages
 //
 //  Change History:
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
-//#define HWIO_DEBUG_PRINT
 
+
+/******************************************************************************/
+/** HEADER INCLUDES                                                          **/
+/******************************************************************************/
 #include "five_point_map.h"
+
+/******************************************************************************/
+/** DATA DEFINITIONS                                                         **/
+/******************************************************************************/
+
+/******************************************************************************/
+/** FUNCTIONS                                                                **/
+/******************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
 // double five_point_map() 
@@ -25,8 +37,6 @@
 //                  input_map_pts - pointer to 5-length array of input cutoff points. Must be monotomically decreasing
 //                  output_map_pts - pointer to 5-length array of output values
 // Output: double - remapped
-// Globals Read: None
-// Globals Written: NOne
 ////////////////////////////////////////////////////////////////////////////////
 
 double five_point_map(uint16_t input, const uint16_t input_map_pts[5], const double output_map_pts[5])

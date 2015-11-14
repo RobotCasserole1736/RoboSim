@@ -13,22 +13,33 @@
 //
 /******************************************************************************/
 
+/******************************************************************************/
+/** HEADER INCLUDES                                                          **/
+/******************************************************************************/
 #include <SPI.h>
 #include <Wire.h>
 #include "display.h"
 #include <math.h>
 
-//global vars
+/******************************************************************************/
+/** DATA DEFINITIONS                                                         **/
+/******************************************************************************/
 unsigned char display_screen_index; //which status screen should be shown?
+
+
+/******************************************************************************/
+/** FUNCTIONS                                                                **/
+/******************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
 // void display_init()
-// Description: Initalize function for the OLED display
+// Description: Initalize function for the OLED display. Sets up internal
+//              data structures, transmits the initial setup i2c commands
+//              to the screen, resets the internal display buffer, and sets
+//              the screen to display the now-blank buffer
 //
 // Input Arguments: None
-// Output: None
-// Globals Read: None
-// Globals Written: None
+// Returns:
 ////////////////////////////////////////////////////////////////////////////////
 void display_init()
 {
@@ -42,14 +53,17 @@ void display_init()
     
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // void display_boot_screen()
-// Description: Periodic function to update the contents of the display
+// Description: Writes a booting splash screen to the display buffer, sets
+//              the screen to display it, then waits for 1 second to ensure the
+//              user sees it.
+//         Note: the use of the delay function is not process-safe. This 
+//         function should only be called during initilization, not during
+//         any OS-managed process.
 //
 // Input Arguments: None
-// Output: None
-// Globals Read: None
-// Globals Written: None
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void display_boot_screen()
 {
@@ -70,12 +84,11 @@ void display_boot_screen()
 
 ////////////////////////////////////////////////////////////////////////////////
 // void display_update()
-// Description: Periodic function to update the contents of the display
+// Description: Draws textual info onto the screen. What info is drawn depends 
+//              on the value of display_screen_index.
 //
 // Input Arguments: None
-// Output: None
-// Globals Read: None
-// Globals Written: None
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void display_update()
 {
@@ -86,15 +99,19 @@ void display_update()
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
+  
+  //Always draw a line to indicate the status of the PC connection
   if(pc_connected)
     display.println("PC Host Connected");
   else
     display.println("PC Host Disconnected");
       
-  //debug
-  display_screen_index = 1;
+  //Draw different content on the remaining 3 lines depending on the 
+  // value of display_screen_index. Each case defines a different
+  // "page" to display.
+  
   switch (display_screen_index){
-      case 0:
+      case 0: //Packet counter
         display.println("~~Packet Counts");
         display.print("RX: ");
         display.println(rx_packet_count);
@@ -102,7 +119,7 @@ void display_update()
         display.println(tx_packet_count);
       break;
       
-      case 1:
+      case 1: //Motor voltages pg 1
         display.print("~~Motor Voltages");
         display.setCursor(0,16);
         display.print("M1:");
@@ -118,23 +135,23 @@ void display_update()
         display.print(get_motor_in_voltage(3), 2);
       break;
       
-      case 2:
+      case 2: //Motor Voltages pg 2
         display.print("~~Motor Voltages");
         display.setCursor(0,16);
         display.print("M5:");
         display.print(get_motor_in_voltage(4), 2);
         display.setCursor(0,24);
         display.print("M7:");
-        display.println("N/A");
+        display.println("N/A"); //M7 not currently an input
         display.setCursor(64,16);
         display.print("M6:");
         display.print(get_motor_in_voltage(5), 2);
         display.setCursor(64,24);
         display.print("M8:");
-        display.print("N/A");
+        display.print("N/A"); //M8 not currently an input
       break;
       
-      case 3:
+      case 3: //Digital Solenoid input statuses
         display.println("~~Solenoid Inputs");
         display.println("0 1 2 3 4 5 6 7");
         for(i = 0;i < NUM_IO_CARDS*8; i++)
@@ -144,7 +161,7 @@ void display_update()
         }
       break;
       
-      case 4:
+      case 4: //Analog output voltages
         display.println("~~Analog Outputs");
         display.print("AO1: ");
         display.print(analog_outputs[0], 2);
@@ -154,7 +171,7 @@ void display_update()
         display.println("V");
       break;
       
-      case 5:
+      case 5: //Digital 0-5V output statuses
         display.println("~~Digital Outputs");
         display.println("0 1 2 3 4 5 6 7");
         for(i = 0;i < NUM_IO_CARDS*8; i++)
@@ -164,7 +181,7 @@ void display_update()
         }
       break;
       
-      case 6:
+      case 6: //Encoder Periods pg 1
         display.println("~~Encoder Periods");
         display.print("E1:");
         if(encoder_enabled[0])
@@ -180,7 +197,7 @@ void display_update()
         display.println("ms");
       break;
       
-      case 7:
+      case 7: //Encoder Periods pg 2
         display.println("~~Encoder Periods");
         display.print("E3:");
         if(encoder_enabled[2])
@@ -196,11 +213,11 @@ void display_update()
         display.println("ms");
       break;
       
-     case 8: //screensaver
+     case 8: //Screensaver
         display_screensaver_update();
       break;
       
-      case 245:
+      case 245: //System status setup. TODO: make these sections work
         display.println("~~System Status");
         //display.print("Mem Usage: "); //This doesn't seem to be working at the moment...
         //display.print(calc_memory_usage_pct(), 1);
@@ -225,8 +242,8 @@ void display_update()
         display.drawBitmap(103, 19, chef_hat_logo_bmp, 16, 16, 1);
       break;
 
-      default:
-          display.println("Test of Display update...");
+      default: //Default: Error message
+          display.println("ERR: Unknown display page requested");
       break;
   }
 
@@ -238,17 +255,17 @@ void display_update()
 
 ////////////////////////////////////////////////////////////////////////////////
 // void display_calc_screen_index()
-// Description: Calculates the next screen index
+// Description: Calculates the next screen index. Currently just cycles through
+//              most of the available pages. Future functionality is to tie
+//              screen switching to a user input control
 //
 // Input Arguments: None
-// Output: None
-// Globals Read: None
-// Globals Written: None
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void display_calc_screen_index()
 {
-    const int delay_loops = 35;
-    const int max_display_screen_index = 8;
+    const int delay_loops = 10; //Number of loops to display each page for
+    const int max_display_screen_index = 8; //Iterate from page 0 up to this page #
     static int i = 0;
     
     if(i == delay_loops)
@@ -274,16 +291,12 @@ void display_calc_screen_index()
     }
     
     
-}
-
-////////////////////////////////////////////////////////////////////////////////
+}////////////////////////////////////////////////////////////////////////////////
 // void display_disp_msg()
 // Description: Print a messasge to screen. Useful for program reporting info.
 //
 // Input Arguments: msg - ascii text string to print
-// Output: None
-// Globals Read: None
-// Globals Written: None
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void display_disp_msg(char * msg)
 {
@@ -297,31 +310,45 @@ void display_disp_msg(char * msg)
   display.display();
     
     
-}
-
-////////////////////////////////////////////////////////////////////////////////
+}////////////////////////////////////////////////////////////////////////////////
 // void display_screensaver_update()
-// Description: update and display bouncing hats for a "screensaver"
+// Description: update and display bouncing hats for a "screensaver". There are 
+//              lots of fudge parameters to get this simulation of 2d motion 
+//              and colissions of spherical objects to look nice. 
+//
+//              Warning to beginner programmers: This function was written as
+//              a fun weekend project only. It has no real value within RoboSim.
+//              There's lots of code which appears arbitrary unless you know the
+//              underlying physics, and even then...yah... If I were you I wouldn't
+//              even bother looking at this funciton. Save yourself the confusion, 
+//              Move along, nothing to see here. This is not the function you 
+//              are looking for.
+//              
 //
 // Input Arguments: none
-// Output: None
-// Globals Read: None
-// Globals Written: None
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void display_screensaver_update(void)
 {
+  //Consider each hat as a ball of radius 'hat_radius'
   const int hat_radius = 8;
   
+  //Fudge-factor to get the speed looking nice
   const double speed_scale = 0.5;
   
+  //Mass of each hat. Only difference between masses for
+  //the hats matters, as this is only used to calculate
+  //the conservation-of-momentum equations
   const double hat_1_mass = 2;
   const double hat_2_mass = 2;
   
+  //define physical boundaries to constrain the hats
   const int top_wall_limit = 0;
   const int bottom_wall_limit = 31;
   const int left_wall_limit = 0;
   const int right_wall_limit = 127;
   
+  //Initial positions and veloctieis of each hat.
   static double hat_1_pos_x = 30;
   static double hat_1_pos_y = 8;
   static double hat_1_vel_x = 3;
@@ -332,15 +359,16 @@ void display_screensaver_update(void)
   static double hat_2_vel_x = -2;
   static double hat_2_vel_y = 3;
   
+  //State variables
   static char prev_hats_in_contact = 0;
   char hats_in_contact = 0;
   char hat_collision_occurred = 0;
- 
-
-  
   double A = 0; //angle of collision
   
   display.clearDisplay();
+  
+  //The following is a textbook impelementation of two spherical
+  //objects undergoing elastic collisions with walls and eachother.
   
   //wall collisions are simpler - just invert the velocity.
   //Hat 1:
@@ -403,6 +431,10 @@ void display_screensaver_update(void)
   //handle hat collision
   if(hat_collision_occurred)
   {
+    //Note new variables are added here only if a collision has happened.
+    //This should reduce average memory usage, but cause noticeable spikes
+    //during collisions. If the OS crashes while running the screensaver, 
+    //when hats collide, this is likely the reason.
     double magnitude_1;
     double magnitude_2;
     double direction_1;
@@ -420,6 +452,8 @@ void display_screensaver_update(void)
     
     double dx;
     double dy;
+    
+    // something something physics something something
     dx = hat_1_pos_x-hat_2_pos_x;
     dy = hat_1_pos_y-hat_2_pos_y;
     A = atan2(dy, dx);
@@ -452,8 +486,6 @@ void display_screensaver_update(void)
   //draw hats
   display.drawBitmap(hat_1_pos_x-hat_radius, hat_1_pos_y-hat_radius, chef_hat_logo_bmp, 16, 16, 1);
   display.drawBitmap(hat_2_pos_x-hat_radius, hat_2_pos_y-hat_radius, chef_hat_logo_bmp, 16, 16, 1);
-
-  
   display.display();
     
     
