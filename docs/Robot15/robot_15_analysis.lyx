@@ -74,7 +74,7 @@
 \begin_body
 
 \begin_layout Title
-RoboSim Sample Robot Plant Model Calcualtions
+RoboSim Sample Robot Plant Model Calculations
 \end_layout
 
 \begin_layout Author
@@ -117,7 +117,7 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Part
-Background Mathematics Primer
+Background Academics Primer
 \end_layout
 
 \begin_layout Standard
@@ -129,9 +129,10 @@ basic
 \begin_inset Quotes erd
 \end_inset
 
- math required to understand RoboSim.
- This math could be considered at the level of AP Calc BC and AP Physics
- C.
+ math and physics required to understand RoboSim.
+ This content is effectively a whirlwind summary of the important parts
+ of AP Calc BC, AP Physics C, basic Chemistry, and any introductory Electronics
+ course.
 \end_layout
 
 \begin_layout Section
@@ -143,7 +144,11 @@ Sir Isaac Newton was a smart man.
  He came up with calculus.
  Either him or Leibniz.
  In any event.
- Calculus is a thing.
+ 
+\series bold
+Calculus
+\series default
+ is a particular field of study within mathematics.
  It studies functions and properties of functions.
 \end_layout
 
@@ -152,21 +157,50 @@ Functions
 \end_layout
 
 \begin_layout Standard
-A function can be thought of as a box which takes one input, and produces
- some outputs based on that input.
+A 
+\series bold
+function
+\series default
+ can be thought of as a box which takes one input, and produces some outputs
+ based on that input.
  For RoboSim, we will deal with many functions of time.
- This is to say that we will look at how properties (such as speed) change
- over time.
- In a mathematical sense, time is the input, and speed is the output.
- At every given time, there is a speed.
+ This is to say that we will look at how 
+\series bold
+properties
+\series default
+ change over time.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+Box
+\begin_inset Quotes erd
+\end_inset
+
+ in this case is the robot itself.
+ The most fundamental input to the robot is time.
+ As time progresses forward, different properties of the robot change.
+ These properties include things like location, speed, torque, rotation,
+ electrical current draw, etc.
+ In a mathematical sense, time is the input, and the various properties
+ are the output.
+ At every given time, each property has a value.
+ Additionally, the physics of the configuration of the parts of the robot
+ determine relationships between the quantities as time progresses forward.
+ For example, a large voltage applied to motors will induce larger torques
+ and speeds and current draws.
 \end_layout
 
 \begin_layout Subsection
-Continuous
+Continuous Functions, Derivatives and Integrals
 \end_layout
 
 \begin_layout Standard
-Continuous calculus is what is usually studied in High School.
+
+\series bold
+Continuous calculus
+\series default
+ is what is usually studied in High School.
  It is assumed that time is linear and continuous.
  Valid times are t = 0s, t = 1.2429543987s, t = 3.25s, etc.
  Any value of time is a defined.
@@ -178,9 +212,14 @@ Calculus looks at two primary things about functions: Derivatives and Integrals.
 \end_layout
 
 \begin_layout Standard
-A derivitavie of a function describes how quickly the function is changing
- as time goes on.
- 
+A 
+\series bold
+Derivative
+\series default
+ of a function describes how quickly the function is changing as time goes
+ on.
+ On a curve on a Cartesian (x/y) plot, the derivative is the same as the
+ slope of the curve at any given point.
 \end_layout
 
 \begin_layout Standard
@@ -206,8 +245,14 @@ x=\frac{dy}{dt}
 \end_layout
 
 \begin_layout Standard
-An Integral of a function describes how big or small the function's value
- has been historically.
+An 
+\series bold
+Integral
+\series default
+ of a function describes how big or small the function's value has been
+ historically.
+ On a Cartesian plot, the integral is the same as the area between the curve
+ and the x axis over a given period of time.
 \end_layout
 
 \begin_layout Standard
@@ -238,7 +283,7 @@ For the purposes of RoboSim, there is no need to discuss the calculation
 \end_layout
 
 \begin_layout Standard
-If a function is geting larger quickly, its derivative will be big at that
+If a function is getting larger quickly, its derivative will be big at that
  time.
  If it is getting smaller in a hurry, its derivative will be negative
 \end_layout
@@ -250,61 +295,28 @@ If a function has been big for a long time, its integral will be large.
 \end_layout
 
 \begin_layout Subsection
-Descrete
+Discrete Functions, Derivatives and Integrals
 \end_layout
 
 \begin_layout Standard
-Descrete calculus is just like continuous calculus, except we only allow
- time to take on certain values.
- Maybe its like:
-\end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-t=\{1,2,3,4,5...\}
-\]
-
+\series bold
+Discrete functions
+\series default
+ are very similar to normal functions, except they are only defined at certain,
+ regularly-repeating time values.
+ In this way, a discrete function could be though of as a set of 
+\begin_inset Formula ${time,value}$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Or maybe it's more like
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-t=\{0.00,0.01,0.02,0.03,0.04...\}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In any case, we only allow time to take on certain values.
- These values must be regularly spaced for any of the math to work.
- The spacing between the valid time values is called the Sample Time.
- The Sample Time will henceforth be referred to as 
-\begin_inset Formula $Ts$
-\end_inset
-
-.
+ pairs.
  
 \end_layout
 
 \begin_layout Standard
-Descrete functions are notated as such:
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
-x=y[t]
+\{0.00,3\},\{0.01,2\},\{0.02,1\},\{0.03,0\},...
 \]
 
 \end_inset
@@ -313,59 +325,80 @@ x=y[t]
 \end_layout
 
 \begin_layout Standard
-Note the square brackets which indicate descrete time.
- Here t is an index, rather than a measure in seconds.
- Multiplying 
-\begin_inset Formula $t$
+We usually notate a discrete time function as such
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=y[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a function 
+\begin_inset Formula $y$
+\end_inset
+
+ that produces a value 
+\begin_inset Formula $x$
+\end_inset
+
+ at time index 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ For all discrete functions, we must always specify a 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Sample Time
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ (notated 
+\begin_inset Formula $Ts$
+\end_inset
+
+) to indicate the spacing between samples.
+ For RoboSim, 
+\begin_inset Formula $Ts$
+\end_inset
+
+ is hard-coded to 50ms.
+\end_layout
+
+\begin_layout Standard
+Note the square brackets which indicate discrete time.
+ Here n is an index, not a measure in seconds.
+ Multiplying the 
+\begin_inset Formula $n$
 \end_inset
 
  index by the sample time 
 \begin_inset Formula $Ts$
 \end_inset
 
- yeilds the actual (real-world) time in seconds.
+ yields the actual (real-world) time in seconds.
 \end_layout
 
 \begin_layout Standard
-For every time value, there is a given output value of the function.
- For example, consider the following function:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-y[t]=\{1,5,2,6,3,7,4,7\},Ts=0.1
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-A series of outputs is defined, starting at 
-\begin_inset Formula $t=0$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
-Since 
-\begin_inset Formula $Ts$
-\end_inset
-
-is 
-\begin_inset Formula $0.1$
-\end_inset
-
-, we can determine the following is true:
+In Discrete time calculus, we define derivatives as follows:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-y[0]=1
+x=y[n]
 \]
 
 \end_inset
@@ -376,7 +409,48 @@ y[0]=1
 \begin_layout Standard
 \begin_inset Formula 
 \[
-y[1]=5
+\frac{dx}{dt}\cong\frac{y[n]-y[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This formula says 
+\begin_inset Quotes eld
+\end_inset
+
+A function's derivative is equal to the current value minus the previous
+ value, scaled by the sample time.
+\begin_inset Quotes erd
+\end_inset
+
+ You may recognize this form from part of the 
+\begin_inset Quotes eld
+\end_inset
+
+Limit
+\begin_inset Quotes erd
+\end_inset
+
+ definition of a derivative.
+ Note here that if we force Ts to zero, we have a continuous derivative.
+ However, because computer systems cannot sample infinitely fast, we accept
+ a small but finite Ts as a very close approximation.
+ The conditions under which this approximation is acceptable is the subject
+ of Nyquist Frequency theory, but is a topic out of scope for this discussion.
+\end_layout
+
+\begin_layout Standard
+In Discrete time calculus, we define Integrals as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=y[n]
 \]
 
 \end_inset
@@ -387,7 +461,7 @@ y[1]=5
 \begin_layout Standard
 \begin_inset Formula 
 \[
-y[3]=6
+\intop xdt\cong\stackrel[i=0]{n}{\sum}y[i]*Ts
 \]
 
 \end_inset
@@ -396,63 +470,19 @@ y[3]=6
 \end_layout
 
 \begin_layout Standard
-And so on.
-\end_layout
-
-\begin_layout Standard
-In Descrete time calculus, we define derivatives as follows:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-x=y[t]
-\]
-
+This equation says 
+\begin_inset Quotes eld
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{dx}{dt}=\frac{y[t]-y[t-1]}{Ts}
-\]
-
+A function's integral is equal to the sum of all previous values, scaled
+ by the sample time
+\begin_inset Quotes erd
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-In Descrete time calculus, we define Integrals as follows:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-x=y[t]
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\intop xdt=\stackrel[i=0]{t}{\sum}y[i]*Ts
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We define them this way because of reasons.
+.You may recognize this from the Riemann sum approximation of an integral.
+ If we force Ts to zero, we end up with a continuous integral.
+ But again, since computer systems cannot sample infinitely fast, we accept
+ a small but finite Ts and move on with our lives.
 \end_layout
 
 \begin_layout Section
@@ -462,25 +492,31 @@ Physics
 \begin_layout Standard
 Physics is also a thing that Newton did.
  Told you he was smart.
+ In this section, we will begin to analyze the constraints imposed by mother
+ nature between different quantities on our robot.
 \end_layout
 
 \begin_layout Subsection
-Things and Calculus
+Position, Linear Motion, and Calculus 
 \end_layout
 
 \begin_layout Standard
 For physics to work, we must have objects in places.
- The place the object is at is called its Position.
+ The place the object is at is called its 
+\series bold
+Position
+\series default
+.
  Let us define the following function which describes an object's location
  along one axis at any time.
- Specifically, it says how far the object is from an arbitrary zero pointat
- any time:
+ Specifically, it says how far the object is from an arbitrary zero point
+ at any time:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-Distance=x[t]
+Distance=x[n]
 \]
 
 \end_inset
@@ -489,14 +525,18 @@ Distance=x[t]
 \end_layout
 
 \begin_layout Standard
-Velocity is how fast an object is moving.
+
+\series bold
+Velocity
+\series default
+ is how fast an object is moving.
  Velocity can be positive or negative.
  Positive velocity means the distance gets bigger, and negative velocity
  means the distance gets smaller.
  Because of physics, velocity is therefore the derivative of distance.
 \begin_inset Formula 
 \[
-Velocity=v[t]
+Velocity=v[n]
 \]
 
 \end_inset
@@ -507,7 +547,7 @@ Velocity=v[t]
 \begin_layout Standard
 \begin_inset Formula 
 \[
-v[t]=\frac{dx}{dt}=\frac{x[t]-x[t-1]}{Ts}
+v[n]=\frac{dx}{dt}=\frac{x[n]-x[n-1]}{Ts}
 \]
 
 \end_inset
@@ -516,7 +556,11 @@ v[t]=\frac{dx}{dt}=\frac{x[t]-x[t-1]}{Ts}
 \end_layout
 
 \begin_layout Standard
-Acceleration is how fast an object is changing in velocity.
+
+\series bold
+Acceleration
+\series default
+ is how fast an object is changing in velocity.
  Acceleration can be positive or negative.
  A positive acceleration means the object is going faster and faster and
  faster.
@@ -527,7 +571,7 @@ Acceleration is how fast an object is changing in velocity.
 \begin_layout Standard
 \begin_inset Formula 
 \[
-Acceleration=a[t]
+Acceleration=a[n]
 \]
 
 \end_inset
@@ -538,7 +582,7 @@ Acceleration=a[t]
 \begin_layout Standard
 \begin_inset Formula 
 \[
-a[t]=\frac{dv}{dt}=\frac{v[t]-v[t-1]}{Ts}
+a[n]=\frac{dv}{dt}=\frac{v[n]-v[n-1]}{Ts}
 \]
 
 \end_inset
@@ -555,7 +599,7 @@ Note that integration allows you to go the other way.
 \begin_layout Standard
 \begin_inset Formula 
 \[
-v[t]=\stackrel[i=0]{t}{\sum}a[i]*Ts
+v[n]=\stackrel[i=0]{n}{\sum}a[i]*Ts
 \]
 
 \end_inset
@@ -566,7 +610,7 @@ v[t]=\stackrel[i=0]{t}{\sum}a[i]*Ts
 \begin_layout Standard
 \begin_inset Formula 
 \[
-x[t]=\stackrel[i=0]{t}{\sum}v[i]*Ts
+x[n]=\stackrel[i=0]{n}{\sum}v[i]*Ts
 \]
 
 \end_inset
@@ -575,7 +619,11 @@ x[t]=\stackrel[i=0]{t}{\sum}v[i]*Ts
 \end_layout
 
 \begin_layout Standard
-For units, we will always use metric.
+For units, we will always use 
+\series bold
+metric
+\series default
+.
  Therefore, distance is in meters (m), velocity is in meters per second
  (m/s), and acceleration is in meters per second, per second (m/s^2)
 \end_layout
@@ -585,13 +633,17 @@ Forces and Linear motion
 \end_layout
 
 \begin_layout Standard
-Force is something pushing on another thing.
+
+\series bold
+Force
+\series default
+ is something pushing on another thing.
  The more you push, the faster and faster you will go.
 \end_layout
 
 \begin_layout Standard
 Newton's laws of motion allow us to define the following: At any given time,
- Acceleration is porportional to Force, scaled by an objects mass:
+ Acceleration is proportional to Force, scaled by an objects mass:
 \end_layout
 
 \begin_layout Standard
@@ -608,7 +660,7 @@ Force=mass*acceleration
 \begin_layout Standard
 \begin_inset Formula 
 \[
-F[t]=m*a[t]
+F[n]=m*a[n]
 \]
 
 \end_inset
@@ -624,21 +676,727 @@ Note that Force is measured in Newtons (N), mass is measured in kilograms
 \begin_layout Standard
 Note also that force changes over time, and acceleration changes over time,
  but we assume mass is constant.
+ 
 \end_layout
 
 \begin_layout Subsection
+Torque and Rotation
+\end_layout
+
+\begin_layout Standard
+Because symmetry is a thing of life, Newton's laws of motion also have analogs
+ for 
+\series bold
+rotational motion
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+Instead of force, we now have 
+\series bold
+Torque
+\series default
+.
+ Torque is force that goes in a circle.
+ It is measured in Newton-meters.
+ 
+\end_layout
+
+\begin_layout Standard
+All torque acts about a central pivot point.
+ This may be the center of mass of the robot, the center of a gear, the
+ center of a shaft, the center of a wheel, etc.
+\end_layout
+
+\begin_layout Standard
+As indicated by the unit, a torque always has two important things to consider
+ - How much force is pushing in a circle, and how far from the center of
+ the circle is that force acting?
+\end_layout
+
+\begin_layout Standard
+The distance from the central pivot point of the rotation to the point of
+ application of force is called the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Lever Arm
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ of the torque.
+ Bigger lever arms mean more torque for the same force.
+ 
+\end_layout
+
+\begin_layout Standard
+This is why wrenches have long handles.
+ They are designed to turn things in a circle with some amount of torque.
+ Assuming a human can only exert a maximum amount of force, a longer handle
+ makes for a longer lever arm, which in turn means a higher max torque applied.
+ If a bolt is stuck, one option is a bigger wrench with a longer handle.
+\end_layout
+
+\begin_layout Subsubsection
+Rotational Motion Parameters
+\end_layout
+
+\begin_layout Standard
+There are rotational measurements which are analogous to the linear motion
+ parameters discussed above.
+ Lower-case Greek letters are used to describe these rotational parameters
+\end_layout
+
+\begin_layout Standard
+The current 
+\series bold
+angle
+\series default
+ a rotating object is pointed in is referred to as theta:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Angle=\theta[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The rate at which that angle is changing is 
+\series bold
+rotational velocity
+\series default
+, or omega:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+RotationalVelocity=\omega[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The rate of change of the rotational velocity is the 
+\series bold
+rotational acceleration
+\series default
+, or alpha:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+RotationalAcceleration=\alpha[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As with linear motion, velocity is the derivative of position, and acceleration
+ is the derivative of velocity.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega[n]=\frac{d\theta}{dt}=\frac{\theta[n]-\theta[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\alpha[n]=\frac{d\omega}{dt}=\frac{\omega[n]-\omega[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also as with linear motion, velocity is the integral of acceleration, and
+ position is the integral of velocity.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega[n]=\stackrel[i=0]{n}{\sum}\alpha[i]*Ts
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\theta[n]=\stackrel[i=0]{n}{\sum}\omega[i]*Ts
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 Torque and Rotational motion
 \end_layout
 
 \begin_layout Standard
-Because symmetriy is a thing of life, Newton's laws of motion also have
- analogs for rotational motion.
+The relationship between torque and rotational motion is highly analogous
+ to force and linear motion:
 \end_layout
 
 \begin_layout Standard
-Instead of force, we now have Torque.
- Torque is force that goes in a ciricle.
- It is measured in Newton-meters.
+At any given time, an object's rotational acceleration is proportional to
+ the torque applied to it, scaled by the object's 
+\begin_inset Quotes eld
+\end_inset
+
+moment of inertia
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+torque=moment\ of\ inertia*rotational\ acceleration
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T[n]=I*\alpha[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An object's 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+moment of inertia
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ is like its total mass, but also accounts for how far that mass is from
+ the center of rotation.
+ The more mass an object has, and the further that mass is from the center
+ of rotation, the harder it is to get the object rotating at a different
+ speed.
+ The actual value of this is in units of kilogram meters-squared (kg m^2),
+ and is most easily calculated with a table of shapes and corresponding
+ formulas.
+\end_layout
+
+\begin_layout Standard
+Although we have assumed the moment of inertia to be constant, that is not
+ always the case.
+ Although it is rare for a robot to add or loose mass during a match, it
+ is more common for the location of that mass to change on the robot.
+ For example, if an arm extends out by a foot from the robot, the location
+ of the mass of that arm is now further from the center.
+ This increases the robot's moment of inertia, which makes it harder for
+ the drive-train to start or stop the robot from spinning.
+\end_layout
+
+\begin_layout Subsection
+Ideal Gas Law
+\end_layout
+
+\begin_layout Standard
+Cylinders, tanks, compressors, and valves are all pneumatic components used
+ on FRC robots.
+ 
+\series bold
+Pneumatic components
+\series default
+ on a robot all deal with the movement of compressed air, and the transfer
+ of energy involved therein.
+ 
+\end_layout
+
+\begin_layout Standard
+Air is the gas used within these systems.
+ Under the normal temperatures experienced in the robot, and the 125psi
+ pressure restriction of FRC rules, air acts much like an 
+\series bold
+ideal gas
+\series default
+.
+ Therefore, it is appropriate to model it with the ideal gas law:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+PV=nrT
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, P refers to the pressure of the gas (in kilo-pascals, or kPa), V refers
+ to the volume of gas considered (in Liters, or L), T refers to the temperature
+ of the gas (in kelvin, or K), and n refers to the number of moles of gas
+ molecules being considered.
+ The remaining symbol r is the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Gas Constant
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+, a constant with units L*kPa/(K*mol), and is numerically equal to 8.3144621.
+ It is determined by the physics of interacting gas particles.
+ Its derivation will not be described in this paper
+\end_layout
+
+\begin_layout Standard
+Note also that n is in moles.
+ A 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+mole
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ is a unit-less multiplier, like 
+\begin_inset Quotes eld
+\end_inset
+
+dozen
+\begin_inset Quotes erd
+\end_inset
+
+.
+ For example, if I have a dozen donuts, it means I have twelve donuts.
+ Similarly, if I have a mole of donuts, I have 
+\begin_inset Formula $6.022*10^{23}$
+\end_inset
+
+donuts.
+ 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Interestingly enough, the average jelly donuts contains 
+\begin_inset Formula $10^{6}$
+\end_inset
+
+ Joules of energy.
+ This means that one mole of jelly donuts would have about 
+\begin_inset Formula $6*10^{29}$
+\end_inset
+
+Joules of energy.
+ The rotational energy stored in Earth's rotation is about 
+\begin_inset Formula $2*10^{29}$
+\end_inset
+
+Joules.
+ This means that if you had a 100% efficent rocket powered by jelly donuts,
+ and attached it to the earth's equator, you could stop the earth from spinning,
+ and still have 2/3rds of your donuts left over for eating! The more you
+ know...
+\end_layout
+
+\end_inset
+
+ The reason for its use here is that gas molecules are tiny, and usually
+ we have a lot of them.
+ It's a lot simpler to do math talking about 
+\begin_inset Quotes eld
+\end_inset
+
+1 mole of molecules
+\begin_inset Quotes erd
+\end_inset
+
+ rather than absurdly large numbers.
+\end_layout
+
+\begin_layout Standard
+What the ideal gas law describes is the relationship between pressure, temperatu
+re, amount of gas, the volume the gas occupies.
+ For example, when a compressor kicks on, it forces more moles of air into
+ the same volume.
+ We also assume that temperature does not change.
+ Therefore, based on the above equation, if T, r, and V are unchanged, and
+ n increases, then P must also increase to keep the equation balanced.
+ This makes since, since anyone who was observed a properly-set-up pneumatic
+ system knows turning on the compressor makes system pressure go up.
+\end_layout
+
+\begin_layout Subsection
+Electrical Laws
+\end_layout
+
+\begin_layout Standard
+Motors, motor controllers, batteries, wires, and circuit breakers are all
+ part of the 
+\series bold
+electrical system
+\series default
+ on a robot.
+ These components obey many laws related to electricity.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Electrical Introduction
+\end_layout
+
+\begin_layout Standard
+For FRC robotics purposes, 
+\series bold
+electricity
+\series default
+ is the movement of electrons through 
+\begin_inset Quotes eld
+\end_inset
+
+conductors
+\begin_inset Quotes erd
+\end_inset
+
+.
+ A 
+\series bold
+conductor
+\series default
+ is any substance which has freely-moving charged particles, most commonly
+ electrons.
+ Usually these movements are random, but when they start to go in the same
+ direction, we say there is an 
+\begin_inset Quotes eld
+\end_inset
+
+electric current
+\begin_inset Quotes erd
+\end_inset
+
+ present.
+ Metals are the most common conductors.
+\end_layout
+
+\begin_layout Standard
+The opposite of a conductor is an insulator.
+ Common insulators include glass, wood, and plastic.
+ These substances to not have freely-moving charged particles, so they cannot
+ sustain an electric current.
+ By wrapping a conductor inside an insulator, you create an isolated conduit
+ to move electrical current in an organized fashion (eg, a wire).
+\end_layout
+
+\begin_layout Subsubsection
+Basic Electrical Quantities and Relationships
+\end_layout
+
+\begin_layout Standard
+When talking about the flow of electrons, there are two important quantities.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Current
+\series default
+ is the number of electrons flowing past a given point over a given time.
+ It is usually indicated by the lower-case letter 
+\begin_inset Formula $i$
+\end_inset
+
+ (blame the French).
+ Units are almost always in 
+\begin_inset Quotes eld
+\end_inset
+
+Amperes
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+Amps
+\begin_inset Quotes erd
+\end_inset
+
+ for short.
+ The Amp unit is denoted 
+\begin_inset Quotes eld
+\end_inset
+
+A
+\begin_inset Quotes erd
+\end_inset
+
+.
+ One amp of current is equal to 
+\begin_inset Formula $6.24*10^{18}$
+\end_inset
+
+electrons passing a given point on a wire in one second.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Current=i[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Voltage
+\series default
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+force
+\begin_inset Quotes erd
+\end_inset
+
+ which causes the motion of electrons in a conductor.
+ The more voltage, the more of a punch the electrons will have.
+ It is measured in a unit called 
+\begin_inset Quotes eld
+\end_inset
+
+Volts
+\begin_inset Quotes erd
+\end_inset
+
+ and denoted with the letter 
+\begin_inset Quotes eld
+\end_inset
+
+V
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Voltage=v[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the word 
+\begin_inset Quotes eld
+\end_inset
+
+force
+\begin_inset Quotes erd
+\end_inset
+
+ is used very loosely here, as the energy associated with electricity has
+ much more to do with electric and magnetic fields, and not so much the
+ physical impact of tiny electrons on a mass.
+ However, the details of this theory is beyond the scope of this paper.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Resistance 
+\series default
+is how easily a substance allows electricity to pass through.
+ Conductors have a very low resistance, while insulators have a very high
+ resistance.
+ Resistance to electrical flow can be affected by many factors, including
+ the temperature and physical shape of the device.
+ Resistance is measured in a unit called an 
+\begin_inset Quotes eld
+\end_inset
+
+Ohm
+\begin_inset Quotes erd
+\end_inset
+
+, and is denoted with a capital Greek letter Omega (
+\begin_inset Formula $\Omega$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+The resistance of a device determines how much voltage it pushes back with
+ (ie, the 
+\begin_inset Quotes eld
+\end_inset
+
+voltage drop
+\begin_inset Quotes erd
+\end_inset
+
+) when a current runs through it.
+ This relationship is linear, and is expressed with Ohm's Law:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v[n]=R*i[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation states that for a given amount of current running through
+ a device, that device will push back on that flow with a proportional amount
+ of voltage, scaled by the device's resistance.
+\end_layout
+
+\begin_layout Standard
+For example, Ohm's law explains why system voltage drops when you drive
+ a robot very hard.
+ All batteries have some small amount of internal resistance (something
+ like 
+\begin_inset Formula $0.012\Omega$
+\end_inset
+
+).
+ They usually supply around 12V of voltage.
+ However, as motors and solenoids and compressors draw large amounts of
+ current, the battery internally starts to fight itself due to its internal
+ resistance.
+ The voltage actually supplied by the battery is then some quantity less
+ than 12V, and the amount of drop is roughly proportional to the amount
+ of current pulled from the battery.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Inductance
+\series default
+ and 
+\series bold
+Capacitance
+\series default
+ are properties of devices, describing their ability to store electrical
+ energy and release it over time.
+ The math associated with these is beyond the scope of this paper.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Power
+\series default
+ is not specifically an electrical topic, but relates strongly to electrical
+ quantities.
+ Electrical Power refers to the total energy absorbed or dissipated by an
+ electrical component over time.
+ Positive power in an electrical component implies energy is leaving the
+ system (via motion, heat, sound, etc.), while negative power means energy
+ is entering the system (Battery, power supply, hand-cranked generator,
+ etc.)
+\end_layout
+
+\begin_layout Standard
+Power is calculated in many ways.
+ In general, it can be found my muliplying voltage and current:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+P[n]=v[n]*i[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Power will be measured in units of Watts (denoted 
+\begin_inset Quotes eld
+\end_inset
+
+W
+\begin_inset Quotes erd
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Part
