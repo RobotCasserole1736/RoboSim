@@ -91,6 +91,8 @@ void display_update()
   else
     display.println("PC Host Disconnected");
       
+  //debug
+  display_screen_index = 1;
   switch (display_screen_index){
       case 0:
         display.println("~~Packet Counts");
@@ -107,10 +109,10 @@ void display_update()
         display.print(get_motor_in_voltage(0), 2);
         display.setCursor(0,24);
         display.print("M3:");
-        display.println(get_motor_in_voltage(1), 2);
+        display.println(get_motor_in_voltage(2), 2);
         display.setCursor(64,16);
         display.print("M2:");
-        display.print(get_motor_in_voltage(2), 2);
+        display.print(get_motor_in_voltage(1), 2);
         display.setCursor(64,24);
         display.print("M4:");
         display.print(get_motor_in_voltage(3), 2);

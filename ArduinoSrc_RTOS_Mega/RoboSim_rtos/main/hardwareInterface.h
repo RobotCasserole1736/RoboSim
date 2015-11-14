@@ -38,13 +38,14 @@
 #define DISCONNECT_DBNC_TIME 30 //number of reads w/o a full packet before we say there's no more PC
 
 //Calibration values for analog input boards
-const uint16_t input_map[6][5] PROGMEM = {{892,717,563,354,174},  //brd 1, ch 1
-                                          {896,719,536,357,175},  //brd 1, ch 2
-                                          {894,720,538,352,177},  //brd 2, ch 1
-                                          {894,719,537,356,181},  //brd 2, ch 2
-                                          {890,712,535,357,172},  //brd 3, ch 1
-                                          {896,714,536,357,174}}; //brd 3, ch 2
-const double output_map[5] PROGMEM = {-12.0,-6.0,0.0,6.0,12.0}; //same for all
+const uint16_t input_map_m1[5]  = {892,717,563,354,174};  //brd 1, ch 1
+const uint16_t input_map_m2[5]  = {896,719,536,357,175};  //brd 1, ch 2
+const uint16_t input_map_m3[5]  = {894,720,538,352,177};  //brd 2, ch 1
+const uint16_t input_map_m4[5]  = {894,719,537,356,181};  //brd 2, ch 2
+const uint16_t input_map_m5[5]  = {890,712,535,357,172};  //brd 3, ch 1
+const uint16_t input_map_m6[5]  = {896,714,536,357,174};  //brd 3, ch 2
+const uint16_t * input_map[6]  = {input_map_m1,input_map_m2,input_map_m3,input_map_m4,input_map_m5,input_map_m6};
+const double output_map[5] = {-12.0,-6.0,0.0,6.0,12.0}; //same for all
 
 
 //Function prototypes from ISRs.cpp

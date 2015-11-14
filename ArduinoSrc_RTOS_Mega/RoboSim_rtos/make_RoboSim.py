@@ -41,7 +41,7 @@ code_search_specs = ["./*/*.c", "./*/*.cpp", "./*/*.h", "./*/*.ino"]
 mega_board_param = "arduino:avr:mega:cpu=atmega2560" #for standard arduino mega. See https://github.com/arduino/Arduino/blob/ide-1.5.x/build/shared/manpage.adoc for help with other boards.
 uno_board_param = "arduino:avr:uno" #for standard arduino uno. See https://github.com/arduino/Arduino/blob/ide-1.5.x/build/shared/manpage.adoc for help with other boards.
 ftdi_board_param = uno_board_param #Can't detect the board that's on the other end of an FTDI, so assume uno?
-default_arduino_serial_port = "COM4"
+default_arduino_serial_port = "COM8"
 
 # Pull user-specified build target
 if(len(sys.argv)>1):
@@ -64,6 +64,7 @@ except:
     print("Warning: could not import serial libraries. Assuming PySerial is not installed and making a wild guess which port the arduino is on. May the odds be ever in your favor!")
     find_arduino_automatically = 0;
     arduino_serial_port = default_arduino_serial_port
+    board_param = mega_board_param
     print("Attempting to contuinue assuming arduino is on " + arduino_serial_port)
     
     

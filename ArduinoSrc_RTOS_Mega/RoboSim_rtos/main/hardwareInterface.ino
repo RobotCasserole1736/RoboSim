@@ -126,6 +126,7 @@ double get_motor_in_voltage(char motor_num)
 {
   //run motor value through five point map
   return five_point_map(motor_input_readings[motor_num],input_map[motor_num],output_map);
+  //return double(input_map[motor_num][motor_num]);
 }
 
 
