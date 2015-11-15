@@ -431,7 +431,7 @@ Discrete functions
 \end_layout
 
 \begin_layout Standard
-We might turn a continuous function into a descrete one by 
+We might turn a continuous function into a discrete one by 
 \series bold
 sampling
 \series default
@@ -460,7 +460,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Sampling a continuous function x=y(t) to produce descrete function x=y[n]
+Sampling a continuous function x=y(t) to produce discrete function x=y[n]
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:Sampling a Function"
@@ -1071,8 +1071,8 @@ normal
 \begin_inset Formula $\mu_{S}$
 \end_inset
 
- is the Coefficent of Static Friction, which is derived from how effictive
- the two surfaces are at sticking to eachother.
+ is the Coefficient of Static Friction, which is derived from how effective
+ the two surfaces are at sticking to each-other.
  Two smooth, slick surfaces (like two pieces of smooth hard plastic) will
  have a small 
 \begin_inset Formula $\mu_{S}$
@@ -1159,7 +1159,7 @@ Again,
 
 is the kinetic frictional force.
  It always points in the opposite direction of motion of the interface (opposes
- the motion occuring).
+ the motion occurring).
  
 \begin_inset Formula $F_{N}$
 \end_inset
@@ -1177,7 +1177,7 @@ normal
 \begin_inset Formula $\mu_{K}$
 \end_inset
 
- is the coefficent of kinetic friction, which again determines how effective
+ is the coefficient of kinetic friction, which again determines how effective
  the materials can interface with each other to produce an opposing force.
  
 \end_layout
@@ -1623,7 +1623,7 @@ Joules of energy.
 \end_inset
 
 Joules.
- This means that if you had a 100% efficent rocket powered by jelly donuts,
+ This means that if you had a 100% efficient rocket powered by jelly donuts,
  and attached it to the earth's equator, you could stop the earth from spinning,
  and still have 2/3rds of your donuts left over for eating! The more you
  know...
@@ -1901,7 +1901,7 @@ This equation states that for a given amount of current running through
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1915,7 +1915,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Ohm's Law, with various electrical quantities modeld as anthropomorphic
+Ohm's Law, with various electrical quantities models as anthropomorphic
  peanuts.
 \begin_inset CommandInset label
 LatexCommand label
@@ -1985,7 +1985,7 @@ Power
 
 \begin_layout Standard
 Power is calculated in many ways.
- In general, it can be found my muliplying voltage and current:
+ In general, it can be found my multiplying voltage and current:
 \end_layout
 
 \begin_layout Standard
@@ -2026,8 +2026,691 @@ Component Models
 Electric Motor
 \end_layout
 
+\begin_layout Standard
+Simply put, an 
+\series bold
+electric motor
+\series default
+ is a device which converts electrical energy into rotational mechanical
+ energy.
+ Current flowing through the motor causes a force on the motor.
+ However, the interactions of the motor's electrical and mechanical parts
+ also drives a variety of 
+\series bold
+equilibrium
+\series default
+ points.
+ Due to the level of interaction, an electric motor is one of the more complex
+ devices to model.
+ It helps to split the motor into two portions, the electrical and the mechanica
+l parts.
+\end_layout
+
+\begin_layout Subsection
+Electrical Model
+\end_layout
+
+\begin_layout Standard
+A motor, electrically speaking, is a two-terminal device.
+ For a DC motor,its interior windings and communicator will be modeled as
+ a resistor, inductor, and voltage source in series.
+ The resistance and inductance model the physical configuration of the windings
+ inside the motor.
+ The wire itself is always non-deal, having some resistance.
+ Additionally, since the wire is wrapped in tight coils, there is some non-negli
+gible inductance.
+\end_layout
+
+\begin_layout Standard
+The voltage source models what is referred to as 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Back EMF
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Remember that a changing magnetic field inside coils of wire will induce
+ a voltage in those wires (this is how electrical generators work).
+ Although at first it is the energy input to the motor that causes the shaft
+ to start to spin, as the shaft spins it generates its own set of magnetic
+ fields.
+ This secondary field begins to induce a new voltage in the coils called
+ Back EMF.
+ This voltage's value is linearly proportional to the speed the motor is
+ turning at.
+ This is why a free-wheeling motor has a maximum speed.
+\end_layout
+
+\begin_layout Standard
+All these parts of the electrical model create voltages to oppose or aid
+ the flow of current through the motor.
+ At the end of the day, the torque produced by the motor is
+\series bold
+ linearly proportional
+\series default
+ to the current flowing through it.
+\end_layout
+
+\begin_layout Standard
+To illustrate, follow this example concerning a free-wheeling motor (no
+ load torque): The motor is stopped, and a voltage is suddenly applied to
+ it.
+ Little current flows at first due to the inductance.
+ However, as time goes on, the magnetic field builds up and more and more
+ current flows.
+ As current begins to flow in ever increasing quantities, more and more
+ torque is applied to the output shaft.
+ The output shaft begins to accelerate due to the torque.
+ As the output shaft picks up speed, the back EMF voltage also increases.
+ Soon, it is no longer the inductance that is limiting current flow, but
+ instead the back EMF voltage source.
+ Eventually, an equilibrium is hit where there is (theoretically) no current
+ flow through the motor anymore, as the back EMF voltage completely counters
+ out the supply voltage.
+\end_layout
+
+\begin_layout Standard
+In reality, there is always a small current draw due to the load torques
+ from friction in the internal bearings (and various other reasons).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/motor_mdl.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A combined motor electrical and mechanical model
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:elec_mech_motor"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Given a supply voltage and a back EMF, applying KVL around the motor circuit
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:elec_mech_motor"
+
+\end_inset
+
+, we deduce the following continuous-time equation for the motor current:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{in}(t)=I_{m}(t)R_{m}+L_{m}\frac{dI_{m}}{dt}+V_{emf}(t)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula $V_{in}$
+\end_inset
+
+is the supply voltage to the motor, 
+\begin_inset Formula $R_{m}$
+\end_inset
+
+and 
+\begin_inset Formula $L_{m}$
+\end_inset
+
+ are the motor's winding's resistance and inductance (in Ohms and Henries),
+ and 
+\begin_inset Formula $V_{emf}$
+\end_inset
+
+ is the Back EMF voltage from any rotation of the output shaft.
+ The 
+\begin_inset Formula $L_{m}\frac{dI_{m}}{dt}$
+\end_inset
+
+term comes from the voltage-current relationship in an inductor.
+ Simply put, an inductor produces a large voltage in response to large changes
+ in current (hence, the derivative term).
+ The derivation of this relationship is beyond the scope of this document.
+\end_layout
+
+\begin_layout Standard
+Moving to the discrete domain, we find the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{in}[n]=I_{m}[n]R_{m}+L_{m}\left(\frac{I_{m}[n]-I_{m}[n-1]}{Ts}\right)+V_{emf}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now solve for 
+\begin_inset Formula $I_{m}[n]$
+\end_inset
+
+, the motor current at the present time-step:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{m}[n]=\frac{1}{\left(R_{m}+\frac{L_{m}}{Ts}\right)}\left(\frac{L_{m}I_{m}[n-1]}{Ts}-V_{emf}[n]+V_{in}[n]\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Joining of Electrical and Mechanical Models
+\end_layout
+
+\begin_layout Standard
+Now, we shall introduce some constants to link the mechanical and electrical
+ models together.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Data for this section can be found in the CIM motor curves available from
+ Andymark: http://files.andymark.com/CIM-motor-curve-am-0255.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These can be derived from analyzing the physical construction of the motor,
+ but are usually empirically measured.
+\end_layout
+
+\begin_layout Standard
+The 
+\series bold
+Torque Constant
+\series default
+ 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ determines the relationship between Torque and Current.
+ We define the following linking equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{m}[n]=K_{t}*I_{m}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $T_{m}$
+\end_inset
+
+is the torque produced on the output shaft of the motor.
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ is measured in units of Torque per Current, or Nm/A
+\end_layout
+
+\begin_layout Standard
+It is known that at zero current, zero torque is present (hence, no need
+ for any constant offset in the above equation).
+ 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ is most easily calculated from a motor's Stall Torque and Stall Current,
+ two figures readily available for most motors.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+K_{t}=\frac{T_{stall}}{I_{stall}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the case of a CIM motor, the stall torque is 2.429 Nm, and the stall current
+ is 131.227 A.
+\end_layout
+
+\begin_layout Standard
+The 
+\series bold
+Speed Constant 
+\series default
+
+\begin_inset Formula $K_{i}$
+\end_inset
+
+determines the relationship between the magnitude of the Back EMF voltage,
+ and the rotational speed of the output shaft.
+ We define the following linking equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{emf}[n]=K_{i}*\omega_{m}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\omega_{m}$
+\end_inset
+
+is the rotational speed of the output shaft of the motor.
+ 
+\begin_inset Formula $K_{i}$
+\end_inset
+
+is measured in units of Voltage per Rotational Velocity, or V/(rad/s).
+ 
+\end_layout
+
+\begin_layout Standard
+It is again known that at zero speed, there is zero back EMF.
+ 
+\begin_inset Formula $K_{i}$
+\end_inset
+
+is most easily calculated by analyzing the motor in its 
+\begin_inset Quotes eld
+\end_inset
+
+free-wheeling
+\begin_inset Quotes erd
+\end_inset
+
+ speed, where a positive voltage 
+\begin_inset Formula $V_{supply}$
+\end_inset
+
+ has been applied to the motor, and a maximum speed has been observed sustained
+ at the output shaft (
+\begin_inset Formula $\omega_{FW}$
+\end_inset
+
+).
+ Assuming the input current in this state (
+\begin_inset Formula $I_{FW}$
+\end_inset
+
+) is also known, the following relationship is true:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+K_{i}=\frac{V_{supply}-I_{FW}*R_{m}}{\omega_{FW}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Be sure to add scaling constants for units as needed - Current is often
+ reported in mA (not A), and free-wheel speeds in RPM (not rad/s).
+\end_layout
+
+\begin_layout Standard
+Substituting these Electrical/Mechanical constant relationships in and re-arrang
+ing terms, we arrive at the final equation used in the motor model:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{m}[n]=T_{m}[n-1]+T_{s}*\left(\frac{K_{t}}{L_{m}}\left(V_{in}[n]-\frac{T_{m}[n-1]R_{m}}{K_{t}}-K_{i}*\omega_{m}[n-1]\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{m}[n]=\frac{T_{m}[n]}{K_{t}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have now reduced the motor to a model which takes a voltage, speed, and
+ previous torque as input, and determines what the new torque value should
+ be.
+ Additionally, via the second equation, we can determine the current draw
+ of the given motor.
+\end_layout
+
+\begin_layout Subsection
+Integration with Larger Systems
+\end_layout
+
+\begin_layout Standard
+The one remaining relationship unexplored is the speed-torque relationship
+ in the motor.
+ Thus far we have defined the motor which produces some torque, dependent
+ upon the voltage applied and the speed the motor runs at.
+ However, once this torque is applied, how quickly does the speed change?
+ This question can only be answered by analyzing what the motor is hooked
+ up to.
+ In the case of a free-wheeling motor, not attached to anything, the answer
+ lies in the moment of inertia of the shaft itself, and the rotational friction
+ in the bearings.
+ When driving an actual robot, the torque of the motor is transferred through
+ the drive-train to the ground.
+ The wheels convert the torque to a linear force, and start rotating in
+ response to the net acceleration of the robot.
+ This rotational speed is then transferred back up through the drive-train
+ to the motors.
+ In all cases, friction provides a constant drag on motion.
+ The exact math in determining the torque-speed relationship must be derived
+ from the device attached to the motor, not the motor itself.
+\end_layout
+
 \begin_layout Section
 Main Battery
+\end_layout
+
+\begin_layout Standard
+There are many sources of power for electrical circuits.
+ While analyzing circuits, the most common source used is what is referred
+ to as a 
+\begin_inset Quotes eld
+\end_inset
+
+Ideal Voltage Source
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is a device which produces a voltage across its terminals, and that
+ voltage does not change with the amount of current flowing through the
+ device.
+ In theory, such a device could provide an infinite amount of power (keep
+ voltage the same as current increases indefinitely).
+ This assumption makes analysis of circuits easier, but fails to provide
+ the whole picture.
+\end_layout
+
+\begin_layout Subsection
+Modeling Voltage Drop due to Instantaneous Current Draw
+\end_layout
+
+\begin_layout Standard
+A battery is what is referred to as a 
+\begin_inset Quotes eld
+\end_inset
+
+Non-ideal Voltage Source
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It can be modeled with an ideal voltage source in series with a resistor.
+ The voltage source models the current-pushing potential of the chemical
+ reaction in the battery, and the resistor models the internal parasitic
+ resistance which causes voltage to drop as more current is drawn.
+ The MK ES17-12 batteries standard for FRC
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Constants derived from data-sheet at http://www.mkbattery.com/images/ES17-12.pdf
+\end_layout
+
+\end_inset
+
+ have an average internal resistance of 
+\begin_inset Formula $0.012\Omega$
+\end_inset
+
+.
+ The nominal (no-current-draw) voltage of the battery can be anywhere from
+ 13V down to 8V or even lower, depending on how much the battery is charged.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/battery.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A non-idea voltage source, modeling a battery
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:battMdl"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the purposes of RoboSim, we have not yet modeled the decaying nominal
+ voltage of the battery as it discharges, since the simulation is not designed
+ to be accurate for long-term endurance tests.
+ However, we have modeled the drop in supply voltage with elevated current
+ draw.
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:battMdl"
+
+\end_inset
+
+ for the circuit model employed.
+ 
+\end_layout
+
+\begin_layout Standard
+In general, the output of the battery model is the system voltage, and the
+ input is the total current draw from the battery.
+ The model is governed by the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{sys}[n]=V_{nom}[n]-R_{bat}*I_{draw}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $V_{sys}$
+\end_inset
+
+is the robot system voltage at a given sample time 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ 
+\begin_inset Formula $V_{nom}[n]$
+\end_inset
+
+is the nominal (no-current-draw) voltage of the battery.
+ For simplicity it may be assumed to be 12V, but could also be calculated
+ based on the remaining charge in the battery.
+ 
+\begin_inset Formula $R_{bat}$
+\end_inset
+
+is the parasitic internal resistance of the battery, assumed equals to 
+\begin_inset Formula $0.012\Omega$
+\end_inset
+
+ for the ES17-12.
+ Finally, 
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+is the total current demand of the robot at sample time 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ Within the plant model, the total current draw is calculated by summing
+ the current draw from each motor, solenoid, compressor, etc., along with
+ nominal background current draw (such as electronics, lights, or fans).
+\end_layout
+
+\begin_layout Subsection
+Modeling Total Remaining Charge based on Aggregate Current Draw
+\end_layout
+
+\begin_layout Standard
+Additionally, the battery model uses
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+to calculate the total charge remaining in the battery.
+ This charge-remaining metric could be used to drop nominal battery voltage
+ over time, but will also give developers indication of the amount of battery
+ life drained by performing certain maneuvers with their robot.
+ The battery is designed to have 17 Amp-Hours of charge in it.
+ This means that you can pull 17 amps for one hour, one amp for 17 hours,
+ or any other combination of amps and hours which, when multiplied, gets
+ you to 17.
+ We model battery charge by calculating the number of Amp-Hours drained
+ from the battery by the current draw every plant loop.
+ This behavior is defined by the equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q[n]=Q[n-1]-\frac{I_{draw}[n]*Ts}{3600}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Q[n]$
+\end_inset
+
+ is the present charge (in amp-hours) in the battery, and 
+\begin_inset Formula $Q[n-1]$
+\end_inset
+
+ is what the charge was last loop.
+ Here, we always calculate the present charge by subtracting the current
+ draw (in amps), multiplied by the sample time (with a 3600 factor to convert
+ Ts from seconds to hours).
+ This charge metric can be used to analyze expected battery life of a given
+ robot design.
 \end_layout
 
 \begin_layout Section
