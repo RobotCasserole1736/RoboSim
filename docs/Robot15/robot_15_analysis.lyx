@@ -642,6 +642,67 @@ A function's integral is equal to the sum of all previous values, scaled
 \end_layout
 
 \begin_layout Section
+Trigonometry 
+\end_layout
+
+\begin_layout Standard
+You are likely already aware of most trig concepts.
+ 
+\begin_inset Formula $sin(),cos(),tan()$
+\end_inset
+
+are among some of the functions you should be familiar with.
+ For the purposes of calculations of robosim, we will do all angle calculations
+ in radians.
+ Additionally, we will use to 
+\begin_inset Formula $atan2()$
+\end_inset
+
+ function, which is very similar to the inverse tangent (
+\begin_inset Formula $atan()$
+\end_inset
+
+).
+ However, it has some extra definitions to give it a full output range of
+ 
+\begin_inset Formula $\left[0,2\pi\right]$
+\end_inset
+
+for any given X/Y inputs.
+ You can look up more details online, but the formal definition is as follows:
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+atan2(X,Y)=\begin{cases}
+atan\left(\frac{-Y}{X}\right) & X>0\\
+180\textdegree+atan\left(\frac{Y}{X}\right) & Y\geq0,X<0\\
+-180\textdegree+atan\left(\frac{Y}{X}\right) & Y<0,X<0\\
+90\textdegree & Y>0,X=0\\
+-90\textdegree & Y<0,X=0\\
+undefined & Y=0,X=0
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Physics
 \end_layout
 
@@ -654,6 +715,13 @@ Physics is also a thing that Newton did.
 
 \begin_layout Subsection
 Position, Linear Motion, and Calculus 
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Position,-Linear-Motion,"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -789,7 +857,7 @@ reference "fig:accel_vel_pos"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -855,7 +923,7 @@ Force
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1127,6 +1195,13 @@ Static Friction
 
 \begin_layout Subsubsection
 Kinetic Friction
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Kinetic-Friction"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2024,6 +2099,13 @@ Component Models
 
 \begin_layout Section
 Electric Motor
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Electric-Motor"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2734,6 +2816,484 @@ Traction Wheel
 
 \begin_layout Part
 Integrated Model
+\end_layout
+
+\begin_layout Standard
+There are multiple parts to the robot model.
+ Each shall be discussed in detail here.
+\end_layout
+
+\begin_layout Section
+Electrical Subsystem
+\end_layout
+
+\begin_layout Standard
+The electrical subsytem consists of the robot's power source (the main battery),
+ all current drawing devices (motors, solenoids, compressors, etc.), and
+ any safety devices (main circut breaker, etc.).
+\end_layout
+
+\begin_layout Section
+Drivetrain Subsystem
+\end_layout
+
+\begin_layout Standard
+The drivetriain consists of the components which exert forces on the net
+ robot body, and move it around the field.
+ Conceptually, it transforms torque from the motors, and calculates what
+ forces those torques exert on the robot.
+ Then, an acceleration, velocity, and position of the robot body can be
+ calculated from these forces.
+ Rotation is also accounted for.
+ Finally, the net motion of the robot is transformed back into a speed,
+ which is fed back up through the drivetrain to determine what rotational
+ speed the motors are running at.
+\end_layout
+
+\begin_layout Standard
+For Robot_15, a simple tank drive is modeled.
+ The Drivetrain consists of two sets of drive wheels/motors/gearboxes -
+ a left and a right set.
+ Each set of drive equpment has a given gear ratio, wheel diameter, and
+ number of drive motors.
+ It is assumed that each drive equipment set can exert a force toward the
+ front or the back of the robot, and that force is applied at a point offset
+ to the leftt or right of the robot's physical center.
+ The distance from the center to the point of force application is called
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+Motor Width
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The robot additionally has a width and height (the half-width and half-height
+ are shown, and are used in the software for calculations).
+ The X and Y axes are also provided.
+ Note that all linear velocity components are assumed relative to reference
+ frame fixed on the field, not on the robot (unless otherwise indicated)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/sim_model.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The model of the tank drive robot.
+ Note that MotorWidth and HalfWidth are mixed up, this should be changed.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SimMdl"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first step in the calcualtions for the drivetrain are to calculate all
+ the forces acting on the robot.
+\end_layout
+
+\begin_layout Subsection
+Linear Force from Drivetrain Motors
+\end_layout
+
+\begin_layout Standard
+The torque from the motor is a function of the motor's speed and the supply
+ voltage.
+ See section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Electric-Motor"
+
+\end_inset
+
+ for the derivation of torque from speed and supply voltage.
+ Given the left and right motor torques, a linear force magnititude on the
+ robot can be calculated:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{lin}[n]=\frac{\left(T_{L}[n]+T_{R}[n]\right)*N_{M}}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $T_{L}$
+\end_inset
+
+and 
+\begin_inset Formula $T_{R}$
+\end_inset
+
+being the torque (in Nm) produced by the left and right motors respectively,
+ 
+\begin_inset Formula $N_{M}$
+\end_inset
+
+being the the number of motors powering each side of the drivetrain (usually
+ 2 or 3), 
+\begin_inset Formula $D_{W}$
+\end_inset
+
+ being the wheel diameter (in m), and 
+\begin_inset Formula $R$
+\end_inset
+
+ being the gear ratio of the gearboxes and any sprokets used.
+ Note that R might actually change over time if shifting gearboxes are used.
+\end_layout
+
+\begin_layout Subsection
+Net Rotational Torque from Drivetrain Motors
+\end_layout
+
+\begin_layout Standard
+Next, because the forces from each side of the drivetrain act at a non-zero
+ difference from the center of mass of the robot, they may exert a net torque
+ on the robot.
+ This is what allows the robot to rotate in place.
+ The magnititude of this torque on the robot is calculated:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{net}[n]=\frac{\left(-T_{L}[n]+T_{R}[n]\right)*N_{M}*W_{mot}}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All variables used here are the same as above, with the addition of the
+ motor width, 
+\begin_inset Formula $W_{mot}$
+\end_inset
+
+in meters.
+\end_layout
+
+\begin_layout Subsection
+Wheel friction
+\end_layout
+
+\begin_layout Standard
+Wheel friction is currently under development.
+ So far, we will only calculate kinetic friction which opposes the robot
+ from sliding side-to-side (perpendicular to the direction the drive wheels
+ point).
+ Note this force is large for traction wheels, but very small for omni-wheels.
+ By adjusting the coeficent of friction in the robot configuration structure,
+ different types of wheels can be tested.
+\end_layout
+
+\begin_layout Standard
+The first step is determining what component of the robot's velocity is
+ perpendicular to the direction the wheels are pointed
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\theta[n]=atan2\left(\frac{V_{y}[n]}{V_{x}[n]}\right)-\theta_{robot}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{perp}[n]=\sqrt{V_{x}[n]^{2}+V_{y}[n]^{2}}*sin\left(\Delta\theta[n]\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $V_{y}$
+\end_inset
+
+ and 
+\begin_inset Formula $V_{x}$
+\end_inset
+
+being the y and x components of the robot's current velocity, and 
+\begin_inset Formula $\theta_{robot}$
+\end_inset
+
+being the current direction the robot is pointed in.
+ 
+\end_layout
+
+\begin_layout Standard
+Then, using the equations for kinetic friction described in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Kinetic-Friction"
+
+\end_inset
+
+, we can determine a magnititude for the frictional force from the wheel
+ opposing side-to-side motion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{fric,perp}[n]=-V_{perp}[n]*K_{k,wheel}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $K_{k,wheel}$
+\end_inset
+
+being the net kinetic coefficent of friction for all wheels in contact with
+ the ground.
+\end_layout
+
+\begin_layout Subsection
+Induced Motion
+\end_layout
+
+\begin_layout Standard
+We now have all forces requried to calculate the net motion of the robot
+ from the drivetrain.
+ We will use the relationship force equals mass times acceleration, solved
+ for acceleration.
+ We will consider the X and Y components separately.
+ We must use trig to determine the net X/Y motion based on the direction
+ the robot is pointed, which in turn dictates which direction the drivetrain
+ can push or apply friction in.
+\end_layout
+
+\begin_layout Standard
+The acceleration in the X and Y directions (WRT a fixed reference frame
+ of the field) for the robot is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{x}[n]=\frac{F_{lin}[n]*cos\left(\theta_{robot}[n]\right)+F_{fric,perp}[n]*-sin\left(\theta_{robot}[n]\right)}{M_{robot}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{y}[n]=\frac{F_{lin}[n]*sin\left(\theta_{robot}[n]\right)+F_{fric,perp}[n]*cos\left(\theta_{robot}[n]\right)}{M_{robot}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $M_{robot}$
+\end_inset
+
+being the robot's mass in kg.
+\end_layout
+
+\begin_layout Standard
+Additionally, we also calculate the rotational acceleration from the induced
+ torque:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\alpha[n]=\frac{T_{net}[n]}{I_{robot}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $I_{robot}$
+\end_inset
+
+being the robot's net moment of inertia (like mass, but for spinning things).
+ Not having any better ideas, we modeled the robot's mass as being uniform
+ throughout a subsection of its base.
+ By making this mass-distributed-in-a-rectangular-prisim assumption, we
+ can assume the following value for the moment of inertia:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{robot}=\frac{M_{robot}}{12}*\left[\left(0.9*L_{robot}\right)^{2}+(2*W_{motor})^{2}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $M_{robot}$
+\end_inset
+
+being the robot mass in kg, 
+\begin_inset Formula $L_{robot}$
+\end_inset
+
+being the robot's total length from front to back bumper, and 
+\begin_inset Formula $W_{motor}$
+\end_inset
+
+being the distance from the robot's centerpoint to the point of force applicatio
+n of the drivetrain(in m).
+\end_layout
+
+\begin_layout Standard
+Now that we have the accelerations, we can use the physics equations determined
+ in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Position,-Linear-Motion,"
+
+\end_inset
+
+ to deduce the robot's current position, velocity, rotation, and rotational
+ velocity.
+\end_layout
+
+\begin_layout Subsection
+Motor Speed Calculation
+\end_layout
+
+\begin_layout Standard
+Finally, we must pass back up the robot's net motion to calcualte the speed
+ each motor is running at.
+ This is crucial for determining accurate future torque values.
+\end_layout
+
+\begin_layout Standard
+We must account for the robot's current orientation on the field, it's X
+ and Y velocity, and its rotational velocity.
+ For both motors, we calcualte speeds with the following equations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega_{L}[n]=\frac{\left[V_{x}[n]cos\left(\theta_{robot}[n]\right)+V_{y}[n]sin\left(\theta_{robot}[n]\right)-\omega_{robot}[n]*W_{motor}\right]*2\pi}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega_{R}[n]=\frac{\left[V_{x}[n]cos\left(\theta_{robot}[n]\right)+V_{y}[n]sin\left(\theta_{robot}[n]\right)+\omega_{robot}[n]*W_{motor}\right]*2\pi}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The next control loop, these new speeds will be fed into the motor model
+ to calculate the next torque.
+\end_layout
+
+\begin_layout Section
+Pneumatic subsystem
+\end_layout
+
+\begin_layout Standard
+This is not yet implemented.
+\end_layout
+
+\begin_layout Section
+Field Collision Model
+\end_layout
+
+\begin_layout Standard
+The field collision model determines behavior when the robot collides with
+ a wall of the field.
+ The collisions are inelastic - that is to say, some of the energy is absorbed
+ by the bumpers.
+ This means the robot bounces back on a collision, but is traveling slower.
 \end_layout
 
 \begin_layout Standard
