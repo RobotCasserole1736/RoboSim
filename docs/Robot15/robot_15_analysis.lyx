@@ -2562,6 +2562,13 @@ The one remaining relationship unexplored is the speed-torque relationship
 
 \begin_layout Section
 Main Battery
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Main-Battery"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2797,6 +2804,13 @@ Q[n]=Q[n-1]-\frac{I_{draw}[n]*Ts}{3600}
 
 \begin_layout Section
 Main Circuit Breaker
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Main-Circuit-Breaker"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2831,6 +2845,132 @@ Electrical Subsystem
 The electrical subsytem consists of the robot's power source (the main battery),
  all current drawing devices (motors, solenoids, compressors, etc.), and
  any safety devices (main circut breaker, etc.).
+\end_layout
+
+\begin_layout Standard
+One of the key metrics to track is total current draw from the battery.
+ As soon as we know the compressor state and motor torques, we calculate
+ total current draw with the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{draw}[n]=\left(I_{MR}[n]+I_{ML}[n]\right)*N_{M}+I_{comp}[n]+I_{nom}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula $I_{ML}$
+\end_inset
+
+and 
+\begin_inset Formula $I_{MR}$
+\end_inset
+
+are the current draw from the left and right motor respectively.
+ 
+\begin_inset Formula $I_{comp}$
+\end_inset
+
+is the air compressor current, which is assumed 0 until the pneumatic system
+ is implemented.
+ Finally, 
+\begin_inset Formula $I_{nom}$
+\end_inset
+
+represents background, nominal current draw from the roboRIO, LED's, fans,
+ etc.
+ We have modeled it as a constan 0.5A current draw.
+\end_layout
+
+\begin_layout Standard
+System voltage is the voltage supplied by the battery to all of the robot
+ components.
+ Usually it is near 12V, but large current draws or weak batteries may decrease
+ it.
+ This 
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+is used to calculate the present system voltage via the equations laid out
+ in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Main-Battery"
+
+\end_inset
+
+.
+ Additionally, the main battery charge is tracked via the equation presesnted
+ in that same section.
+ 
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+is also used by the main circuit breaker model to determine if the breaker
+ should be in a tripped or closed state.
+ If tripped, system voltage is driven to zero.
+ See section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Main-Circuit-Breaker"
+
+\end_inset
+
+ for more details on this component.
+\end_layout
+
+\begin_layout Standard
+Once the system voltage is known, it can be used to calculate adjusted motor
+ voltages driving the motors.
+ There is feedback here: as motors push harder, they draw more current,
+ which drops the system voltage.
+ In turn, this prevents the motors from outputting their maximum power.
+ This systsem-voltage-drop relationship is maintained by treating the voltage
+ input waveform (whether from the RoboSim hardware measurements or from
+ test vectors in a fully-simulated setup) as 
+\begin_inset Quotes eld
+\end_inset
+
+voltage commands
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The actual voltage going to each motor is calculated off of this equation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{M}[n]=\frac{V_{sys}[n]}{12}*V_{cmd}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $V_{cmd}$
+\end_inset
+
+is the commanded voltage to the motor, 
+\begin_inset Formula $V_{sys}$
+\end_inset
+
+is the robot system voltage, and 
+\begin_inset Formula $V_{M}$
+\end_inset
+
+is the voltage actually applied to the motor.
 \end_layout
 
 \begin_layout Section
@@ -3297,6 +3437,25 @@ The field collision model determines behavior when the robot collides with
 \end_layout
 
 \begin_layout Standard
+The field collision model is still very crude, and for that reason will
+ not be described in depth.
+ Suffice to say, the basic principe is that when the robot comes in contact
+ with a wall, one part of the velocity (X direction or Y direction) is reversed
+ and reduced to simulate a 
+\begin_inset Quotes eld
+\end_inset
+
+bounce
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Future work will model this bounce more accurately, and also examine the
+ rotational effects of a corner of the robot hitting the wall before the
+ rest of the robot does.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Newpage pagebreak
 \end_inset
 
@@ -3309,6 +3468,122 @@ Design Notes
 
 \begin_layout Section
 Software Architecture
+\end_layout
+
+\begin_layout Standard
+The sim software architecture is desiged to be flexible and modular, with
+ large parts that can be re-used year to year.
+ Most 
+\begin_inset Quotes eld
+\end_inset
+
+components'
+\begin_inset Quotes erd
+\end_inset
+
+ to the simulation will have an init (run once) and a main (run once per
+ loop) file.
+ We will briefly describe each file
+\end_layout
+
+\begin_layout Subsection
+sim_main
+\end_layout
+
+\begin_layout Standard
+Sim_main.m is the main entry point for the simulation.
+ This is the file to run in Octave when you wish to run a simulation.
+ It calls all the initilization functions and runs the main control loop.
+\end_layout
+
+\begin_layout Standard
+After clearing the Octave workspace, sim_main will load the instrument control
+ package (needed for serial communication with the RoboSim hardware), add
+ additional folders to its path (so it knows where to find utility and library
+ files), start up some logging, and then call additional initilization inside
+ sim_init.m.
+ After that, a progress bar is displayed and a timer is started to ensure
+ the perioidic loop is run at the correct rate.
+\end_layout
+
+\begin_layout Standard
+The periodic loop will run for the number of timesteps specificed at sim
+ initilization time.On each loop, the first thing done is to mark the time
+ the loop started at.
+ This will be used at the end to determine how long to wait to maintain
+ a consistant run rate.
+ Next, the inputs for this control loop are gathered via in_proc.m.
+ Then the robot plant model is run, and any robot/field physics calculations
+ are run.
+ Then, the results of this loop are set to outputs via out_proc.m.
+ Lastly, if it is desired to run this simulation in real-time, the simulation
+ waits for a given amount of time to ensure a consistant loop run time (ie,
+ sample rate).
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+Finally, after the simulation has completed the required number of main
+ control loops, the post_proc tasks are run.
+ Then the simulation exits.
+\end_layout
+
+\begin_layout Subsection
+sim_init
+\end_layout
+
+\begin_layout Standard
+Sim_init contains some of the simulation-enviroment-specific setup and data
+ structures.
+ Here, you can set the sample time (reccommend 50ms.
+ Also, any changes here must have corresponding changes in the arduino software
+ as well).
+ You can also specify simTime, the length of time in seconds the sim will
+ run for.
+ There are two other important switches: one to decide if input comes from
+ predefined simulation testcases or from RoboSim hardware (the use_serial
+ variable), and another to determine if the simulation should attempt to
+ execute in real time (ie, each control loop is 50ms) or not (ie, each control
+ loop runs as fast as possible).
+ Running real-time is nice to get a good conceptual feel for how the robot
+ will look as it moves around, and is required if use_serial is 1.
+ However, if plots of test results are of primary concern, you can set enforce_r
+ealtime to 0 and get faster execution time.
+\end_layout
+
+\begin_layout Standard
+After setting these variables, sim_init runs initilization for the robot
+ and for the field, then opens up the serial connection to the RoboSim hardware
+ if hardware is being used.
+\end_layout
+
+\begin_layout Subsection
+robot_init_15
+\end_layout
+
+\begin_layout Subsection
+field_init_15
+\end_layout
+
+\begin_layout Subsection
+in_proc
+\end_layout
+
+\begin_layout Subsection
+robot_15
+\end_layout
+
+\begin_layout Subsection
+field_robot_physics
+\end_layout
+
+\begin_layout Subsection
+out_proc
+\end_layout
+
+\begin_layout Subsection
+post_proc
 \end_layout
 
 \begin_layout Section

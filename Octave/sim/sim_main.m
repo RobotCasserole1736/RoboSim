@@ -22,7 +22,10 @@ addpath('..\lib\');          % component model libraries
 %Enable logging to file (mostly for headless runs)
 diary "RoboSim_plant_log.txt"
 
+%Initalize the simulation. This will call the other init functions as well.
 sim_init;
+
+%Create a pop-up progress bar
 h = waitbar(0, "Running Simulation...");
 
 %start timer for maintaining periodic loop rate
