@@ -3519,8 +3519,6 @@ The periodic loop will run for the number of timesteps specificed at sim
  Lastly, if it is desired to run this simulation in real-time, the simulation
  waits for a given amount of time to ensure a consistant loop run time (ie,
  sample rate).
-\backslash
-
 \end_layout
 
 \begin_layout Standard
