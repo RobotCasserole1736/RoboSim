@@ -6,7 +6,7 @@
 % Created July 20, 2015 - Andrew Gurik & Chris Gerth
 % 
 
-%% Drivetrain
+%% Input maps
 
 %% Get Motor Voltage
 %% scale by system voltage
@@ -14,6 +14,11 @@
 motor(1).voltage = in.motor_voltage(1)*(robot_state.supply_voltage/robot_config.battery_nominal_voltage);
 % Right
 motor(2).voltage = in.motor_voltage(2)*(robot_state.supply_voltage/robot_config.battery_nominal_voltage);
+
+%assume compressor power is hooked to the first solenoid input.
+robot_state.compressor_enabled_command = in.solenoid_voltage(1);
+
+%% Drivetrain
 
 %% Physics Model
 
@@ -78,10 +83,29 @@ motor(2).speed = (robot_state.linear_vel_x*cos(robot_state.rotation) +...
                  (2*pi)*...                                                  % (rad/rev)
                  (1/(robot_config.gear_ratio(1)));                           % Gear ratio, inverse b/c motor rotates faster than wheels
 
+%Pneumatic system calculations
+
+%Calculate all air flow out of the pneumatic system
+system_total_outflow = robot_config.nominal_air_leak_rate; %Add more terms here for each component with flow - cylinders, etc.
+
+%Determine, based on previous system pressure, if the compressor should be enabled.
+press_sense_enabled = pressure_sensor(robot_state.system_air_pressure, 0);
+
+%Model the basic logic of the compressor/air switch safety system. This may be removed 
+if(robot_state.compressor_enabled_command)
+	robot_state.compressor_enabled = press_sense_enabled;
+else
+	robot_state.compressor_enabled = 0;
+end
+
+%Determine a new system pressure
+[robot_state.system_air_pressure, compressor_current] = compressor_and_tank(robot_state.compressor_enabled, system_total_outflow, robot_config.num_air_tanks, 0);
+				 
+				 
 %Electrical calculations
 
 %Sum the total current draw
-robot_state.current_draw = (abs(motor(1).current) + abs(motor(2).current)) * robot_config.drive_motors_per_side + robot_config.nominal_current_draw;
+robot_state.current_draw = (abs(motor(1).current) + abs(motor(2).current)) * robot_config.drive_motors_per_side + robot_config.nominal_current_draw + compressor_current;
 
 %Update the battery charge based on current draw
 robot_state.battery_charge = max(robot_state.battery_charge - robot_state.current_draw*Ts/3600,0); %Ts in seconds, charge in amp-HOURS

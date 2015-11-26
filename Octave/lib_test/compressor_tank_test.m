@@ -45,7 +45,7 @@ time_vector = 0:Ts:(SimEndTime - Ts);
 %Run main testcase
 
 %initalize
-compressor_and_tank(0,0,1);
+compressor_and_tank(0,0,1,1);
 pressure_sensor(0,1);
 h = waitbar(0, "Running Simulation...");
 
@@ -65,7 +65,7 @@ for i = 1:1:num_timesteps %iterate by timestep
 		cur_comp_enable = pressure_sensor(sys_press(i-1), 0);
 	end
 	
-	[sys_press(i), sys_current(i)] = compressor_and_tank(cur_comp_enable, cur_outflow_rate, 0);
+	[sys_press(i), sys_current(i)] = compressor_and_tank(cur_comp_enable, cur_outflow_rate,1, 0);
 
 end
 delete(h);

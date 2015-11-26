@@ -56,6 +56,8 @@ struct  (
         'battery_nominal_voltage', 12,...           %Battery nominal voltage. Usually 12, but can go lower to simulate dead battery behavior
         'battery_internal_resistance', 0.012,...    %Battery internal resistance. This is what causes battery voltage to drop under load.
         'nominal_current_draw', 0.5,...             %Background average current draw of roboRIO, cooling fans, lights, etc.
+		'num_air_tanks', 2,...                      %number of pneumatic tanks available
+		'nominal_air_leak_rate', 0.0005,...         %Volumetric leak rate from pneumatic system in L per s. Should be zero, but non-zero if our plumbing is bad.
         'scratch',              0
         );
 		
@@ -85,6 +87,9 @@ struct  (
         'battery_charge', robot_config.battery_capacity,... % current charge of battery (Amp Hours)
         'supply_voltage', robot_config.battery_nominal_voltage,... %system voltage available to all components (V)
         'current_draw',              0,... % Total current draw from the battery (A)
+		'system_air_pressure',       0,... % Air pressure for pneumatic system in kPa
+		'compressor_enabled_command', 0,... %set to 1 to turn the compressor on, 0 to turn it off. Overridden if sys press is too high.
+		'compressor_enabled',        0,... %1 if compressor is actually running, 0 if off.
         'scratch',                   0
         );
         
@@ -111,6 +116,10 @@ for ii = 1:2+robot_config.mechanism_motors %Left and right drive motors, plus me
 			'scratch',      0
 			);
 end
+
+%%Init pneumatic system internal variables
+compressor_and_tank(0,0,robot_config.num_air_tanks,1);
+pressure_sensor(0,1);
 
 %% Initialize Robot Drawing
 figure(1);

@@ -25,8 +25,8 @@ plot(t,lmt,'-+b',t,rmt,'-+r');
 title('Motor output torque (Nm)');
 legend('Left', 'Right');
 subplot(3,1,2);
-plot(t,lms,'-+b',t,rms,'-+r');
-title('Motor output shaft speed (rad/s)');
+plot(t,lms.*9.54929659643,'-+b',t,rms.*9.54929659643,'-+r');
+title('Motor output shaft speed (RPM)');
 legend('Left', 'Right');
 subplot(3,1,3);
 plot(t,lmv,'-+b',t,rmv,'-+r');
@@ -51,13 +51,22 @@ set(gcf,'numbertitle','off','name','Electrical')
 % robot plot
 figure(4);
 subplot(3,1,1);
-plot(t,rb_x_vel,'-+g',t,rb_y_vel,'-+r');
+plot(t,rb_x_vel.*3.28084,'-+g',t,rb_y_vel.*3.28084,'-+r');
 legend('X', 'Y');
-title('Robot Velocity (m/s)');
+title('Robot Velocity (ft/s)');
 subplot(3,1,2);
-plot(-rb_y_pos,rb_x_pos,'-+r');
-title('Robot Position Trace(m)');
+plot(-rb_y_pos.*3.28084,rb_x_pos.*3.28084,'-+r');
+title('Robot Position Trace(ft)');
 subplot(3,1,3);
-plot(t,rb_rot_vel,'-+r');
-title('Robot Rotational Velocity(rad/s)');
+plot(t,rb_rot_vel.*9.54929659643,'-+r');
+title('Robot Rotational Velocity(RPM)');
 set(gcf,'numbertitle','off','name','Robot')
+
+
+%pneumatic system plots 
+figure(5);
+subplot(1,1,1);
+plot(t,rb_sys_press./6.89475729,'-+r');
+legend('Tank Pressure (psi)');
+title('Pneumatic System Pressure');
+set(gcf,'numbertitle','off','name','Pneum')

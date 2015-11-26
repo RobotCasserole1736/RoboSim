@@ -31,6 +31,8 @@ rb_cur_draw(i) = robot_state.current_draw;
 rb_bat_chg(i) = robot_state.battery_charge;
 rb_sply_v(i) = robot_state.supply_voltage;
 
+rb_sys_press(i) = robot_state.system_air_pressure;
+
 t(i) = n;
 
 %% serial write

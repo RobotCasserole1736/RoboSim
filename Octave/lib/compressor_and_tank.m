@@ -12,7 +12,7 @@
 %        - 
 %
 
-function [sys_press_kPa, comp_current_A] = compressor_and_tank(enabled, outflow_rate_L_per_s, reset)
+function [sys_press_kPa, comp_current_A] = compressor_and_tank(enabled, outflow_rate_L_per_s, num_tanks, reset)
 
 % access the plant sample time global
 global Ts;
@@ -21,7 +21,6 @@ global Ts;
 persistent moles_air_stored
 
 %User Constants
-num_tanks = 1;
 tank_volume_L = 0.574; %(574 mL Clippard air tanks - http://www.andymark.com/product-p/am-2649.htm)
 tank_air_temp_C = 21; %(in DegC. 70degF ~= 21degC)
 
