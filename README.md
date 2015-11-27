@@ -11,6 +11,12 @@ RoboSim is build around an Arduino Uno. There are two perripherial boards which 
 ## Project Status
 RoboSim is currently in development. This section will be updated once the first release candidate is completed.
 
+## Screenshots
+[![Screenshot](/docs/sample_screenshots/motors.jpg)](docs/sample_screenshots/)
+[![Screenshot](/docs/sample_screenshots/electrical.jpg)](docs/sample_screenshots/)
+[![Screenshot](/docs/sample_screenshots/Robot_Physical.jpg)](docs/sample_screenshots/)
+[![Screenshot](/docs/sample_screenshots/Robot_Figure.jpg)](docs/sample_screenshots/)
+
 ## Repository Contents
 - arduino_src - source code for the embedded arduino controller inside of RoboSim
 - Octave - source code for the Octave-run plant model and GUI
