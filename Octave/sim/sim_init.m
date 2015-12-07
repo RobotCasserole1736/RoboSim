@@ -37,6 +37,7 @@ enforce_realtime = 1; %if set to 1, delays simulation to display in real-time. i
 field_init_15; % load the field
 robot_init_15; % Initialize Robot
 
+
 %% Set Defaults
 
 % initialize plot vectors (only time for now?)

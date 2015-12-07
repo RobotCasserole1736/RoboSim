@@ -2817,6 +2817,208 @@ name "sec:Main-Circuit-Breaker"
 Compressor and Tank
 \end_layout
 
+\begin_layout Standard
+The compressor and tank library model reporesent the source of pneumatic
+ energy for the robot.
+ The compressor modeled is the Viair 90C, standard for FRC robots.
+ The air tanks have an adjustable volume (set by defining the number of
+ half-liter tanks).
+ 
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Quotes eld
+\end_inset
+
+The System
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For all pneumatic calculations, the volume inside the tanks, tubing, valves,
+ etc.
+ is modeled collectively as the 
+\begin_inset Quotes eld
+\end_inset
+
+system
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In principle, there are a certain number of air molecules inside of this
+ system at all time.
+ The model track the number of moles of air inside the system, and then
+ can calculate the pressure using the total volume and an assumed temperature.
+ The compressor as a device adds moles of air to this system, while any
+ leaks or cylinder actuations reduce the number of moles in the system.
+\end_layout
+
+\begin_layout Standard
+The system requires a 
+\begin_inset Quotes eld
+\end_inset
+
+reset
+\begin_inset Quotes erd
+\end_inset
+
+ trigger at the start of the simulation.
+ When reset, it triggers calculations to determine nominal (ie, one-atmosphere)
+ quantities of air molecules in the system.
+ This initalizes the state variable to the right number of moles of air
+ for an assumed temperature.
+\end_layout
+
+\begin_layout Standard
+The temperature of air in the system is assumed to always be at 
+\begin_inset Formula $70\textdegree$
+\end_inset
+
+F.
+ This is based on the idea that the compressor does not induce much extra
+ heat into the air it compresses, and any extra heat is dissapated to the
+ atmosphere through the compressor metal body, tank walls, and tubing.
+ Making this assumption allows us to not have to calculate the thermal equations
+ relating heat loss through a complex system of many different materials
+ of different shapes.
+\end_layout
+
+\begin_layout Subsection
+Compressor
+\end_layout
+
+\begin_layout Standard
+Viair provides performance data for its compressors.
+ For the 90C model, there is a non-linear relationship between flow rate,
+ pressure, and drawn current.
+ At any given time, the compressor must fight the system pressure to put
+ more air into the system.
+ Additionally, the faster the flow rate and the higher the system pressure,
+ the more current is needed to keep pushing moles of air into the system.
+ The numerical values can be found in the compressor's datasheet, and are
+ plotted with interpolation in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:comp_perf_data"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/viair90C_flow_rate.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename resources/viair90C_current_draw.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Viair 90C Performance Data
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:comp_perf_data"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the performance data is listed in imperial units, so some conversion
+ factors are applied in software to get to the metric equivilants.
+ 
+\end_layout
+
+\begin_layout Standard
+Every simulation loop, a total number of new moles of air to be added to
+ the system is calculated based on this performance data, and whether the
+ compressor is running or not.
+ By using the ideal gas law, and assuming the system pressure is known,
+ the number of new moles of air can be calculated:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\triangle num\_moles\_comp[n]=\frac{P[n-1]F[n]*Ts}{rT}
+\]
+
+\end_inset
+
+For 
+\begin_inset Formula $P$
+\end_inset
+
+ being the previous system pressure, 
+\begin_inset Formula $F$
+\end_inset
+
+ being the volumetric flow rate (calculated from performance data if compressor
+ is running, or 0 if not running),
+\begin_inset Formula $Ts$
+\end_inset
+
+ being the sample time, 
+\begin_inset Formula $T$
+\end_inset
+
+ being the system air temperature (assumed equal to
+\begin_inset Formula $70\textdegree$
+\end_inset
+
+F), and 
+\begin_inset Formula $r=8.31$
+\end_inset
+
+ being the gas constant in units of 
+\begin_inset Formula $\frac{L*kPa}{K*mol}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Finally, given the current system pressure and running/not-running state
+ of the compressor, the current draw at timestep 
+\begin_inset Formula $n$
+\end_inset
+
+ may also be calculated.
+\end_layout
+
 \begin_layout Section
 Traction Wheel
 \end_layout
@@ -2830,6 +3032,13 @@ Traction Wheel
 
 \begin_layout Part
 Integrated Model
+\begin_inset CommandInset label
+LatexCommand label
+name "part:Integrated-Model"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3421,11 +3630,19 @@ Pneumatic subsystem
 \end_layout
 
 \begin_layout Standard
-This is not yet implemented.
+This has been paritally implemented, and not at all documented.
+ To be updated....
 \end_layout
 
 \begin_layout Section
 Field Collision Model
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Field-Collision-Model"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3560,32 +3777,208 @@ After setting these variables, sim_init runs initilization for the robot
 robot_init_15
 \end_layout
 
+\begin_layout Standard
+Robo_init is run once before the start of the main simulation loop.
+ Its purposes is to initalize the internal state and configuration structutes
+ of the robot, and draw the initial robot onto the field.
+ 
+\end_layout
+
+\begin_layout Standard
+There are three main structures - config, state, and calc_config.
+ Config values will be constant throughout the simulation.
+ They represent the physical properties of the robot (physical dimensions,
+ weight, number of motors, number of air tanks, etc.).
+ These physical paramaters are all used in the physics-based calculations
+ of the robot's actions.
+ Note that the units of each parameter should be included into the comments
+ associated with the params (units matter! And there's little oppurtunity
+ to figure them out from the rest of the code!).
+ The state structure holds all the physical paramaters which change over
+ time (acceleration, rotation, position, system voltage, etc.).
+ Again, units should be specified.
+ Since this is a digital system, it's expected that some of the values will
+ have 
+\begin_inset Quotes eld
+\end_inset
+
+current
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+previous
+\begin_inset Quotes erd
+\end_inset
+
+ values.
+ At the end of each main loop, the structure should be considered to have
+ all the data associated with the robot at timestep 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ Finally, there is an additional structure for the calculated config values.
+ These should not be edited from robot to robot - the values are derived
+ from other config values.
+ These are things like unit-converted values (ex: mass in kg) or the moment
+ of inertia, which can be calculated from other known values.
+\end_layout
+
+\begin_layout Standard
+After the structures for the robot have been defined, a few more are added
+ for specific components.
+ Currently, this is for the motors.
+\end_layout
+
+\begin_layout Standard
+Finally, a few calculations are done to draw the initial robot onto the
+ field.
+ The initial figure is selected, and the robot square is drawn.
+ Additionally, a small marker circle is drawn on the front of the robot
+ to differentiate it from the back.
+\end_layout
+
 \begin_layout Subsection
 field_init_15
+\end_layout
+
+\begin_layout Standard
+Field_init is responsible for setting up the field paramaters structure,
+ and drawing the field.
+ The field structure contains info about the physical dimensions of the
+ field components, as well as various drawing paramaters.
+ After the struct is initalized, a figure is created, the axis is set up
+ to be used as a canvas to draw the field on, and the actual components
+ of the field are drawn.
+ This drawing needs only be done once, unless a field element is animated.
 \end_layout
 
 \begin_layout Subsection
 in_proc
 \end_layout
 
+\begin_layout Standard
+In_proc is the input processing script.
+ It is responsible for getting inputs from some source, and updating the
+ input structure based on those inputs.
+ The input structure is its own set of time-changing values, containing
+ the current set of inputs (usually motor and solenoid voltages).
+\end_layout
+
+\begin_layout Standard
+In general, if a serial port connection is used, the serial_read_packet
+ function is called to get input from the arduino.
+ On a bad packet being recieved, the old packet is maintained and a warning
+ is printed to screen.
+ 
+\end_layout
+
+\begin_layout Standard
+If no serial port is needed, the input structure is instead populated using
+ some pre-defined time-voltage vectors.
+ These vectors are defined within the in_proc script itself.
+ The define a voltage to set, and the time at which to set it.
+ Between given points, linenar interpolation is used.
+ 
+\end_layout
+
+\begin_layout Standard
+This 
+\begin_inset Quotes eld
+\end_inset
+
+no-serial-port
+\begin_inset Quotes erd
+\end_inset
+
+ mode allows robot designers to test different driving conditions with different
+ physical parameters, with no electrical board built.
+ 
+\end_layout
+
 \begin_layout Subsection
 robot_15
+\end_layout
+
+\begin_layout Standard
+The Robot_15 script executes the integrated model of the robot.
+ No data structures are defined here - the robot state and outputs structures
+ are updated based on the inputs, physical parameters, and previous state.
+ See Part 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "part:Integrated-Model"
+
+\end_inset
+
+ for more information on the content of the robot_15 script.
 \end_layout
 
 \begin_layout Subsection
 field_robot_physics
 \end_layout
 
+\begin_layout Standard
+The field_robot_physics script re-adjusts the robot state structure based
+ on any interaction between the robot and the field.
+ Usually, this interaction means the robot ran into a wall or a part of
+ the field.
+ See section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Field-Collision-Model"
+
+\end_inset
+
+ for more info on how collisions are handled.
+\end_layout
+
 \begin_layout Subsection
 out_proc
+\end_layout
+
+\begin_layout Standard
+The Output Processing script is designed to, well, process outputs.
+ This means updating any animations based on the newly determined state
+ of the robot, and recording values of importance.
+ To limit memory usage, only specific signals are recorded over time - output
+ processing is where a full time-based vector of imporptant values (ex:
+ robot x and y position) is updated with the current value.
+ For most values, only the current (and maybe the previous) value is kept
+ in memory.
+ But for signals which will be analyzed after the simulation is complete,
+ a vector which has enough space to hold all values of the signal during
+ the simualtion is updated.
+\end_layout
+
+\begin_layout Standard
+Additonally, the verticies of the robot on the field are recalculated and
+ re-set.
+ A command is called to update the drawing on the screen.
 \end_layout
 
 \begin_layout Subsection
 post_proc
 \end_layout
 
+\begin_layout Standard
+After the simulation is completed, the recorded vectors must be plotted.
+ These plots are generated with proper scaling and labeling in the post_proc
+ script.
+ Additionally, if a serial port was used, it is shut down cleanly in this
+ script.
+\end_layout
+
 \begin_layout Section
 RoboSim Hardware
+\end_layout
+
+\begin_layout Standard
+To be completed.....
 \end_layout
 
 \end_body
