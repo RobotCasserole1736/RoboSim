@@ -42,6 +42,22 @@ mega_board_param = "arduino:avr:mega:cpu=atmega2560" #for standard arduino mega.
 uno_board_param = "arduino:avr:uno" #for standard arduino uno. See https://github.com/arduino/Arduino/blob/ide-1.5.x/build/shared/manpage.adoc for help with other boards.
 ftdi_board_param = uno_board_param #Can't detect the board that's on the other end of an FTDI, so assume uno?
 default_arduino_serial_port = "COM8"
+board_param = mega_board_param #default to mega
+
+def print_help():
+    print("")
+    print("~~make_Robosim.py - a utility to build and upload the robosim arduino sketch")
+    print("=====Valid Targets=====")
+    print("  all    :  Build and upload everything")
+    print("  sketch :  Create the temporary sketch only")
+    print("  clean  :  Remove all temporary files")
+    print("  verify :  Create temp sketch and build it, but don't attempt to upload")
+    print("  ident  :  Display connected arduinos and exit")
+    print("  -h     :  Print this message and exit")
+    print("Default behavior builds all")
+    
+
+#MAIN FUNCTION BEGINS HERE
 
 # Pull user-specified build target
 if(len(sys.argv)>1):
@@ -50,9 +66,13 @@ else:
     build_target = "all"
     
 #validate build target is a known one
-if(not(build_target == "all" or build_target == "sketch" or build_target == "clean" or build_target == "verify" or build_target == "ident")):
+if(not(build_target == "all" or build_target == "sketch" or build_target == "clean" or build_target == "verify" or build_target == "ident" or build_target == "-h")):
+    print_help()
     print("Error: " + build_target + " is not a recognized build target!")
     sys.exit(-1)
+elif(build_target == "-h"):
+    print_help()
+    sys.exit(0)
 else:
     print("Building " + build_target)
     

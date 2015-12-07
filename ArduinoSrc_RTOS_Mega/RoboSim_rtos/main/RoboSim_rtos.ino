@@ -13,6 +13,10 @@
 //      Chris Gerth - 20Mar2015 - Created
 //
 /******************************************************************************/
+
+/******************************************************************************/
+/** HEADER INCLUDES                                                          **/
+/******************************************************************************/
 #include "hardwareInterface.h"
 #include "plant.h"
 #include "display.h"
@@ -20,18 +24,23 @@
 
 //#define ENABLE_TASK_DEBUG_PRINT
 
-////////////////////////////////////////////////////////////////////////////////
-// Top-Level Global Data
-////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
+/** DATA DEFINITIONS                                                         **/
+/******************************************************************************/
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Loop() global variables
-////////////////////////////////////////////////////////////////////////////////
-int plant_running_led_counter = 0;
-boolean plant_running_led_state = false;
+/******************************************************************************/
+/** FUNCTIONS                                                                **/
+/******************************************************************************/
 
-
+////////////////////////////////////////////////////////////////////////////////
+// static void vPCSerialTx()
+// Description: RTOS Task for transmitting serial packets to the PC
+//
+//
+// Input Arguments: pvParameters - not used
+// Returns: None
+////////////////////////////////////////////////////////////////////////////////
 static void vPCSerialTx(void *pvParameters) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = (TickType_t)round(SERIAL_TX_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
@@ -55,6 +64,14 @@ static void vPCSerialTx(void *pvParameters) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// static void vPCSerialRx()
+// Description: RTOS Task for recieving serial packets from the PC
+//
+//
+// Input Arguments: pvParameters - not used
+// Returns: None
+////////////////////////////////////////////////////////////////////////////////
 static void vPCSerialRx(void *pvParameters) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = (TickType_t)round(SERIAL_RX_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait 
@@ -67,8 +84,14 @@ static void vPCSerialRx(void *pvParameters) {
   
   for(;;)
   {
+    //recieve packet ("blocking", but let RTOS run in background)
+    //TODO: This way of doing it is clunky. This is bad coding practice, because
+    // it cannot be statically determined that this while loop will ever exit.
+    // Additionally, this yeilding is what the scheduler should be doing, not us.
+    // Preferred method would be to just attempt to get the packet, and do nothing if
+    // there's not packet available. WIll require testing to ensure that's possible,
+    // and doesn't hose up any other functionality.
     vTaskDelayUntil( &xLastWakeTime, xFrequency );
-    //recieve packet (blocking, but let RTOS run in background)
     while(get_packet_from_pc() == -1)
     {
         vTaskDelayUntil( &xLastWakeTime, 1);
@@ -80,6 +103,15 @@ static void vPCSerialRx(void *pvParameters) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// static void vHWIOSample()
+// Description: RTOS Task for sampling hardware inputs, and setting 
+//              hardware outputs
+//
+//
+// Input Arguments: pvParameters - not used
+// Returns: None
+////////////////////////////////////////////////////////////////////////////////
 static void vHWIOSample(void *pvParameters) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = (TickType_t)round(HW_IO_SAMPLE_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
@@ -93,9 +125,10 @@ static void vHWIOSample(void *pvParameters) {
   for(;;)
   {
     vTaskDelayUntil( &xLastWakeTime, xFrequency );
-    //Acquire input & output
-    sample_motor_values();
-    io_card_exchange_data();
+    //Acquire input & set output
+    //these functions will write values to global variables
+    sample_motor_values(); //motor vals - input only
+    io_card_exchange_data(); // IO card - input and output
     #ifdef ENABLE_TASK_DEBUG_PRINT
     Serial.println("Finished loop of HWIO sample");
     Serial.flush();
@@ -103,6 +136,14 @@ static void vHWIOSample(void *pvParameters) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// static void vPlantRunLoop() 
+// Description: RTOS task for executing an on-arduino plant model
+//
+//
+// Input Arguments: pvParameters - not used
+// Returns: None
+////////////////////////////////////////////////////////////////////////////////
 static void vPlantRunLoop(void *pvParameters) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = (TickType_t)round(PLANT_LOOP_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
@@ -114,7 +155,7 @@ static void vPlantRunLoop(void *pvParameters) {
   for(;;)
   {
     vTaskDelayUntil( &xLastWakeTime, xFrequency );
-    //run plant model (if any)
+    //run plant model
     plant_periodic_loop();
   }
   #ifdef ENABLE_TASK_DEBUG_PRINT
@@ -123,6 +164,14 @@ static void vPlantRunLoop(void *pvParameters) {
   #endif 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// static void vDisplayUpdate()
+// Description: RTOS task for updating content displayed on the OLED display
+//
+//
+// Input Arguments: pvParameters - not used
+// Returns: None
+////////////////////////////////////////////////////////////////////////////////
 static void vDisplayUpdate(void *pvParameters) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = (TickType_t)round(DISPLAY_UPDATE_TASK_RATES_S * ((double)configTICK_RATE_HZ)); //calculate number of RTOS scheduler ticks to wait   
@@ -147,74 +196,98 @@ static void vDisplayUpdate(void *pvParameters) {
 
 ////////////////////////////////////////////////////////////////////////////////
 // void setup() 
-// Description: Initalize function required by arduino.
+// Description: Initalize function required by arduino. Main entry point of the
+//              SW after bootloader hands off execution control to user software.
 //
 // Input Arguments: None
-// Output: None
-// Globals Read: None
-// Globals Written: None
+// Returns: None
 ////////////////////////////////////////////////////////////////////////////////
 void setup()
 {
-  //init display
-  display_init();
-  display_boot_screen();
+    // WHEN POWER IS APPLIED TO THE ARDUINO OR THE RESET BUTTON IS PRESSED,
+    // THE SW EXECUTION STARTS RIGHT HERE!!!
     
-  //Open Serial port
-  Serial.begin(115200, SERIAL_8E2); //config to 8 data bits, even parity, 2 stop bits
-  //ensure it will actually run
-  
-  //start up encoders
-  encoderInit();
-  
-  //start up motor inputs
-  init_motor_inputs();
-  
-  //set up io cards
-  init_io_card();
-  
-  #ifdef ENABLE_TASK_DEBUG_PRINT
-  Serial.println("done with init");
-  Serial.flush();
-  #endif
-  
-  //set up rtos tasks
-  //Priorities go from tskIdle_Priority to configMAX_PRIORITIES (0 to 4)
-  //empirically determined stack sizes seems to be the minimum stack size usable
-  xTaskCreate(vHWIOSample, "HWIO", 350 , NULL, tskIDLE_PRIORITY + 10, NULL);
-  #ifdef ENABLE_TASK_DEBUG_PRINT
-  Serial.println("created HWIOSample task");
-  Serial.flush();
-  #endif
-  xTaskCreate(vPCSerialTx, "SerTx", 300, NULL, tskIDLE_PRIORITY + 8, NULL);
-  #ifdef ENABLE_TASK_DEBUG_PRINT
-  Serial.println("created tx task");
-  Serial.flush();
-  #endif
-  xTaskCreate(vPCSerialRx, "SerRx", 300, NULL, tskIDLE_PRIORITY + 6, NULL);
-  #ifdef ENABLE_TASK_DEBUG_PRINT
-  Serial.println("created rx task");
-  Serial.flush();
-  #endif
-  xTaskCreate(vDisplayUpdate, "DispUpd", 500, NULL, tskIDLE_PRIORITY + 2, NULL);
-  #ifdef ENABLE_TASK_DEBUG_PRINT
-  Serial.println("created display update task");
-  Serial.flush();
-  #endif
-  
-  
-  
-  // start RTOS
-  #ifdef ENABLE_TASK_DEBUG_PRINT
-  Serial.println("Starting Scheduler");
-  Serial.flush();
-  #endif
-  vTaskStartScheduler();
-
-  // should never return
-  Serial.println(F("Die"));
-  while(1);
-  
+    //init display
+    display_init();
+    display_boot_screen();
+      
+    //Open Serial port
+    Serial.begin(115200, SERIAL_8E2); //config to 115200 baud, 8 data bits, even parity, 2 stop bits
+    
+    //start up encoders
+    encoderInit();
+    
+    //start up motor inputs
+    init_motor_inputs();
+    
+    //set up io cards
+    init_io_card();
+    
+    #ifdef ENABLE_TASK_DEBUG_PRINT
+    Serial.println("done with init");
+    Serial.flush();
+    #endif
+    
+    //set up rtos tasks (initalize data structures and stacks for them)
+    // This will NOT start running them (yet), just defines what they should be.
+    //Priorities go from tskIdle_Priority to configMAX_PRIORITIES
+    //empirically determined stack sizes seems to be the minimum stack size usable
+    //Only create a task if it is enabled.
+    if(HW_IO_SAMPLE_TASK_ENABLE)
+    {
+        xTaskCreate(vHWIOSample, "HWIO", 350 , NULL, tskIDLE_PRIORITY + 10, NULL);
+        #ifdef ENABLE_TASK_DEBUG_PRINT
+        Serial.println("created HWIOSample task");
+        Serial.flush();
+        #endif
+    }
+    if(SERIAL_TX_TASK_ENABLE)
+    {
+        xTaskCreate(vPCSerialTx, "SerTx", 300, NULL, tskIDLE_PRIORITY + 8, NULL);
+        #ifdef ENABLE_TASK_DEBUG_PRINT
+        Serial.println("created tx task");
+        Serial.flush();
+        #endif
+    }
+    if(SERIAL_RX_TASK_ENABLE)
+    {
+        xTaskCreate(vPCSerialRx, "SerRx", 300, NULL, tskIDLE_PRIORITY + 6, NULL);
+        #ifdef ENABLE_TASK_DEBUG_PRINT
+        Serial.println("created rx task");
+        Serial.flush();
+        #endif
+    }
+    if(DISPLAY_UPDATE_TASK_ENABLE)
+    {
+        xTaskCreate(vDisplayUpdate, "DispUpd", 500, NULL, tskIDLE_PRIORITY + 2, NULL);
+        #ifdef ENABLE_TASK_DEBUG_PRINT
+        Serial.println("created display update task");
+        Serial.flush();
+        #endif
+    }
+    if(PLANT_LOOP_TASK_ENABLE)
+    {
+        xTaskCreate(vPlantRunLoop, "PlantMdl", 500, NULL, tskIDLE_PRIORITY + 7, NULL);
+        #ifdef ENABLE_TASK_DEBUG_PRINT
+        Serial.println("created plant model update task");
+        Serial.flush();
+        #endif
+    }
+    
+    
+    
+    // start RTOS
+    #ifdef ENABLE_TASK_DEBUG_PRINT
+    Serial.println("Starting Scheduler");
+    Serial.flush();
+    #endif
+    vTaskStartScheduler();
+    
+    // Above function should never return
+    // If it does, just hang out, I guess...
+    while(1);
+    //TODO: more robust thing could be to reset the system at this point?
+    
 }
 
 

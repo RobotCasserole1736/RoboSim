@@ -1,0 +1,3985 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2.5cm
+\rightmargin 2cm
+\bottommargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+RoboSim Sample Robot Plant Model Calculations
+\end_layout
+
+\begin_layout Author
+Chris Gerth - FRC 1736 Robot Casserole
+\end_layout
+
+\begin_layout Date
+Fall 2015
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+An analysis of a simple tank-drive robot is presented.
+ The simple plant model is designed to be a starting point for year-to-year
+ development of more detailed robot models.
+ The device modeled has two sets of motors to drive motion in a tank-drive
+ fashion, along with a normal battery and electrical system.
+\end_layout
+
+\begin_layout Abstract
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Background Academics Primer
+\end_layout
+
+\begin_layout Standard
+In this section, we will seek to demonstrate the 
+\begin_inset Quotes eld
+\end_inset
+
+basic
+\begin_inset Quotes erd
+\end_inset
+
+ math and physics required to understand RoboSim.
+ This content is effectively a whirlwind summary of the important parts
+ of AP Calc BC, AP Physics C, basic Chemistry, and any introductory Electronics
+ course.
+\end_layout
+
+\begin_layout Section
+Calculus
+\end_layout
+
+\begin_layout Standard
+Sir Isaac Newton was a smart man.
+ He came up with calculus.
+ Either him or Leibniz.
+ In any event.
+ 
+\series bold
+Calculus
+\series default
+ is a particular field of study within mathematics.
+ It studies functions and properties of functions.
+\end_layout
+
+\begin_layout Subsection
+Functions
+\end_layout
+
+\begin_layout Standard
+A 
+\series bold
+function
+\series default
+ can be thought of as a box which takes one input, and produces some outputs
+ based on that input.
+ For RoboSim, we will deal with many functions of time.
+ This is to say that we will look at how 
+\series bold
+properties
+\series default
+ change over time.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+Box
+\begin_inset Quotes erd
+\end_inset
+
+ in this case is the robot itself.
+ The most fundamental input to the robot is time.
+ As time progresses forward, different properties of the robot change.
+ These properties include things like location, speed, torque, rotation,
+ electrical current draw, etc.
+ In a mathematical sense, time is the input, and the various properties
+ are the output.
+ At every given time, each property has a value.
+ Additionally, the physics of the configuration of the parts of the robot
+ determine relationships between the quantities as time progresses forward.
+ For example, a large voltage applied to motors will induce larger torques
+ and speeds and current draws.
+\end_layout
+
+\begin_layout Subsection
+Continuous Functions, Derivatives and Integrals
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Continuous calculus
+\series default
+ is what is usually studied in High School.
+ It is assumed that time is linear and continuous.
+ Valid times are t = 0s, t = 1.2429543987s, t = 3.25s, etc.
+ Any value of time is a defined.
+ An infinitely detailed timeline can be established.
+\end_layout
+
+\begin_layout Standard
+Calculus looks at two primary things about functions: Derivatives and Integrals.
+\end_layout
+
+\begin_layout Standard
+A 
+\series bold
+Derivative
+\series default
+ of a function describes how quickly the function is changing as time goes
+ on.
+ On a curve on a Cartesian (x/y) plot, the derivative is the same as the
+ slope of the curve at any given point, as shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:deriv"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=y(t)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=\frac{dy}{dt}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/deriv_example.gif
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Illustration of a derivative as the 
+\begin_inset Quotes eld
+\end_inset
+
+instantaneous slope
+\begin_inset Quotes erd
+\end_inset
+
+ of a curve
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:deriv"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An 
+\series bold
+Integral
+\series default
+ of a function describes how big or small the function's value has been
+ historically.
+ On a Cartesian plot, the integral is the same as the area between the curve
+ and the x axis over a given period of time, as shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:integral"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=y(t)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+X=\int y(t)dt+c
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/integral_example.gif
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Illustration of a integral as the 
+\begin_inset Quotes eld
+\end_inset
+
+area under a curve
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:integral"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the purposes of RoboSim, there is no need to discuss the calculation
+ of integrals or derivatives in the continuous domain.
+\end_layout
+
+\begin_layout Standard
+If a function is getting larger quickly, its derivative will be big at that
+ time.
+ If it is getting smaller in a hurry, its derivative will be negative
+\end_layout
+
+\begin_layout Standard
+If a function has been big for a long time, its integral will be large.
+ If it's been bouncing around but equally above and below zero, the integral
+ will be very small.
+\end_layout
+
+\begin_layout Subsection
+Discrete Functions, Derivatives and Integrals
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Discrete functions
+\series default
+ are very similar to normal functions, except they are only defined at certain,
+ regularly-repeating time values.
+ In this way, a discrete function could be though of as a set of 
+\begin_inset Formula ${time,value}$
+\end_inset
+
+ pairs.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\{0.00,3\},\{0.01,2\},\{0.02,1\},\{0.03,0\},...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We might turn a continuous function into a discrete one by 
+\series bold
+sampling
+\series default
+ it at regular intervals.
+ This is usually the way that sensors and digital systems are integrated
+ - the sensor reads an analog value continuously, and the digital system
+ records the sensor's value at specific points in time.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/sampling_a_function.png
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sampling a continuous function x=y(t) to produce discrete function x=y[n]
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sampling a Function"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We usually notate a discrete time function as such
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=y[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a function 
+\begin_inset Formula $y$
+\end_inset
+
+ that produces a value 
+\begin_inset Formula $x$
+\end_inset
+
+ at time index 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ For all discrete functions, we must always specify a 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Sample Time
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ (notated 
+\begin_inset Formula $Ts$
+\end_inset
+
+) to indicate the spacing between samples.
+ For RoboSim, 
+\begin_inset Formula $Ts$
+\end_inset
+
+ is hard-coded to 50ms.
+\end_layout
+
+\begin_layout Standard
+Note the square brackets which indicate discrete time.
+ Here n is an index, not a measure in seconds.
+ Multiplying the 
+\begin_inset Formula $n$
+\end_inset
+
+ index by the sample time 
+\begin_inset Formula $Ts$
+\end_inset
+
+ yields the actual (real-world) time in seconds.
+\end_layout
+
+\begin_layout Standard
+In Discrete time calculus, we define derivatives as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=y[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{dx}{dt}\cong\frac{y[n]-y[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This formula says 
+\begin_inset Quotes eld
+\end_inset
+
+A function's derivative is equal to the current value minus the previous
+ value, scaled by the sample time.
+\begin_inset Quotes erd
+\end_inset
+
+ You may recognize this form from part of the 
+\begin_inset Quotes eld
+\end_inset
+
+Limit
+\begin_inset Quotes erd
+\end_inset
+
+ definition of a derivative.
+ Note here that if we force Ts to zero, we have a continuous derivative.
+ However, because computer systems cannot sample infinitely fast, we accept
+ a small but finite Ts as a very close approximation.
+ The conditions under which this approximation is acceptable is the subject
+ of Nyquist Frequency theory, but is a topic out of scope for this discussion.
+\end_layout
+
+\begin_layout Standard
+In Discrete time calculus, we define Integrals as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=y[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\intop xdt\cong\stackrel[i=0]{n}{\sum}y[i]*Ts
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation says 
+\begin_inset Quotes eld
+\end_inset
+
+A function's integral is equal to the sum of all previous values, scaled
+ by the sample time
+\begin_inset Quotes erd
+\end_inset
+
+.You may recognize this from the Riemann sum approximation of an integral.
+ If we force Ts to zero, we end up with a continuous integral.
+ But again, since computer systems cannot sample infinitely fast, we accept
+ a small but finite Ts and move on with our lives.
+\end_layout
+
+\begin_layout Section
+Trigonometry 
+\end_layout
+
+\begin_layout Standard
+You are likely already aware of most trig concepts.
+ 
+\begin_inset Formula $sin(),cos(),tan()$
+\end_inset
+
+are among some of the functions you should be familiar with.
+ For the purposes of calculations of robosim, we will do all angle calculations
+ in radians.
+ Additionally, we will use to 
+\begin_inset Formula $atan2()$
+\end_inset
+
+ function, which is very similar to the inverse tangent (
+\begin_inset Formula $atan()$
+\end_inset
+
+).
+ However, it has some extra definitions to give it a full output range of
+ 
+\begin_inset Formula $\left[0,2\pi\right]$
+\end_inset
+
+for any given X/Y inputs.
+ You can look up more details online, but the formal definition is as follows:
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+atan2(X,Y)=\begin{cases}
+atan\left(\frac{-Y}{X}\right) & X>0\\
+180\textdegree+atan\left(\frac{Y}{X}\right) & Y\geq0,X<0\\
+-180\textdegree+atan\left(\frac{Y}{X}\right) & Y<0,X<0\\
+90\textdegree & Y>0,X=0\\
+-90\textdegree & Y<0,X=0\\
+undefined & Y=0,X=0
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Physics
+\end_layout
+
+\begin_layout Standard
+Physics is also a thing that Newton did.
+ Told you he was smart.
+ In this section, we will begin to analyze the constraints imposed by mother
+ nature between different quantities on our robot.
+\end_layout
+
+\begin_layout Subsection
+Position, Linear Motion, and Calculus 
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Position,-Linear-Motion,"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For physics to work, we must have objects in places.
+ The place the object is at is called its 
+\series bold
+Position
+\series default
+.
+ Let us define the following function which describes an object's location
+ along one axis at any time.
+ Specifically, it says how far the object is from an arbitrary zero point
+ at any time:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Distance=x[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Velocity
+\series default
+ is how fast an object is moving.
+ Velocity can be positive or negative.
+ Positive velocity means the distance gets bigger, and negative velocity
+ means the distance gets smaller.
+ Because of physics, velocity is therefore the derivative of distance.
+\begin_inset Formula 
+\[
+Velocity=v[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v[n]=\frac{dx}{dt}=\frac{x[n]-x[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Acceleration
+\series default
+ is how fast an object is changing in velocity.
+ Acceleration can be positive or negative.
+ A positive acceleration means the object is going faster and faster and
+ faster.
+ A negative acceleration means the object is slowing down.
+ Because physics is still physics, acceleration is the derivative of velocity.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Acceleration=a[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+a[n]=\frac{dv}{dt}=\frac{v[n]-v[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that integration allows you to go the other way.
+ That is to say, velocity is the integral of acceleration, and distance
+ is the integral of velocity.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v[n]=\stackrel[i=0]{n}{\sum}a[i]*Ts
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x[n]=\stackrel[i=0]{n}{\sum}v[i]*Ts
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Plots of these relationships are shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:accel_vel_pos"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/pos_vel_accel.png
+	width 15cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Examples of motion, relating acceleration, velocity, and position
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:accel_vel_pos"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For units, we will always use 
+\series bold
+metric
+\series default
+.
+ Therefore, distance is in meters (m), velocity is in meters per second
+ (m/s), and acceleration is in meters per second, per second (m/s^2)
+\end_layout
+
+\begin_layout Subsection
+Forces and Linear motion
+\end_layout
+
+\begin_layout Subsubsection
+Newton's Law
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Force
+\series default
+ is something pushing on another thing.
+ The more you push, the faster and faster you will go.
+ The larger the object, the harder it is to make it go faster.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/f=ma.png
+	width 12cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Newton's Second Law
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:f=ma"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Newton's laws of motion allow us to define the following: At any given time,
+ Acceleration is proportional to Force, scaled by an objects mass:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Force=mass*acceleration
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F[n]=m*a[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that Force is measured in Newtons (N), mass is measured in kilograms
+ (kg), and acceleration is in meters per second per second (m/s^2).
+\end_layout
+
+\begin_layout Standard
+Note also that force changes over time, and acceleration changes over time,
+ but we assume mass is constant.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Sources of Forces
+\end_layout
+
+\begin_layout Standard
+Forces come from many places.
+ A student pushing on a robot frame is one possible, simple source.
+ A turning wheel in contact with the floor is another.
+ Meshed gear teeth pushing on one another is yet another transfer of force.
+ 
+\end_layout
+
+\begin_layout Standard
+Of the list mentioned so far, friction is very important and has some special
+ calculations associated with it.
+\end_layout
+
+\begin_layout Subsubsection
+Frictional Forces
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Friction
+\series default
+ is a force which opposes two contacting surfaces from sliding relative
+ to each other.
+ It comes from microscopic interactions of matter in contact with each other.
+ It can get very complex and is not fully understood, but can be well modeled
+ at a macro level.
+ We will discuss this model, as it is the most useful for FRC robotics applicati
+ons.
+ There are two main types of friction: Static and Kinetic.
+\end_layout
+
+\begin_layout Subsubsection
+Static Friction
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Static friction
+\series default
+ deals with the case where two surfaces are not moving relative to one another.
+ If you were to pin a book in place on a wall by only pressing on the book
+ toward the wall, you would be using the static friction between the book
+ and the wall to oppose the force of gravity, keeping the book from falling.
+ This is illustrated in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:static_fric_book"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/static_friction_on_wall.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Static friction pinning a book to a wall
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:static_fric_book"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Static frictional force will take on whatever value it needs to to counter
+ out other forces, up to a certain point.
+ This certain point is called the 
+\series bold
+maximum static frictional force
+\series default
+.
+ It is calculated with the following formula:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{Smax}[n]=\mu_{S}*F_{N}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula $F_{Smax}$
+\end_inset
+
+ is the maximum static frictional force.
+ It always points in the opposite direction as any force acting along the
+ same axis.
+ 
+\begin_inset Formula $F_{N}$
+\end_inset
+
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ force, or the force pinning the two surfaces together.
+ 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+ is the Coefficient of Static Friction, which is derived from how effective
+ the two surfaces are at sticking to each-other.
+ Two smooth, slick surfaces (like two pieces of smooth hard plastic) will
+ have a small 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+, while two rough surfaces (like concrete) will have a large 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+.
+ Usually, 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+ is just looked up in a table.
+ 
+\end_layout
+
+\begin_layout Standard
+Static friction is often informally called 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Stiction
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ in the engineering world, since it causes things to stick together.
+ Also, 
+\begin_inset Quotes eld
+\end_inset
+
+Stiction
+\begin_inset Quotes erd
+\end_inset
+
+ is a portmanteau of 
+\begin_inset Quotes eld
+\end_inset
+
+Static Friction
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Engineers are a clever bunch.
+\end_layout
+
+\begin_layout Subsubsection
+Kinetic Friction
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Kinetic-Friction"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Kinetic friction
+\series default
+ deals with the case where two surfaces are sliding relative to each other.
+ If you were to slide a book along the ground, the force that opposes your
+ efforts to push the book is the kinetic frictional force of the book in
+ contact with the ground.
+ It is calculated by this formula:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{K}[n]=\mu_{K}*F_{N}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again, 
+\begin_inset Formula $F_{K}$
+\end_inset
+
+is the kinetic frictional force.
+ It always points in the opposite direction of motion of the interface (opposes
+ the motion occurring).
+ 
+\begin_inset Formula $F_{N}$
+\end_inset
+
+ is still the 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ force, or the force pinning the two surfaces together.
+ 
+\begin_inset Formula $\mu_{K}$
+\end_inset
+
+ is the coefficient of kinetic friction, which again determines how effective
+ the materials can interface with each other to produce an opposing force.
+ 
+\end_layout
+
+\begin_layout Standard
+For most materials, 
+\begin_inset Formula $\mu_{K}$
+\end_inset
+
+ is slightly than 
+\begin_inset Formula $\mu_{S}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that as a wheel is rotating with the ground, there is no relative motion
+ between the ground and the point of contact with the wheel.
+ Indeed, the motion of the robot is due to the rotation of the wheel, and
+ not due to the wheel slipping over the ground.
+ A non-slipping robot's wheel-ground interface lies in the Static Friction
+ domain.
+ When wheel-ground interfaces start to enter the Kinetic friction domain,
+ the effect is what many young people refer to as 
+\begin_inset Quotes eld
+\end_inset
+
+drifting
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Torque and Rotation
+\end_layout
+
+\begin_layout Standard
+Because symmetry is a thing of life, Newton's laws of motion also have analogs
+ for 
+\series bold
+rotational motion
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+Instead of force, we now have 
+\series bold
+Torque
+\series default
+.
+ Torque is force that goes in a circle.
+ It is measured in Newton-meters.
+ 
+\end_layout
+
+\begin_layout Standard
+All torque acts about a central pivot point.
+ This may be the center of mass of the robot, the center of a gear, the
+ center of a shaft, the center of a wheel, etc.
+\end_layout
+
+\begin_layout Standard
+As indicated by the unit, a torque always has two important things to consider
+ - How much force is pushing in a circle, and how far from the center of
+ the circle is that force acting?
+\end_layout
+
+\begin_layout Standard
+The distance from the central pivot point of the rotation to the point of
+ application of force is called the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Lever Arm
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ of the torque.
+ Bigger lever arms mean more torque for the same force.
+ 
+\end_layout
+
+\begin_layout Standard
+This is why wrenches have long handles.
+ They are designed to turn things in a circle with some amount of torque.
+ Assuming a human can only exert a maximum amount of force, a longer handle
+ makes for a longer lever arm, which in turn means a higher max torque applied.
+ If a bolt is stuck, one option is a bigger wrench with a longer handle.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/wrench turning nuts.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Torque exerted on a nut
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:torque_nut"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Rotational Motion Parameters
+\end_layout
+
+\begin_layout Standard
+There are rotational measurements which are analogous to the linear motion
+ parameters discussed above.
+ Lower-case Greek letters are used to describe these rotational parameters
+\end_layout
+
+\begin_layout Standard
+The current 
+\series bold
+angle
+\series default
+ a rotating object is pointed in is referred to as theta:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Angle=\theta[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The rate at which that angle is changing is 
+\series bold
+rotational velocity
+\series default
+, or omega:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+RotationalVelocity=\omega[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The rate of change of the rotational velocity is the 
+\series bold
+rotational acceleration
+\series default
+, or alpha:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+RotationalAcceleration=\alpha[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As with linear motion, velocity is the derivative of position, and acceleration
+ is the derivative of velocity.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega[n]=\frac{d\theta}{dt}=\frac{\theta[n]-\theta[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\alpha[n]=\frac{d\omega}{dt}=\frac{\omega[n]-\omega[n-1]}{Ts}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also as with linear motion, velocity is the integral of acceleration, and
+ position is the integral of velocity.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega[n]=\stackrel[i=0]{n}{\sum}\alpha[i]*Ts
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\theta[n]=\stackrel[i=0]{n}{\sum}\omega[i]*Ts
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Torque and Rotational motion
+\end_layout
+
+\begin_layout Standard
+The relationship between torque and rotational motion is highly analogous
+ to force and linear motion:
+\end_layout
+
+\begin_layout Standard
+At any given time, an object's rotational acceleration is proportional to
+ the torque applied to it, scaled by the object's 
+\begin_inset Quotes eld
+\end_inset
+
+moment of inertia
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+torque=moment\ of\ inertia*rotational\ acceleration
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T[n]=I*\alpha[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An object's 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+moment of inertia
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ is like its total mass, but also accounts for how far that mass is from
+ the center of rotation.
+ The more mass an object has, and the further that mass is from the center
+ of rotation, the harder it is to get the object rotating at a different
+ speed.
+ The actual value of this is in units of kilogram meters-squared (kg m^2),
+ and is most easily calculated with a table of shapes and corresponding
+ formulas.
+\end_layout
+
+\begin_layout Standard
+Although we have assumed the moment of inertia to be constant, that is not
+ always the case.
+ Although it is rare for a robot to add or loose mass during a match, it
+ is more common for the location of that mass to change on the robot.
+ For example, if an arm extends out by a foot from the robot, the location
+ of the mass of that arm is now further from the center.
+ This increases the robot's moment of inertia, which makes it harder for
+ the drive-train to start or stop the robot from spinning.
+\end_layout
+
+\begin_layout Subsection
+Ideal Gas Law
+\end_layout
+
+\begin_layout Standard
+Cylinders, tanks, compressors, and valves are all pneumatic components used
+ on FRC robots.
+ 
+\series bold
+Pneumatic components
+\series default
+ on a robot all deal with the movement of compressed air, and the transfer
+ of energy involved therein.
+ 
+\end_layout
+
+\begin_layout Standard
+Air is the gas used within these systems.
+ Under the normal temperatures experienced in the robot, and the 125psi
+ pressure restriction of FRC rules, air acts much like an 
+\series bold
+ideal gas
+\series default
+.
+ Therefore, it is appropriate to model it with the ideal gas law:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+PV=nrT
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, P refers to the pressure of the gas (in kilo-pascals, or kPa), V refers
+ to the volume of gas considered (in Liters, or L), T refers to the temperature
+ of the gas (in kelvin, or K), and n refers to the number of moles of gas
+ molecules being considered.
+ The remaining symbol r is the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Gas Constant
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+, a constant with units L*kPa/(K*mol), and is numerically equal to 8.3144621.
+ It is determined by the physics of interacting gas particles.
+ Its derivation will not be described in this paper
+\end_layout
+
+\begin_layout Standard
+Note also that n is in moles.
+ A 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+mole
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ is a unit-less multiplier, like 
+\begin_inset Quotes eld
+\end_inset
+
+dozen
+\begin_inset Quotes erd
+\end_inset
+
+.
+ For example, if I have a dozen donuts, it means I have twelve donuts.
+ Similarly, if I have a mole of donuts, I have 
+\begin_inset Formula $6.022*10^{23}$
+\end_inset
+
+donuts.
+ 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Interestingly enough, the average jelly donuts contains 
+\begin_inset Formula $10^{6}$
+\end_inset
+
+ Joules of energy.
+ This means that one mole of jelly donuts would have about 
+\begin_inset Formula $6*10^{29}$
+\end_inset
+
+Joules of energy.
+ The rotational energy stored in Earth's rotation is about 
+\begin_inset Formula $2*10^{29}$
+\end_inset
+
+Joules.
+ This means that if you had a 100% efficient rocket powered by jelly donuts,
+ and attached it to the earth's equator, you could stop the earth from spinning,
+ and still have 2/3rds of your donuts left over for eating! The more you
+ know...
+\end_layout
+
+\end_inset
+
+ The reason for its use here is that gas molecules are tiny, and usually
+ we have a lot of them.
+ It's a lot simpler to do math talking about 
+\begin_inset Quotes eld
+\end_inset
+
+1 mole of molecules
+\begin_inset Quotes erd
+\end_inset
+
+ rather than absurdly large numbers.
+\end_layout
+
+\begin_layout Standard
+What the ideal gas law describes is the relationship between pressure, temperatu
+re, amount of gas, the volume the gas occupies.
+ For example, when a compressor kicks on, it forces more moles of air into
+ the same volume.
+ We also assume that temperature does not change.
+ Therefore, based on the above equation, if T, r, and V are unchanged, and
+ n increases, then P must also increase to keep the equation balanced.
+ This makes since, since anyone who was observed a properly-set-up pneumatic
+ system knows turning on the compressor makes system pressure go up.
+\end_layout
+
+\begin_layout Subsection
+Electrical Laws
+\end_layout
+
+\begin_layout Standard
+Motors, motor controllers, batteries, wires, and circuit breakers are all
+ part of the 
+\series bold
+electrical system
+\series default
+ on a robot.
+ These components obey many laws related to electricity.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Electrical Introduction
+\end_layout
+
+\begin_layout Standard
+For FRC robotics purposes, 
+\series bold
+electricity
+\series default
+ is the movement of electrons through 
+\begin_inset Quotes eld
+\end_inset
+
+conductors
+\begin_inset Quotes erd
+\end_inset
+
+.
+ A 
+\series bold
+conductor
+\series default
+ is any substance which has freely-moving charged particles, most commonly
+ electrons.
+ Usually these movements are random, but when they start to go in the same
+ direction, we say there is an 
+\begin_inset Quotes eld
+\end_inset
+
+electric current
+\begin_inset Quotes erd
+\end_inset
+
+ present.
+ Metals are the most common conductors.
+\end_layout
+
+\begin_layout Standard
+The opposite of a conductor is an insulator.
+ Common insulators include glass, wood, and plastic.
+ These substances to not have freely-moving charged particles, so they cannot
+ sustain an electric current.
+ By wrapping a conductor inside an insulator, you create an isolated conduit
+ to move electrical current in an organized fashion (eg, a wire).
+\end_layout
+
+\begin_layout Subsubsection
+Basic Electrical Quantities and Relationships
+\end_layout
+
+\begin_layout Standard
+When talking about the flow of electrons, there are two important quantities.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Current
+\series default
+ is the number of electrons flowing past a given point over a given time.
+ It is usually indicated by the lower-case letter 
+\begin_inset Formula $i$
+\end_inset
+
+ (blame the French).
+ Units are almost always in 
+\begin_inset Quotes eld
+\end_inset
+
+Amperes
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+Amps
+\begin_inset Quotes erd
+\end_inset
+
+ for short.
+ The Amp unit is denoted 
+\begin_inset Quotes eld
+\end_inset
+
+A
+\begin_inset Quotes erd
+\end_inset
+
+.
+ One amp of current is equal to 
+\begin_inset Formula $6.24*10^{18}$
+\end_inset
+
+electrons passing a given point on a wire in one second.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Current=i[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Voltage
+\series default
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+force
+\begin_inset Quotes erd
+\end_inset
+
+ which causes the motion of electrons in a conductor.
+ The more voltage, the more of a punch the electrons will have.
+ It is measured in a unit called 
+\begin_inset Quotes eld
+\end_inset
+
+Volts
+\begin_inset Quotes erd
+\end_inset
+
+ and denoted with the letter 
+\begin_inset Quotes eld
+\end_inset
+
+V
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Voltage=v[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the word 
+\begin_inset Quotes eld
+\end_inset
+
+force
+\begin_inset Quotes erd
+\end_inset
+
+ is used very loosely here, as the energy associated with electricity has
+ much more to do with electric and magnetic fields, and not so much the
+ physical impact of tiny electrons on a mass.
+ However, the details of this theory is beyond the scope of this paper.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Resistance 
+\series default
+is how easily a substance allows electricity to pass through.
+ Conductors have a very low resistance, while insulators have a very high
+ resistance.
+ Resistance to electrical flow can be affected by many factors, including
+ the temperature and physical shape of the device.
+ Resistance is measured in a unit called an 
+\begin_inset Quotes eld
+\end_inset
+
+Ohm
+\begin_inset Quotes erd
+\end_inset
+
+, and is denoted with a capital Greek letter Omega (
+\begin_inset Formula $\Omega$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+The resistance of a device determines how much voltage it pushes back with
+ (ie, the 
+\begin_inset Quotes eld
+\end_inset
+
+voltage drop
+\begin_inset Quotes erd
+\end_inset
+
+) when a current runs through it.
+ This relationship is linear, and is expressed with Ohm's Law:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v[n]=R*i[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation states that for a given amount of current running through
+ a device, that device will push back on that flow with a proportional amount
+ of voltage, scaled by the device's resistance.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/ohms.gif
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Ohm's Law, with various electrical quantities models as anthropomorphic
+ peanuts.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Ohms"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For example, Ohm's law explains why system voltage drops when you drive
+ a robot very hard.
+ All batteries have some small amount of internal resistance (something
+ like 
+\begin_inset Formula $0.012\Omega$
+\end_inset
+
+).
+ They usually supply around 12V of voltage.
+ However, as motors and solenoids and compressors draw large amounts of
+ current, the battery internally starts to fight itself due to its internal
+ resistance.
+ The voltage actually supplied by the battery is then some quantity less
+ than 12V, and the amount of drop is roughly proportional to the amount
+ of current pulled from the battery.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Inductance
+\series default
+ and 
+\series bold
+Capacitance
+\series default
+ are properties of devices, describing their ability to store electrical
+ energy and release it over time.
+ The math associated with these is beyond the scope of this paper.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Power
+\series default
+ is not specifically an electrical topic, but relates strongly to electrical
+ quantities.
+ Electrical Power refers to the total energy absorbed or dissipated by an
+ electrical component over time.
+ Positive power in an electrical component implies energy is leaving the
+ system (via motion, heat, sound, etc.), while negative power means energy
+ is entering the system (Battery, power supply, hand-cranked generator,
+ etc.)
+\end_layout
+
+\begin_layout Standard
+Power is calculated in many ways.
+ In general, it can be found my multiplying voltage and current:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+P[n]=v[n]*i[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Power will be measured in units of Watts (denoted 
+\begin_inset Quotes eld
+\end_inset
+
+W
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Component Models
+\end_layout
+
+\begin_layout Section
+Electric Motor
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Electric-Motor"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Simply put, an 
+\series bold
+electric motor
+\series default
+ is a device which converts electrical energy into rotational mechanical
+ energy.
+ Current flowing through the motor causes a force on the motor.
+ However, the interactions of the motor's electrical and mechanical parts
+ also drives a variety of 
+\series bold
+equilibrium
+\series default
+ points.
+ Due to the level of interaction, an electric motor is one of the more complex
+ devices to model.
+ It helps to split the motor into two portions, the electrical and the mechanica
+l parts.
+\end_layout
+
+\begin_layout Subsection
+Electrical Model
+\end_layout
+
+\begin_layout Standard
+A motor, electrically speaking, is a two-terminal device.
+ For a DC motor,its interior windings and communicator will be modeled as
+ a resistor, inductor, and voltage source in series.
+ The resistance and inductance model the physical configuration of the windings
+ inside the motor.
+ The wire itself is always non-deal, having some resistance.
+ Additionally, since the wire is wrapped in tight coils, there is some non-negli
+gible inductance.
+\end_layout
+
+\begin_layout Standard
+The voltage source models what is referred to as 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Back EMF
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Remember that a changing magnetic field inside coils of wire will induce
+ a voltage in those wires (this is how electrical generators work).
+ Although at first it is the energy input to the motor that causes the shaft
+ to start to spin, as the shaft spins it generates its own set of magnetic
+ fields.
+ This secondary field begins to induce a new voltage in the coils called
+ Back EMF.
+ This voltage's value is linearly proportional to the speed the motor is
+ turning at.
+ This is why a free-wheeling motor has a maximum speed.
+\end_layout
+
+\begin_layout Standard
+All these parts of the electrical model create voltages to oppose or aid
+ the flow of current through the motor.
+ At the end of the day, the torque produced by the motor is
+\series bold
+ linearly proportional
+\series default
+ to the current flowing through it.
+\end_layout
+
+\begin_layout Standard
+To illustrate, follow this example concerning a free-wheeling motor (no
+ load torque): The motor is stopped, and a voltage is suddenly applied to
+ it.
+ Little current flows at first due to the inductance.
+ However, as time goes on, the magnetic field builds up and more and more
+ current flows.
+ As current begins to flow in ever increasing quantities, more and more
+ torque is applied to the output shaft.
+ The output shaft begins to accelerate due to the torque.
+ As the output shaft picks up speed, the back EMF voltage also increases.
+ Soon, it is no longer the inductance that is limiting current flow, but
+ instead the back EMF voltage source.
+ Eventually, an equilibrium is hit where there is (theoretically) no current
+ flow through the motor anymore, as the back EMF voltage completely counters
+ out the supply voltage.
+\end_layout
+
+\begin_layout Standard
+In reality, there is always a small current draw due to the load torques
+ from friction in the internal bearings (and various other reasons).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/motor_mdl.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A combined motor electrical and mechanical model
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:elec_mech_motor"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Given a supply voltage and a back EMF, applying KVL around the motor circuit
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:elec_mech_motor"
+
+\end_inset
+
+, we deduce the following continuous-time equation for the motor current:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{in}(t)=I_{m}(t)R_{m}+L_{m}\frac{dI_{m}}{dt}+V_{emf}(t)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula $V_{in}$
+\end_inset
+
+is the supply voltage to the motor, 
+\begin_inset Formula $R_{m}$
+\end_inset
+
+and 
+\begin_inset Formula $L_{m}$
+\end_inset
+
+ are the motor's winding's resistance and inductance (in Ohms and Henries),
+ and 
+\begin_inset Formula $V_{emf}$
+\end_inset
+
+ is the Back EMF voltage from any rotation of the output shaft.
+ The 
+\begin_inset Formula $L_{m}\frac{dI_{m}}{dt}$
+\end_inset
+
+term comes from the voltage-current relationship in an inductor.
+ Simply put, an inductor produces a large voltage in response to large changes
+ in current (hence, the derivative term).
+ The derivation of this relationship is beyond the scope of this document.
+\end_layout
+
+\begin_layout Standard
+Moving to the discrete domain, we find the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{in}[n]=I_{m}[n]R_{m}+L_{m}\left(\frac{I_{m}[n]-I_{m}[n-1]}{Ts}\right)+V_{emf}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now solve for 
+\begin_inset Formula $I_{m}[n]$
+\end_inset
+
+, the motor current at the present time-step:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{m}[n]=\frac{1}{\left(R_{m}+\frac{L_{m}}{Ts}\right)}\left(\frac{L_{m}I_{m}[n-1]}{Ts}-V_{emf}[n]+V_{in}[n]\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Joining of Electrical and Mechanical Models
+\end_layout
+
+\begin_layout Standard
+Now, we shall introduce some constants to link the mechanical and electrical
+ models together.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Data for this section can be found in the CIM motor curves available from
+ Andymark: http://files.andymark.com/CIM-motor-curve-am-0255.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These can be derived from analyzing the physical construction of the motor,
+ but are usually empirically measured.
+\end_layout
+
+\begin_layout Standard
+The 
+\series bold
+Torque Constant
+\series default
+ 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ determines the relationship between Torque and Current.
+ We define the following linking equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{m}[n]=K_{t}*I_{m}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $T_{m}$
+\end_inset
+
+is the torque produced on the output shaft of the motor.
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ is measured in units of Torque per Current, or Nm/A
+\end_layout
+
+\begin_layout Standard
+It is known that at zero current, zero torque is present (hence, no need
+ for any constant offset in the above equation).
+ 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ is most easily calculated from a motor's Stall Torque and Stall Current,
+ two figures readily available for most motors.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+K_{t}=\frac{T_{stall}}{I_{stall}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the case of a CIM motor, the stall torque is 2.429 Nm, and the stall current
+ is 131.227 A.
+\end_layout
+
+\begin_layout Standard
+The 
+\series bold
+Speed Constant 
+\series default
+
+\begin_inset Formula $K_{i}$
+\end_inset
+
+determines the relationship between the magnitude of the Back EMF voltage,
+ and the rotational speed of the output shaft.
+ We define the following linking equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{emf}[n]=K_{i}*\omega_{m}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\omega_{m}$
+\end_inset
+
+is the rotational speed of the output shaft of the motor.
+ 
+\begin_inset Formula $K_{i}$
+\end_inset
+
+is measured in units of Voltage per Rotational Velocity, or V/(rad/s).
+ 
+\end_layout
+
+\begin_layout Standard
+It is again known that at zero speed, there is zero back EMF.
+ 
+\begin_inset Formula $K_{i}$
+\end_inset
+
+is most easily calculated by analyzing the motor in its 
+\begin_inset Quotes eld
+\end_inset
+
+free-wheeling
+\begin_inset Quotes erd
+\end_inset
+
+ speed, where a positive voltage 
+\begin_inset Formula $V_{supply}$
+\end_inset
+
+ has been applied to the motor, and a maximum speed has been observed sustained
+ at the output shaft (
+\begin_inset Formula $\omega_{FW}$
+\end_inset
+
+).
+ Assuming the input current in this state (
+\begin_inset Formula $I_{FW}$
+\end_inset
+
+) is also known, the following relationship is true:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+K_{i}=\frac{V_{supply}-I_{FW}*R_{m}}{\omega_{FW}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Be sure to add scaling constants for units as needed - Current is often
+ reported in mA (not A), and free-wheel speeds in RPM (not rad/s).
+\end_layout
+
+\begin_layout Standard
+Substituting these Electrical/Mechanical constant relationships in and re-arrang
+ing terms, we arrive at the final equation used in the motor model:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{m}[n]=T_{m}[n-1]+T_{s}*\left(\frac{K_{t}}{L_{m}}\left(V_{in}[n]-\frac{T_{m}[n-1]R_{m}}{K_{t}}-K_{i}*\omega_{m}[n-1]\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{m}[n]=\frac{T_{m}[n]}{K_{t}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have now reduced the motor to a model which takes a voltage, speed, and
+ previous torque as input, and determines what the new torque value should
+ be.
+ Additionally, via the second equation, we can determine the current draw
+ of the given motor.
+\end_layout
+
+\begin_layout Subsection
+Integration with Larger Systems
+\end_layout
+
+\begin_layout Standard
+The one remaining relationship unexplored is the speed-torque relationship
+ in the motor.
+ Thus far we have defined the motor which produces some torque, dependent
+ upon the voltage applied and the speed the motor runs at.
+ However, once this torque is applied, how quickly does the speed change?
+ This question can only be answered by analyzing what the motor is hooked
+ up to.
+ In the case of a free-wheeling motor, not attached to anything, the answer
+ lies in the moment of inertia of the shaft itself, and the rotational friction
+ in the bearings.
+ When driving an actual robot, the torque of the motor is transferred through
+ the drive-train to the ground.
+ The wheels convert the torque to a linear force, and start rotating in
+ response to the net acceleration of the robot.
+ This rotational speed is then transferred back up through the drive-train
+ to the motors.
+ In all cases, friction provides a constant drag on motion.
+ The exact math in determining the torque-speed relationship must be derived
+ from the device attached to the motor, not the motor itself.
+\end_layout
+
+\begin_layout Section
+Main Battery
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Main-Battery"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are many sources of power for electrical circuits.
+ While analyzing circuits, the most common source used is what is referred
+ to as a 
+\begin_inset Quotes eld
+\end_inset
+
+Ideal Voltage Source
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is a device which produces a voltage across its terminals, and that
+ voltage does not change with the amount of current flowing through the
+ device.
+ In theory, such a device could provide an infinite amount of power (keep
+ voltage the same as current increases indefinitely).
+ This assumption makes analysis of circuits easier, but fails to provide
+ the whole picture.
+\end_layout
+
+\begin_layout Subsection
+Modeling Voltage Drop due to Instantaneous Current Draw
+\end_layout
+
+\begin_layout Standard
+A battery is what is referred to as a 
+\begin_inset Quotes eld
+\end_inset
+
+Non-ideal Voltage Source
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It can be modeled with an ideal voltage source in series with a resistor.
+ The voltage source models the current-pushing potential of the chemical
+ reaction in the battery, and the resistor models the internal parasitic
+ resistance which causes voltage to drop as more current is drawn.
+ The MK ES17-12 batteries standard for FRC
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Constants derived from data-sheet at http://www.mkbattery.com/images/ES17-12.pdf
+\end_layout
+
+\end_inset
+
+ have an average internal resistance of 
+\begin_inset Formula $0.012\Omega$
+\end_inset
+
+.
+ The nominal (no-current-draw) voltage of the battery can be anywhere from
+ 13V down to 8V or even lower, depending on how much the battery is charged.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/battery.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A non-idea voltage source, modeling a battery
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:battMdl"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the purposes of RoboSim, we have not yet modeled the decaying nominal
+ voltage of the battery as it discharges, since the simulation is not designed
+ to be accurate for long-term endurance tests.
+ However, we have modeled the drop in supply voltage with elevated current
+ draw.
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:battMdl"
+
+\end_inset
+
+ for the circuit model employed.
+ 
+\end_layout
+
+\begin_layout Standard
+In general, the output of the battery model is the system voltage, and the
+ input is the total current draw from the battery.
+ The model is governed by the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{sys}[n]=V_{nom}[n]-R_{bat}*I_{draw}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $V_{sys}$
+\end_inset
+
+is the robot system voltage at a given sample time 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ 
+\begin_inset Formula $V_{nom}[n]$
+\end_inset
+
+is the nominal (no-current-draw) voltage of the battery.
+ For simplicity it may be assumed to be 12V, but could also be calculated
+ based on the remaining charge in the battery.
+ 
+\begin_inset Formula $R_{bat}$
+\end_inset
+
+is the parasitic internal resistance of the battery, assumed equals to 
+\begin_inset Formula $0.012\Omega$
+\end_inset
+
+ for the ES17-12.
+ Finally, 
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+is the total current demand of the robot at sample time 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ Within the plant model, the total current draw is calculated by summing
+ the current draw from each motor, solenoid, compressor, etc., along with
+ nominal background current draw (such as electronics, lights, or fans).
+\end_layout
+
+\begin_layout Subsection
+Modeling Total Remaining Charge based on Aggregate Current Draw
+\end_layout
+
+\begin_layout Standard
+Additionally, the battery model uses
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+to calculate the total charge remaining in the battery.
+ This charge-remaining metric could be used to drop nominal battery voltage
+ over time, but will also give developers indication of the amount of battery
+ life drained by performing certain maneuvers with their robot.
+ The battery is designed to have 17 Amp-Hours of charge in it.
+ This means that you can pull 17 amps for one hour, one amp for 17 hours,
+ or any other combination of amps and hours which, when multiplied, gets
+ you to 17.
+ We model battery charge by calculating the number of Amp-Hours drained
+ from the battery by the current draw every plant loop.
+ This behavior is defined by the equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q[n]=Q[n-1]-\frac{I_{draw}[n]*Ts}{3600}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Q[n]$
+\end_inset
+
+ is the present charge (in amp-hours) in the battery, and 
+\begin_inset Formula $Q[n-1]$
+\end_inset
+
+ is what the charge was last loop.
+ Here, we always calculate the present charge by subtracting the current
+ draw (in amps), multiplied by the sample time (with a 3600 factor to convert
+ Ts from seconds to hours).
+ This charge metric can be used to analyze expected battery life of a given
+ robot design.
+\end_layout
+
+\begin_layout Section
+Main Circuit Breaker
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Main-Circuit-Breaker"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Compressor and Tank
+\end_layout
+
+\begin_layout Standard
+The compressor and tank library model reporesent the source of pneumatic
+ energy for the robot.
+ The compressor modeled is the Viair 90C, standard for FRC robots.
+ The air tanks have an adjustable volume (set by defining the number of
+ half-liter tanks).
+ 
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Quotes eld
+\end_inset
+
+The System
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For all pneumatic calculations, the volume inside the tanks, tubing, valves,
+ etc.
+ is modeled collectively as the 
+\begin_inset Quotes eld
+\end_inset
+
+system
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In principle, there are a certain number of air molecules inside of this
+ system at all time.
+ The model track the number of moles of air inside the system, and then
+ can calculate the pressure using the total volume and an assumed temperature.
+ The compressor as a device adds moles of air to this system, while any
+ leaks or cylinder actuations reduce the number of moles in the system.
+\end_layout
+
+\begin_layout Standard
+The system requires a 
+\begin_inset Quotes eld
+\end_inset
+
+reset
+\begin_inset Quotes erd
+\end_inset
+
+ trigger at the start of the simulation.
+ When reset, it triggers calculations to determine nominal (ie, one-atmosphere)
+ quantities of air molecules in the system.
+ This initalizes the state variable to the right number of moles of air
+ for an assumed temperature.
+\end_layout
+
+\begin_layout Standard
+The temperature of air in the system is assumed to always be at 
+\begin_inset Formula $70\textdegree$
+\end_inset
+
+F.
+ This is based on the idea that the compressor does not induce much extra
+ heat into the air it compresses, and any extra heat is dissapated to the
+ atmosphere through the compressor metal body, tank walls, and tubing.
+ Making this assumption allows us to not have to calculate the thermal equations
+ relating heat loss through a complex system of many different materials
+ of different shapes.
+\end_layout
+
+\begin_layout Subsection
+Compressor
+\end_layout
+
+\begin_layout Standard
+Viair provides performance data for its compressors.
+ For the 90C model, there is a non-linear relationship between flow rate,
+ pressure, and drawn current.
+ At any given time, the compressor must fight the system pressure to put
+ more air into the system.
+ Additionally, the faster the flow rate and the higher the system pressure,
+ the more current is needed to keep pushing moles of air into the system.
+ The numerical values can be found in the compressor's datasheet, and are
+ plotted with interpolation in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:comp_perf_data"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/viair90C_flow_rate.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename resources/viair90C_current_draw.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Viair 90C Performance Data
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:comp_perf_data"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the performance data is listed in imperial units, so some conversion
+ factors are applied in software to get to the metric equivilants.
+ 
+\end_layout
+
+\begin_layout Standard
+Every simulation loop, a total number of new moles of air to be added to
+ the system is calculated based on this performance data, and whether the
+ compressor is running or not.
+ By using the ideal gas law, and assuming the system pressure is known,
+ the number of new moles of air can be calculated:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\triangle num\_moles\_comp[n]=\frac{P[n-1]F[n]*Ts}{rT}
+\]
+
+\end_inset
+
+For 
+\begin_inset Formula $P$
+\end_inset
+
+ being the previous system pressure, 
+\begin_inset Formula $F$
+\end_inset
+
+ being the volumetric flow rate (calculated from performance data if compressor
+ is running, or 0 if not running),
+\begin_inset Formula $Ts$
+\end_inset
+
+ being the sample time, 
+\begin_inset Formula $T$
+\end_inset
+
+ being the system air temperature (assumed equal to
+\begin_inset Formula $70\textdegree$
+\end_inset
+
+F), and 
+\begin_inset Formula $r=8.31$
+\end_inset
+
+ being the gas constant in units of 
+\begin_inset Formula $\frac{L*kPa}{K*mol}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Finally, given the current system pressure and running/not-running state
+ of the compressor, the current draw at timestep 
+\begin_inset Formula $n$
+\end_inset
+
+ may also be calculated.
+\end_layout
+
+\begin_layout Section
+Traction Wheel
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Integrated Model
+\begin_inset CommandInset label
+LatexCommand label
+name "part:Integrated-Model"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are multiple parts to the robot model.
+ Each shall be discussed in detail here.
+\end_layout
+
+\begin_layout Section
+Electrical Subsystem
+\end_layout
+
+\begin_layout Standard
+The electrical subsytem consists of the robot's power source (the main battery),
+ all current drawing devices (motors, solenoids, compressors, etc.), and
+ any safety devices (main circut breaker, etc.).
+\end_layout
+
+\begin_layout Standard
+One of the key metrics to track is total current draw from the battery.
+ As soon as we know the compressor state and motor torques, we calculate
+ total current draw with the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{draw}[n]=\left(I_{MR}[n]+I_{ML}[n]\right)*N_{M}+I_{comp}[n]+I_{nom}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Formula $I_{ML}$
+\end_inset
+
+and 
+\begin_inset Formula $I_{MR}$
+\end_inset
+
+are the current draw from the left and right motor respectively.
+ 
+\begin_inset Formula $I_{comp}$
+\end_inset
+
+is the air compressor current, which is assumed 0 until the pneumatic system
+ is implemented.
+ Finally, 
+\begin_inset Formula $I_{nom}$
+\end_inset
+
+represents background, nominal current draw from the roboRIO, LED's, fans,
+ etc.
+ We have modeled it as a constan 0.5A current draw.
+\end_layout
+
+\begin_layout Standard
+System voltage is the voltage supplied by the battery to all of the robot
+ components.
+ Usually it is near 12V, but large current draws or weak batteries may decrease
+ it.
+ This 
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+is used to calculate the present system voltage via the equations laid out
+ in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Main-Battery"
+
+\end_inset
+
+.
+ Additionally, the main battery charge is tracked via the equation presesnted
+ in that same section.
+ 
+\begin_inset Formula $I_{draw}$
+\end_inset
+
+is also used by the main circuit breaker model to determine if the breaker
+ should be in a tripped or closed state.
+ If tripped, system voltage is driven to zero.
+ See section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Main-Circuit-Breaker"
+
+\end_inset
+
+ for more details on this component.
+\end_layout
+
+\begin_layout Standard
+Once the system voltage is known, it can be used to calculate adjusted motor
+ voltages driving the motors.
+ There is feedback here: as motors push harder, they draw more current,
+ which drops the system voltage.
+ In turn, this prevents the motors from outputting their maximum power.
+ This systsem-voltage-drop relationship is maintained by treating the voltage
+ input waveform (whether from the RoboSim hardware measurements or from
+ test vectors in a fully-simulated setup) as 
+\begin_inset Quotes eld
+\end_inset
+
+voltage commands
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The actual voltage going to each motor is calculated off of this equation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{M}[n]=\frac{V_{sys}[n]}{12}*V_{cmd}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $V_{cmd}$
+\end_inset
+
+is the commanded voltage to the motor, 
+\begin_inset Formula $V_{sys}$
+\end_inset
+
+is the robot system voltage, and 
+\begin_inset Formula $V_{M}$
+\end_inset
+
+is the voltage actually applied to the motor.
+\end_layout
+
+\begin_layout Section
+Drivetrain Subsystem
+\end_layout
+
+\begin_layout Standard
+The drivetriain consists of the components which exert forces on the net
+ robot body, and move it around the field.
+ Conceptually, it transforms torque from the motors, and calculates what
+ forces those torques exert on the robot.
+ Then, an acceleration, velocity, and position of the robot body can be
+ calculated from these forces.
+ Rotation is also accounted for.
+ Finally, the net motion of the robot is transformed back into a speed,
+ which is fed back up through the drivetrain to determine what rotational
+ speed the motors are running at.
+\end_layout
+
+\begin_layout Standard
+For Robot_15, a simple tank drive is modeled.
+ The Drivetrain consists of two sets of drive wheels/motors/gearboxes -
+ a left and a right set.
+ Each set of drive equpment has a given gear ratio, wheel diameter, and
+ number of drive motors.
+ It is assumed that each drive equipment set can exert a force toward the
+ front or the back of the robot, and that force is applied at a point offset
+ to the leftt or right of the robot's physical center.
+ The distance from the center to the point of force application is called
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+Motor Width
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The robot additionally has a width and height (the half-width and half-height
+ are shown, and are used in the software for calculations).
+ The X and Y axes are also provided.
+ Note that all linear velocity components are assumed relative to reference
+ frame fixed on the field, not on the robot (unless otherwise indicated)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename resources/sim_model.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The model of the tank drive robot.
+ Note that MotorWidth and HalfWidth are mixed up, this should be changed.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SimMdl"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first step in the calcualtions for the drivetrain are to calculate all
+ the forces acting on the robot.
+\end_layout
+
+\begin_layout Subsection
+Linear Force from Drivetrain Motors
+\end_layout
+
+\begin_layout Standard
+The torque from the motor is a function of the motor's speed and the supply
+ voltage.
+ See section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Electric-Motor"
+
+\end_inset
+
+ for the derivation of torque from speed and supply voltage.
+ Given the left and right motor torques, a linear force magnititude on the
+ robot can be calculated:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{lin}[n]=\frac{\left(T_{L}[n]+T_{R}[n]\right)*N_{M}}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $T_{L}$
+\end_inset
+
+and 
+\begin_inset Formula $T_{R}$
+\end_inset
+
+being the torque (in Nm) produced by the left and right motors respectively,
+ 
+\begin_inset Formula $N_{M}$
+\end_inset
+
+being the the number of motors powering each side of the drivetrain (usually
+ 2 or 3), 
+\begin_inset Formula $D_{W}$
+\end_inset
+
+ being the wheel diameter (in m), and 
+\begin_inset Formula $R$
+\end_inset
+
+ being the gear ratio of the gearboxes and any sprokets used.
+ Note that R might actually change over time if shifting gearboxes are used.
+\end_layout
+
+\begin_layout Subsection
+Net Rotational Torque from Drivetrain Motors
+\end_layout
+
+\begin_layout Standard
+Next, because the forces from each side of the drivetrain act at a non-zero
+ difference from the center of mass of the robot, they may exert a net torque
+ on the robot.
+ This is what allows the robot to rotate in place.
+ The magnititude of this torque on the robot is calculated:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{net}[n]=\frac{\left(-T_{L}[n]+T_{R}[n]\right)*N_{M}*W_{mot}}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All variables used here are the same as above, with the addition of the
+ motor width, 
+\begin_inset Formula $W_{mot}$
+\end_inset
+
+in meters.
+\end_layout
+
+\begin_layout Subsection
+Wheel friction
+\end_layout
+
+\begin_layout Standard
+Wheel friction is currently under development.
+ So far, we will only calculate kinetic friction which opposes the robot
+ from sliding side-to-side (perpendicular to the direction the drive wheels
+ point).
+ Note this force is large for traction wheels, but very small for omni-wheels.
+ By adjusting the coeficent of friction in the robot configuration structure,
+ different types of wheels can be tested.
+\end_layout
+
+\begin_layout Standard
+The first step is determining what component of the robot's velocity is
+ perpendicular to the direction the wheels are pointed
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\theta[n]=atan2\left(\frac{V_{y}[n]}{V_{x}[n]}\right)-\theta_{robot}[n]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{perp}[n]=\sqrt{V_{x}[n]^{2}+V_{y}[n]^{2}}*sin\left(\Delta\theta[n]\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $V_{y}$
+\end_inset
+
+ and 
+\begin_inset Formula $V_{x}$
+\end_inset
+
+being the y and x components of the robot's current velocity, and 
+\begin_inset Formula $\theta_{robot}$
+\end_inset
+
+being the current direction the robot is pointed in.
+ 
+\end_layout
+
+\begin_layout Standard
+Then, using the equations for kinetic friction described in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Kinetic-Friction"
+
+\end_inset
+
+, we can determine a magnititude for the frictional force from the wheel
+ opposing side-to-side motion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{fric,perp}[n]=-V_{perp}[n]*K_{k,wheel}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $K_{k,wheel}$
+\end_inset
+
+being the net kinetic coefficent of friction for all wheels in contact with
+ the ground.
+\end_layout
+
+\begin_layout Subsection
+Induced Motion
+\end_layout
+
+\begin_layout Standard
+We now have all forces requried to calculate the net motion of the robot
+ from the drivetrain.
+ We will use the relationship force equals mass times acceleration, solved
+ for acceleration.
+ We will consider the X and Y components separately.
+ We must use trig to determine the net X/Y motion based on the direction
+ the robot is pointed, which in turn dictates which direction the drivetrain
+ can push or apply friction in.
+\end_layout
+
+\begin_layout Standard
+The acceleration in the X and Y directions (WRT a fixed reference frame
+ of the field) for the robot is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{x}[n]=\frac{F_{lin}[n]*cos\left(\theta_{robot}[n]\right)+F_{fric,perp}[n]*-sin\left(\theta_{robot}[n]\right)}{M_{robot}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{y}[n]=\frac{F_{lin}[n]*sin\left(\theta_{robot}[n]\right)+F_{fric,perp}[n]*cos\left(\theta_{robot}[n]\right)}{M_{robot}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $M_{robot}$
+\end_inset
+
+being the robot's mass in kg.
+\end_layout
+
+\begin_layout Standard
+Additionally, we also calculate the rotational acceleration from the induced
+ torque:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\alpha[n]=\frac{T_{net}[n]}{I_{robot}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $I_{robot}$
+\end_inset
+
+being the robot's net moment of inertia (like mass, but for spinning things).
+ Not having any better ideas, we modeled the robot's mass as being uniform
+ throughout a subsection of its base.
+ By making this mass-distributed-in-a-rectangular-prisim assumption, we
+ can assume the following value for the moment of inertia:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+I_{robot}=\frac{M_{robot}}{12}*\left[\left(0.9*L_{robot}\right)^{2}+(2*W_{motor})^{2}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $M_{robot}$
+\end_inset
+
+being the robot mass in kg, 
+\begin_inset Formula $L_{robot}$
+\end_inset
+
+being the robot's total length from front to back bumper, and 
+\begin_inset Formula $W_{motor}$
+\end_inset
+
+being the distance from the robot's centerpoint to the point of force applicatio
+n of the drivetrain(in m).
+\end_layout
+
+\begin_layout Standard
+Now that we have the accelerations, we can use the physics equations determined
+ in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Position,-Linear-Motion,"
+
+\end_inset
+
+ to deduce the robot's current position, velocity, rotation, and rotational
+ velocity.
+\end_layout
+
+\begin_layout Subsection
+Motor Speed Calculation
+\end_layout
+
+\begin_layout Standard
+Finally, we must pass back up the robot's net motion to calcualte the speed
+ each motor is running at.
+ This is crucial for determining accurate future torque values.
+\end_layout
+
+\begin_layout Standard
+We must account for the robot's current orientation on the field, it's X
+ and Y velocity, and its rotational velocity.
+ For both motors, we calcualte speeds with the following equations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega_{L}[n]=\frac{\left[V_{x}[n]cos\left(\theta_{robot}[n]\right)+V_{y}[n]sin\left(\theta_{robot}[n]\right)-\omega_{robot}[n]*W_{motor}\right]*2\pi}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\omega_{R}[n]=\frac{\left[V_{x}[n]cos\left(\theta_{robot}[n]\right)+V_{y}[n]sin\left(\theta_{robot}[n]\right)+\omega_{robot}[n]*W_{motor}\right]*2\pi}{D_{W}*R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The next control loop, these new speeds will be fed into the motor model
+ to calculate the next torque.
+\end_layout
+
+\begin_layout Section
+Pneumatic subsystem
+\end_layout
+
+\begin_layout Standard
+This has been paritally implemented, and not at all documented.
+ To be updated....
+\end_layout
+
+\begin_layout Section
+Field Collision Model
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Field-Collision-Model"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The field collision model determines behavior when the robot collides with
+ a wall of the field.
+ The collisions are inelastic - that is to say, some of the energy is absorbed
+ by the bumpers.
+ This means the robot bounces back on a collision, but is traveling slower.
+\end_layout
+
+\begin_layout Standard
+The field collision model is still very crude, and for that reason will
+ not be described in depth.
+ Suffice to say, the basic principe is that when the robot comes in contact
+ with a wall, one part of the velocity (X direction or Y direction) is reversed
+ and reduced to simulate a 
+\begin_inset Quotes eld
+\end_inset
+
+bounce
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Future work will model this bounce more accurately, and also examine the
+ rotational effects of a corner of the robot hitting the wall before the
+ rest of the robot does.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Design Notes
+\end_layout
+
+\begin_layout Section
+Software Architecture
+\end_layout
+
+\begin_layout Standard
+The sim software architecture is desiged to be flexible and modular, with
+ large parts that can be re-used year to year.
+ Most 
+\begin_inset Quotes eld
+\end_inset
+
+components'
+\begin_inset Quotes erd
+\end_inset
+
+ to the simulation will have an init (run once) and a main (run once per
+ loop) file.
+ We will briefly describe each file
+\end_layout
+
+\begin_layout Subsection
+sim_main
+\end_layout
+
+\begin_layout Standard
+Sim_main.m is the main entry point for the simulation.
+ This is the file to run in Octave when you wish to run a simulation.
+ It calls all the initilization functions and runs the main control loop.
+\end_layout
+
+\begin_layout Standard
+After clearing the Octave workspace, sim_main will load the instrument control
+ package (needed for serial communication with the RoboSim hardware), add
+ additional folders to its path (so it knows where to find utility and library
+ files), start up some logging, and then call additional initilization inside
+ sim_init.m.
+ After that, a progress bar is displayed and a timer is started to ensure
+ the perioidic loop is run at the correct rate.
+\end_layout
+
+\begin_layout Standard
+The periodic loop will run for the number of timesteps specificed at sim
+ initilization time.On each loop, the first thing done is to mark the time
+ the loop started at.
+ This will be used at the end to determine how long to wait to maintain
+ a consistant run rate.
+ Next, the inputs for this control loop are gathered via in_proc.m.
+ Then the robot plant model is run, and any robot/field physics calculations
+ are run.
+ Then, the results of this loop are set to outputs via out_proc.m.
+ Lastly, if it is desired to run this simulation in real-time, the simulation
+ waits for a given amount of time to ensure a consistant loop run time (ie,
+ sample rate).
+\end_layout
+
+\begin_layout Standard
+Finally, after the simulation has completed the required number of main
+ control loops, the post_proc tasks are run.
+ Then the simulation exits.
+\end_layout
+
+\begin_layout Subsection
+sim_init
+\end_layout
+
+\begin_layout Standard
+Sim_init contains some of the simulation-enviroment-specific setup and data
+ structures.
+ Here, you can set the sample time (reccommend 50ms.
+ Also, any changes here must have corresponding changes in the arduino software
+ as well).
+ You can also specify simTime, the length of time in seconds the sim will
+ run for.
+ There are two other important switches: one to decide if input comes from
+ predefined simulation testcases or from RoboSim hardware (the use_serial
+ variable), and another to determine if the simulation should attempt to
+ execute in real time (ie, each control loop is 50ms) or not (ie, each control
+ loop runs as fast as possible).
+ Running real-time is nice to get a good conceptual feel for how the robot
+ will look as it moves around, and is required if use_serial is 1.
+ However, if plots of test results are of primary concern, you can set enforce_r
+ealtime to 0 and get faster execution time.
+\end_layout
+
+\begin_layout Standard
+After setting these variables, sim_init runs initilization for the robot
+ and for the field, then opens up the serial connection to the RoboSim hardware
+ if hardware is being used.
+\end_layout
+
+\begin_layout Subsection
+robot_init_15
+\end_layout
+
+\begin_layout Standard
+Robo_init is run once before the start of the main simulation loop.
+ Its purposes is to initalize the internal state and configuration structutes
+ of the robot, and draw the initial robot onto the field.
+ 
+\end_layout
+
+\begin_layout Standard
+There are three main structures - config, state, and calc_config.
+ Config values will be constant throughout the simulation.
+ They represent the physical properties of the robot (physical dimensions,
+ weight, number of motors, number of air tanks, etc.).
+ These physical paramaters are all used in the physics-based calculations
+ of the robot's actions.
+ Note that the units of each parameter should be included into the comments
+ associated with the params (units matter! And there's little oppurtunity
+ to figure them out from the rest of the code!).
+ The state structure holds all the physical paramaters which change over
+ time (acceleration, rotation, position, system voltage, etc.).
+ Again, units should be specified.
+ Since this is a digital system, it's expected that some of the values will
+ have 
+\begin_inset Quotes eld
+\end_inset
+
+current
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+previous
+\begin_inset Quotes erd
+\end_inset
+
+ values.
+ At the end of each main loop, the structure should be considered to have
+ all the data associated with the robot at timestep 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ Finally, there is an additional structure for the calculated config values.
+ These should not be edited from robot to robot - the values are derived
+ from other config values.
+ These are things like unit-converted values (ex: mass in kg) or the moment
+ of inertia, which can be calculated from other known values.
+\end_layout
+
+\begin_layout Standard
+After the structures for the robot have been defined, a few more are added
+ for specific components.
+ Currently, this is for the motors.
+\end_layout
+
+\begin_layout Standard
+Finally, a few calculations are done to draw the initial robot onto the
+ field.
+ The initial figure is selected, and the robot square is drawn.
+ Additionally, a small marker circle is drawn on the front of the robot
+ to differentiate it from the back.
+\end_layout
+
+\begin_layout Subsection
+field_init_15
+\end_layout
+
+\begin_layout Standard
+Field_init is responsible for setting up the field paramaters structure,
+ and drawing the field.
+ The field structure contains info about the physical dimensions of the
+ field components, as well as various drawing paramaters.
+ After the struct is initalized, a figure is created, the axis is set up
+ to be used as a canvas to draw the field on, and the actual components
+ of the field are drawn.
+ This drawing needs only be done once, unless a field element is animated.
+\end_layout
+
+\begin_layout Subsection
+in_proc
+\end_layout
+
+\begin_layout Standard
+In_proc is the input processing script.
+ It is responsible for getting inputs from some source, and updating the
+ input structure based on those inputs.
+ The input structure is its own set of time-changing values, containing
+ the current set of inputs (usually motor and solenoid voltages).
+\end_layout
+
+\begin_layout Standard
+In general, if a serial port connection is used, the serial_read_packet
+ function is called to get input from the arduino.
+ On a bad packet being recieved, the old packet is maintained and a warning
+ is printed to screen.
+ 
+\end_layout
+
+\begin_layout Standard
+If no serial port is needed, the input structure is instead populated using
+ some pre-defined time-voltage vectors.
+ These vectors are defined within the in_proc script itself.
+ The define a voltage to set, and the time at which to set it.
+ Between given points, linenar interpolation is used.
+ 
+\end_layout
+
+\begin_layout Standard
+This 
+\begin_inset Quotes eld
+\end_inset
+
+no-serial-port
+\begin_inset Quotes erd
+\end_inset
+
+ mode allows robot designers to test different driving conditions with different
+ physical parameters, with no electrical board built.
+ 
+\end_layout
+
+\begin_layout Subsection
+robot_15
+\end_layout
+
+\begin_layout Standard
+The Robot_15 script executes the integrated model of the robot.
+ No data structures are defined here - the robot state and outputs structures
+ are updated based on the inputs, physical parameters, and previous state.
+ See Part 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "part:Integrated-Model"
+
+\end_inset
+
+ for more information on the content of the robot_15 script.
+\end_layout
+
+\begin_layout Subsection
+field_robot_physics
+\end_layout
+
+\begin_layout Standard
+The field_robot_physics script re-adjusts the robot state structure based
+ on any interaction between the robot and the field.
+ Usually, this interaction means the robot ran into a wall or a part of
+ the field.
+ See section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Field-Collision-Model"
+
+\end_inset
+
+ for more info on how collisions are handled.
+\end_layout
+
+\begin_layout Subsection
+out_proc
+\end_layout
+
+\begin_layout Standard
+The Output Processing script is designed to, well, process outputs.
+ This means updating any animations based on the newly determined state
+ of the robot, and recording values of importance.
+ To limit memory usage, only specific signals are recorded over time - output
+ processing is where a full time-based vector of imporptant values (ex:
+ robot x and y position) is updated with the current value.
+ For most values, only the current (and maybe the previous) value is kept
+ in memory.
+ But for signals which will be analyzed after the simulation is complete,
+ a vector which has enough space to hold all values of the signal during
+ the simualtion is updated.
+\end_layout
+
+\begin_layout Standard
+Additonally, the verticies of the robot on the field are recalculated and
+ re-set.
+ A command is called to update the drawing on the screen.
+\end_layout
+
+\begin_layout Subsection
+post_proc
+\end_layout
+
+\begin_layout Standard
+After the simulation is completed, the recorded vectors must be plotted.
+ These plots are generated with proper scaling and labeling in the post_proc
+ script.
+ Additionally, if a serial port was used, it is shut down cleanly in this
+ script.
+\end_layout
+
+\begin_layout Section
+RoboSim Hardware
+\end_layout
+
+\begin_layout Standard
+To be completed.....
+\end_layout
+
+\end_body
+\end_document

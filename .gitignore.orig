@@ -1,0 +1,11 @@
+*_log.txt
+*octave-workspace
+<<<<<<< HEAD
+*RoboSim_plant_log.txt
+*.lyx~
+=======
+*RoboSim_plant_log.txt
+*.dxf~
+*.lyx#
+*.lyx~
+>>>>>>> ChrisG_dev

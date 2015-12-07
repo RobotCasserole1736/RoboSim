@@ -2,3 +2,6 @@
 *octave-workspace
 *RoboSim_plant_log.txt
 *.lyx~
+*.dxf~
+*.lyx#
+*.lyx~

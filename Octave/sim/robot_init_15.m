@@ -122,7 +122,7 @@ compressor_and_tank(0,0,robot_config.num_air_tanks,1);
 pressure_sensor(0,1);
 
 %% Initialize Robot Drawing
-figure(1);
+%figure(1);
 % draw Robot
 
 %calculate robot drawing verticies
@@ -136,4 +136,4 @@ marker_radius = 0.3;
 %create robot patch drawing object
 robot_obj_handle= patch( [ robot_TL_vertex(1) robot_TR_vertex(1) robot_BR_vertex(1) robot_BL_vertex(1) ],[ robot_TL_vertex(2) robot_TR_vertex(2) robot_BR_vertex(2) robot_BL_vertex(2) ], 'r');
 %Create marker object
-robot_front_marker = rectangle("Position",[marker_coords(1)-marker_radius/2, marker_coords(2)-marker_radius/2,marker_radius,marker_radius], "Curvature", [1 1], "FaceColor",[0 .5 .5]);
+robot_front_marker = rectangle("Position",[marker_coords(1)-marker_radius/2, marker_coords(2)-marker_radius/2,marker_radius,marker_radius], "Curvature", [1 1], "FaceColor",[0 .5 .5], 'LineStyle', 'none');
