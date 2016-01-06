@@ -36,8 +36,8 @@
 robot_config = ...
 struct  (
         %Drivetrain config
-        'gear_ratio',           [1/8, 1/12],...     % gear ratio of the drivetrain [low, high]
-        'encoder_ratio',        [1/8, 1/12],...     % ratio of the gearbox from the motor to the encoder [low, high]
+        'gear_ratio',           [1/12, 1/12],...     % gear ratio of the drivetrain [low, high]
+        'encoder_ratio',        [1/12, 1/12],...     % ratio of the gearbox from the motor to the encoder [low, high]
         'wheel_diameter',       6 * 0.0254,...      % drive wheel diameter (meters)
         'drive_motors_per_side', 3,...              % number of motors per side of drivetrain
         'motor_width',          0.3,...             % distance from robot center to left/right drive wheel sets (m)
@@ -46,7 +46,7 @@ struct  (
         %Robot-wall interactions
         'bumper_p_absorption_factor',      0.5,...  % How much of the momentum is absorbed by the bumpers in a wall-robot impact? (0 = none, 1 = all)
         %Overall physical characteristics
-        'weight',               130,...             % robot weight (pounds)
+        'weight',               145,...             % robot weight (pounds)
         'half_width',           0.35,...            % distance from robot center to left/right bumpers (m)
         'half_length',          0.44,...            % distance from robot center to front/back bumpers (m)
         %Mechanism config
@@ -72,7 +72,7 @@ struct  (
 		'linear_vel_y',              0,... % velocity of the robot in the y direction (m/s)
         'linear_vel_x_prev',         0,... % velocity of the robot in the x direction (m/s) from the previous loop
 		'linear_vel_y_prev',         0,... % velocity of the robot in the y direction (m/s) from the previous loop
-		'pos_x',                     0,... % position of the robot center point in x (m)
+		'pos_x',                     -40,... % position of the robot center point in x (m)
 		'pos_y',                     0,... % position of the robot center point in y (m)
         'pos_x_prev',                0,... % position of the robot center point in x (m) from the previous loop
 		'pos_y_prev',                0,... % position of the robot center point in y (m) from the previous loop
