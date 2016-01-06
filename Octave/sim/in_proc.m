@@ -16,7 +16,7 @@ global use_serial
 
 if(use_serial == 0)
 	test_waveform_1_t = [0,0.05,simTime];
-	test_waveform_1_v = [0,12,12];
+	test_waveform_1_v = [0,12,9];
 	test_waveform_2_t = [0,0.05,simTime];
 	test_waveform_2_v = [0,12,12];
     in = ...

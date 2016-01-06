@@ -25,6 +25,7 @@ RoboSim is currently in development. All releases as of now are tested, but cons
 [![Screenshot](/docs/sample_screenshots/electrical.jpg)](docs/sample_screenshots/)
 [![Screenshot](/docs/sample_screenshots/Robot_Physical.jpg)](docs/sample_screenshots/)
 [![Screenshot](/docs/sample_screenshots/Robot_Figure.jpg)](docs/sample_screenshots/)
+[![Screenshot](/docs/sample_screenshots/wall_bounce_animation.jpg)](docs/sample_screenshots/)
 
 ## Repository Contents
 - arduino_src - source code for the embedded arduino controller inside of RoboSim

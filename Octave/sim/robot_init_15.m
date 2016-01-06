@@ -72,7 +72,7 @@ struct  (
 		'linear_vel_y',              0,... % velocity of the robot in the y direction (m/s)
         'linear_vel_x_prev',         0,... % velocity of the robot in the x direction (m/s) from the previous loop
 		'linear_vel_y_prev',         0,... % velocity of the robot in the y direction (m/s) from the previous loop
-		'pos_x',                     -40,... % position of the robot center point in x (m)
+		'pos_x',                     -3,... % position of the robot center point in x (m)
 		'pos_y',                     0,... % position of the robot center point in y (m)
         'pos_x_prev',                0,... % position of the robot center point in x (m) from the previous loop
 		'pos_y_prev',                0,... % position of the robot center point in y (m) from the previous loop

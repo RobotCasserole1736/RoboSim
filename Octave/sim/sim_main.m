@@ -26,7 +26,7 @@ diary "RoboSim_plant_log.txt"
 sim_init;
 
 %Create a pop-up progress bar
-h = waitbar(0, "Running Simulation...");
+%h = waitbar(0, "Running Simulation...");
 
 %start timer for maintaining periodic loop rate
 tic();
@@ -35,7 +35,7 @@ tic();
 for n = 0:Ts:simTime
     %mark loop start time
     loop_start_time = toc();
-    waitbar(i/(simTime/Ts+1), h, sprintf("Running Simulation. (%d/%d)",i, (simTime/Ts+1)));
+    %waitbar(i/(simTime/Ts+1), h, sprintf("Running Simulation. (%d/%d)",i, (simTime/Ts+1)));
 
     %% get inputs
     in_proc;
